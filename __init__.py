@@ -66,7 +66,7 @@ class mdiAFilter(QMdiArea):
     super().__init__(parent)
 
   def eventFilter(self, obj, e):
-    if e.type() == QEvent.KeyRelease:
+    if e.type() == QEvent.KeyRelease and not e.isAutoRepeat():
       Dialog(str( e.isAutoRepeat() ))
 
     return False
