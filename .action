@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ActionCollection version="2" name="Scripts">
     <Actions category="Scripts">
-        <text>Custom Canvas Rotation</text>
+        <text>Custom Radial Menu</text>
 
-        <Action name="c_canvas_rotation">
+        <Action name="CustomRadialMenu">
         <icon></icon>
-        <text>Custom Canvas Rotation</text>
+        <text>Custom Radial Menu</text>
         <whatsThis></whatsThis>
         <toolTip></toolTip>
         <iconText></iconText>

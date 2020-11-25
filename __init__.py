@@ -1,6 +1,6 @@
 from krita import *
 from PyQt5.QtWidgets import *
-from PyQt5.QtCore import QTimer
+from PyQt5.QtCore import *
 import math
 
 DISTANCE_BUFFER = 10                                  # THIS VALUE CAN BE CHANGED TO FIT YOUR NEEDS!
@@ -39,13 +39,13 @@ timer_lock = False                                    # Locks out unnecessary us
 
 # Class for testing (replaces a print statement as I don't know how to print on win)
 class Dialog(QDialog):
-  def __init__(self, text, text2, parent=None):
+  def __init__(self, text, parent=None):
       super(Dialog, self).__init__(parent)
       self.setLayout(QVBoxLayout())
       self.label = QLabel(str(text))
-      self.label2 = QLabel(str(text2))
+      # self.label2 = QLabel(str(text2))
       self.layout().addWidget(self.label)
-      self.layout().addWidget(self.label2)
+      # self.layout().addWidget(self.label2)
       self.resize(200, 50)
       self.exec_()
 
@@ -65,22 +65,23 @@ class qWinFilter(QWindow):
   def __init__(self, parent=None):
     super().__init__(parent)
 
-  def eventFilter(self, obj, e):
-    pass
+  def mousePressEvent(self, event):
+    if event.buttons () == QtCore.Qt.LeftButton:
+      Dialog("test left button")
 
-class RadialMenuExtension(Extension):
+class CustomRadialMenuExtension(Extension):
   def __init__(self,parent):
-    super(RadialMenuExtension, self).__init__(parent)
+    super(CustomRadialMenuExtension, self).__init__(parent)
 
   def setup(self):
     pass
 
   def createActions(self, window):
-    self.radialMenu = window.createAction("radialMenu", "Radial Menu")
-    self.radialMenu.setAutoRepeat(False)
-    self.radialMenu.setCheckable(True)
+    self.customRadialMenu = window.createAction("CustomRadialMenu", "Radial Menu")
+    self.customRadialMenu.setAutoRepeat(False)
+    self.customRadialMenu.setCheckable(True)
 
     self.MAFilter = self.qWinFilter()
 
 
-Krita.instance().addExtension(RadialMenuExtension(Krita.instance()))
+Krita.instance().addExtension(CustomRadialMenuExtension(Krita.instance()))
