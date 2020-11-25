@@ -49,16 +49,16 @@ class Dialog(QDialog):
       self.resize(200, 50)
       self.exec_()
 
-def dot_product(v1, v2):
+def dotProduct(v1, v2):
   return v1[0] * v2[0] + v1[1] * v2[1]
 
 def determinant(v1, v2):
   return v1[0] * v2[1] - v1[1] * v2[0]
 
-def vector_angle(v1, v2):
-  return  math.degrees( math.atan2(determinant(v1, v2), dot_product(v1, v2)) )
+def vectorAngle(v1, v2):
+  return  math.degrees( math.atan2(determinant(v1, v2), dotProduct(v1, v2)) )
 
-def two_point_distance(v1, v2):
+def twoPointDistance(v1, v2):
   return math.sqrt( math.pow(( v2.x() - v1.x() ), 2) + math.pow(( v2.y() - v1.y() ), 2)  )
 
 class qWinFilter(QWindow):
