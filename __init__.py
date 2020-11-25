@@ -68,6 +68,8 @@ class qWinFilter(QWindow):
   def eventFilter(self, obj, e):
     if e.buttons():
       Dialog("test left button")
+    if e.type() == QEvent.KeyRelease:
+      Dialog("test key release")
 
 class CustomRadialMenuExtension(Extension):
   def __init__(self,parent):
