@@ -61,17 +61,19 @@ def vectorAngle(v1, v2):
 def twoPointDistance(v1, v2):
   return math.sqrt( math.pow(( v2.x() - v1.x() ), 2) + math.pow(( v2.y() - v1.y() ), 2)  )
 
-class qWinFilter(QWindow):
+class mdiAFilter(QMdiArea):
   def __init__(self, parent=None):
     super().__init__(parent)
 
   def eventFilter(self, obj, e):
-    if e.buttons():
-      Dialog("test left button")
-    if e.type() == QEvent.KeyRelease:
+    if e.type() == QEvent.KeyRelease and e.isAutoRepeat():
       Dialog("test key release")
-      
+
     return False
+
+def CRDTrigger():
+  Dialog("test connect trigger")
+
 class CustomRadialMenuExtension(Extension):
   def __init__(self,parent):
     super(CustomRadialMenuExtension, self).__init__(parent)
@@ -82,9 +84,10 @@ class CustomRadialMenuExtension(Extension):
   def createActions(self, window):
     self.customRadialMenu = window.createAction("CustomRadialMenu", "Radial Menu")
     self.customRadialMenu.setAutoRepeat(False)
-    self.customRadialMenu.setCheckable(True)
+    self.customRadialMenu.triggered.connect(CRDTrigger)
+    # self.customRadialMenu.setCheckable(True)
 
-    self.MAFilter = qWinFilter()
+    self.MAFilter = mdiAFilter()
 
 
 Krita.instance().addExtension(CustomRadialMenuExtension(Krita.instance()))
