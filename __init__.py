@@ -61,119 +61,26 @@ def vector_angle(v1, v2):
 def two_point_distance(v1, v2):
   return math.sqrt( math.pow(( v2.x() - v1.x() ), 2) + math.pow(( v2.y() - v1.y() ), 2)  )
 
-def release_timer_timeout():
-  global current_active_layer
-  global current_active_layer_locked_original
-  global angle
-  global buffer_lock
-  global key_release_lock
-  global init_offset_angle
-  global cursor_init_position
-  global base_vector
-  global timer
+class qWinFilter(QWindow):
+  def __init__(self, parent=None):
+    super().__init__(parent)
 
-  timer.stop()
-
-  key_release_lock = True
-  cursor_init_position = None
-  buffer_lock = False
-  init_offset_angle = 0
-  angle = 0
-  if current_active_layer != None:
-    current_active_layer.setLocked(current_active_layer_locked_original)
-  current_active_layer = None
-
-# Reset everything back to default state to be ready for next rotation event
-def rotate_timer_timeout():
-  global current_active_layer
-  global current_active_layer_locked_original
-  global angle
-  global buffer_lock
-  global init_offset_angle
-  global cursor_init_position
-  global base_vector
-  global timer
-
-  if not buffer_lock:
-    # Distance from initial point (cursor position trigger event was onvoked from)
-    # to cursor's current position
-    distance = two_point_distance(cursor_init_position, QCursor.pos())
-    
-    # If cursor outside buffer zone start immediately calculate initial offset angle
-    # to ensure smooth transition when changing angles in followint passes
-    if distance > DISTANCE_BUFFER:
-      buffer_lock = True
-
-      v1 = [base_vector[0] - cursor_init_position.x(), base_vector[1] - cursor_init_position.y()]
-      v2 = [QCursor.pos().x() - cursor_init_position.x(), QCursor.pos().y() - cursor_init_position.y()]
-      
-      init_offset_angle = vector_angle(v1, v2)
-  elif buffer_lock:
-    # This handles the canvas rotation itself
-    v1 = [base_vector[0] - cursor_init_position.x(), base_vector[1] - cursor_init_position.y()]
-    v2 = [QCursor.pos().x() - cursor_init_position.x(), QCursor.pos().y() - cursor_init_position.y()]
-    
-    canvas = Krita.instance().activeWindow().activeView().canvas()
-    canvas.setRotation(angle - init_offset_angle + vector_angle(v1, v2))
-
-  timer.start()
+  def eventFilter(self, obj, e):
+    pass
 
 class RadialMenuExtension(Extension):
   def __init__(self,parent):
     super(RadialMenuExtension, self).__init__(parent)
 
-  class mdiAreaFilter(QMdiArea):
-    def __init__(self, parent=None):
-      super().__init__(parent)
-
-    def eventFilter(self, obj, e):
-      global release_timer
-      
-      if e.type() == QEvent.KeyRelease:
-        if key_release_lock:
-          return False
-
-        release_timer.start()
-        
-      return False
-
   def setup(self):
     pass
 
   def createActions(self, window):
-    self.c_canvas_rotation = window.createAction("c_canvas_rotation", "Custom Canvas Rotation")
-    self.c_canvas_rotation.setAutoRepeat(False)
-    self.c_canvas_rotation.setCheckable(True)
+    self.radialMenu = window.createAction("radialMenu", "Radial Menu")
+    self.radialMenu.setAutoRepeat(False)
+    self.radialMenu.setCheckable(True)
 
-    self.MAFilter = self.mdiAreaFilter()
+    self.MAFilter = self.qWinFilter()
 
-    @self.c_canvas_rotation.toggled.connect
-    def on_toggle():
-      global current_active_layer
-      global current_active_layer_locked_original
-      global angle
-      global buffer_lock
-      global key_release_lock
-      global init_offset_angle
-      global cursor_init_position
-      global base_vector
-      global timer
-      global timer_lock
-
-      canvas = Krita.instance().activeWindow().activeView().canvas()
-      
-      # Init custom rotation (vars, timer, active layer reference)
-      key_release_lock = False
-      timer_lock = False
-      cursor_init_position = QCursor.pos()
-      angle = canvas.rotation()
-      current_active_layer = Krita.instance().activeDocument().activeNode()
-      current_active_layer_locked_original = current_active_layer.locked()
-      current_active_layer.setLocked(True)
-
-      timer.start()
-
-timer.timeout.connect(rotate_timer_timeout)
-release_timer.timeout.connect(release_timer_timeout)
 
 Krita.instance().addExtension(RadialMenuExtension(Krita.instance()))
