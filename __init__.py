@@ -66,13 +66,14 @@ class mdiAFilter(QMdiArea):
     super().__init__(parent)
 
   def eventFilter(self, obj, e):
-    if e.type() == QEvent.KeyRelease and e.isAutoRepeat():
-      Dialog("test key release")
+    if e.type() == QEvent.KeyRelease:
+      Dialog(str( e.isAutoRepeat() ))
 
     return False
 
 def CRDTrigger():
-  Dialog("test connect trigger")
+  # Dialog("test connect trigger")
+  pass
 
 class CustomRadialMenuExtension(Extension):
   def __init__(self,parent):
