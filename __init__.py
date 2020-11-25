@@ -65,8 +65,8 @@ class qWinFilter(QWindow):
   def __init__(self, parent=None):
     super().__init__(parent)
 
-  def mousePressEvent(self, event):
-    if event.buttons () == QtCore.Qt.LeftButton:
+  def eventFilter(self, obj, e):
+    if e.buttons () == QtCore.Qt.LeftButton:
       Dialog("test left button")
 
 class CustomRadialMenuExtension(Extension):
