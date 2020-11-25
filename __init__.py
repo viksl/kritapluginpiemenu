@@ -84,7 +84,7 @@ class CustomRadialMenuExtension(Extension):
 
   def createActions(self, window):
     self.customRadialMenu = window.createAction("CustomRadialMenu", "Radial Menu")
-    self.customRadialMenu.setAutoRepeat(False)
+    self.customRadialMenu.setAutoRepeat(True)
     self.customRadialMenu.triggered.connect(CRDTrigger)
     # self.customRadialMenu.setCheckable(True)
 
