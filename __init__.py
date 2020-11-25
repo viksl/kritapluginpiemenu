@@ -72,7 +72,7 @@ class mdiAFilter(QMdiArea):
     return False
 
 def CRDTrigger():
-  Dialog("test connect trigger")
+  # Dialog("test connect trigger")
   pass
 
 class CustomRadialMenuExtension(Extension):
