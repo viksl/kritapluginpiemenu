@@ -1,62 +1,3 @@
-"""
-Author: viksl
-Github: https://github.com/viksl
-Github for this project: 
-Licence:  See file LICENSE
-          GNU GENERAL PUBLIC LICENSE
-          Version 3
-          <https://www.gnu.org/licenses/>
-Date: 25.11.2020
-Version: 1.0
-Default shortcut: Ctrl + Alt + D
-Description:
-  - Free plugin for Krita <https://krita.org) -
-  Krita's canvas rotation is currently bound to the center, which means
-  no matter where on screen your cursor is the angle is always calculated
-  towards the screen/window centre. This means that to rotate cans the
-  cursor has to move across the whole screen for a full 360° rotation
-  or you have to move the cursor closer to the center of the screen
-  to use shorter circular movement for the rotation.
-  This plugin introduces a new shortcut and a semi-new function which
-  utilizes Krita's original canvas rotation but instead of having 
-  window/screen as a centre for the rotation gizmo the cursor's position
-  at the moment of shortcut activation is utilized as the gizmo's centre.
-
-  Current active layer gets locked to avoid any accidental strokes during
-  the rotation. The layer's original state (lock) is stored and restored
-  after the rotation automatically there's no need to manually lock/unlock
-  the layer.
-
-  Note: Do not misunderstand. This does not rotate the canvas around the
-        cursor, canvas rotation in Krita always works around the centre
-        of your screen, this plugin on introduces a custom gizmo with the
-        rotation.
-        With smaller tablets/screens you might have not noticed a need for
-        this but with larger screen if you work in on a side of your screen
-        and want to rotate the canvas you still have to move the cursor
-        around the centre of the screen which means a huge movemvet across
-        half or the entire screen, this plugin mitigates this as mentioned
-        above.
-
-  !IMPORTANT!
-  Changes you can make manually to this plugin:
-  1. Locate the file __init__.py inside c_canvas_rotation directory.
-  2. Open in a text editor of your choice.
-  3. At the top on lines 74 and 81 you will find constants:
-      DISTANCE_BUFFER and TIMER_INTERVAL
-  4. Increase/decrease (can't be negative!) DISTANCE_BUFFER (pixels radius)
-      to grow/shrink area when the rotation is not responsive until the
-      cursor leaves this area for the first time (after that the area
-      is disabled and the rotation is allowed everywhere)
-  5.  Increase/decrease (can't be negative!) TIMER_INTERVAL (milliseconds)
-      to increase/decrease how smooth the ccustom canvas rotaion is.
-      The lower the smoother experience but more cpu intensive (overall it's not a very expensive process
-      so you are fine with going half way down if you feel like it)
-      Don't go to much towards 0 if possible since at very low rates you can get to the moment when
-      krita event loop is as fast as this timer and the rotation will thus fail
-Copyright: (C) viksl
-"""
-
 from krita import *
 from PyQt5.QtWidgets import *
 from PyQt5.QtCore import QTimer
@@ -177,9 +118,9 @@ def rotate_timer_timeout():
 
   timer.start()
 
-class CustomCanvasRotationExtension(Extension):
+class RadialMenuExtension(Extension):
   def __init__(self,parent):
-    super(CustomCanvasRotationExtension, self).__init__(parent)
+    super(RadialMenuExtension, self).__init__(parent)
 
   class mdiAreaFilter(QMdiArea):
     def __init__(self, parent=None):
@@ -235,4 +176,4 @@ class CustomCanvasRotationExtension(Extension):
 timer.timeout.connect(rotate_timer_timeout)
 release_timer.timeout.connect(release_timer_timeout)
 
-Krita.instance().addExtension(CustomCanvasRotationExtension(Krita.instance()))
+Krita.instance().addExtension(RadialMenuExtension(Krita.instance()))

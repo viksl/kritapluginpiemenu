@@ -1,7 +1,7 @@
 [Desktop Entry]
 Type=Service
 ServiceTypes=Krita/PythonPlugin
-X-KDE-Library=c_canvas_rotation
+X-KDE-Library=krita-plugin-radial-menu
 X-Python-2-Compatible=false
-Name=Custom Canvas Rotation
-Comment=Custom Canvas Rotation
+Name=Radial Menu
+Comment=Radial Menu Plugin
