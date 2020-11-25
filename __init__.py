@@ -81,7 +81,7 @@ class CustomRadialMenuExtension(Extension):
     self.customRadialMenu.setAutoRepeat(False)
     self.customRadialMenu.setCheckable(True)
 
-    self.MAFilter = self.qWinFilter()
+    self.MAFilter = qWinFilter()
 
 
 Krita.instance().addExtension(CustomRadialMenuExtension(Krita.instance()))
