@@ -118,7 +118,7 @@ class CustomRadialMenuExtension(Extension):
     # self.customRadialMenu.triggered.connect(CRDTrigger)
     # self.customRadialMenu.setCheckable(True)
     # qwin = Krita.instance().activeWindow().qwindow()
-    self.MAFilter = mdiAFilter()
+    # self.MAFilter = mdiAFilter()
     self.rm = tt(window.qwindow())
 
 
