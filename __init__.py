@@ -67,10 +67,8 @@ class mdiAFilter(QMdiArea):
   def eventFilter(self, obj, e):
     if e.type() == QEvent.KeyPress:
         Dialog("press")
-        self.label.setText("press")
     if e.type() == QEvent.KeyRelease:
         Dialog("release")
-        self.label.setText("release")
 
     return False
 
