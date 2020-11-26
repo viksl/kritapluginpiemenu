@@ -79,9 +79,9 @@ class tt(QWidget):
         self.height = 300
         # no window border
 #        self.setWindowFlags(self.windowFlags() | QtCore.Qt.Dialog | QtCore.Qt.FramelessWindowHint)
-        self.setWindowFlags(self.windowFlags() | QtCore.Qt.Window | QtCore.Qt.FramelessWindowHint)
-        # self.setWindowFlags(self.windowFlags() | QtCore.Qt.Window)
-        self.setAttribute(QtCore.Qt.WA_TranslucentBackground)
+        # self.setWindowFlags(self.windowFlags() | QtCore.Qt.Window | QtCore.Qt.FramelessWindowHint)
+        self.setWindowFlags(self.windowFlags() | QtCore.Qt.Window)
+        # self.setAttribute(QtCore.Qt.WA_TranslucentBackground)
         self.setStyleSheet("background: transparent;")
         self.setWindowTitle("Widget")        
         self.setGeometry(QCursor.pos().x(), QCursor.pos().y(), self.width, self.height)
