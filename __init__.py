@@ -89,10 +89,11 @@ class tt(QWidget):
         self.label.setFont(QFont('Times', 12))
         self.label.setStyleSheet("color: red")
 #        self.showFullScreen()
+
+    def paintEvent(self, event):
         self.painter = QPainter(self)
         self.painter.setBrush(QBrush(Qt.red, Qt.CrossPattern))
         self.painter.drawEllipse(0, 0, self.width, self.height)
-
 
     def keyReleaseEvent(self, event):
         # Dialog("release qwidget")
@@ -107,8 +108,7 @@ class tt(QWidget):
 def CRDTrigger(win):
   # Dialog("test trigger connect")
   win.move(QCursor.pos().x() - win.size().width() / 2, QCursor.pos().y() - win.size().height()  / 2)
-  # win.show()
-  win.showFullScreen()
+  win.show()
 
 class CustomRadialMenuExtension(Extension):
   def __init__(self,parent):
