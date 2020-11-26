@@ -92,7 +92,7 @@ class tt(QWidget):
 
     def paintEvent(self, event):
       self.painter = QPainter(self)
-      self.painter.setBrush(QBrush(Qt.red, Qt.ConicalGradientPattern))
+      self.painter.setBrush(QBrush(Qt.red, Qt.RadialGradientPattern))
       self.painter.drawEllipse(0, 0, self.width, self.height)
       self.painter.end()
 
