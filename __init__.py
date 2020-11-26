@@ -1,6 +1,7 @@
 from krita import *
-from PyQt5.QtWidgets import *
-from PyQt5.QtCore import *
+# from PyQt5.QtWidgets import *
+# from PyQt5.QtCore import *
+from PyQt5 import *
 import math
 
 DISTANCE_BUFFER = 10                                  # THIS VALUE CAN BE CHANGED TO FIT YOUR NEEDS!
@@ -43,9 +44,7 @@ class Dialog(QDialog):
       super(Dialog, self).__init__(parent)
       self.setLayout(QVBoxLayout())
       self.label = QLabel(str(text))
-      # self.label2 = QLabel(str(text2))
       self.layout().addWidget(self.label)
-      # self.layout().addWidget(self.label2)
       self.resize(200, 50)
       self.exec_()
 
@@ -61,19 +60,45 @@ def vectorAngle(v1, v2):
 def twoPointDistance(v1, v2):
   return math.sqrt( math.pow(( v2.x() - v1.x() ), 2) + math.pow(( v2.y() - v1.y() ), 2)  )
 
-class mdiAFilter(QMdiArea):
-  def __init__(self, parent=None):
-    super().__init__(parent)
+# class mdiAFilter(QMdiArea):
+#   def __init__(self, parent=None):
+#     super().__init__(parent)
 
-  def eventFilter(self, obj, e):
-    # if e.type() == QEvent.KeyPress and not e.isAutoRepeat():
-      # Dialog(str( e.isAutoRepeat() ))
+#   def eventFilter(self, obj, e):
+#     # if e.type() == QEvent.KeyPress and not e.isAutoRepeat():
+#       # Dialog(str( e.isAutoRepeat() ))
 
-    return False
+#     return False
 
-def CRDTrigger():
-  Dialog("test connect trigger")
-  pass
+# def CRDTrigger():
+#   Dialog("test connect trigger")
+#   pass
+
+class tt(QWidget):
+    def __init__(self,  parent=None):
+        QWidget.__init__(self, parent)
+
+        # no window border
+#        self.setWindowFlags(self.windowFlags() | QtCore.Qt.Dialog | QtCore.Qt.FramelessWindowHint)
+        self.setWindowFlags(self.windowFlags() | QtCore.Qt.Window | QtCore.Qt.FramelessWindowHint)
+        self.setAttribute(QtCore.Qt.WA_TranslucentBackground)
+        self.setStyleSheet("background: transparent;")
+        self.setWindowTitle("Widget")        
+        self.setGeometry(QCursor.pos().x(), QCursor.pos().y(), 400, 300)
+        self.label = QLabel("this is a label", self)
+        self.label.setFont(QFont('Times', 12))
+        self.label.setStyleSheet("color: red")
+        self.show()
+        
+    def keyRelease(self, e):
+        self.label.setText(str( e.key() ))
+    def eventFilter(self, e):
+        if e.type() == QEvent.KeyPress:
+            Dialog("press")
+            self.label.setText("press")
+        if e.type() == QEvent.KeyRelease:
+            Dialog("release")
+            self.label.setText("release")
 
 class CustomRadialMenuExtension(Extension):
   def __init__(self,parent):
@@ -85,10 +110,11 @@ class CustomRadialMenuExtension(Extension):
   def createActions(self, window):
     self.customRadialMenu = window.createAction("CustomRadialMenu", "Radial Menu")
     self.customRadialMenu.setAutoRepeat(False)
-    self.customRadialMenu.triggered.connect(CRDTrigger)
+    # self.customRadialMenu.triggered.connect(CRDTrigger)
     # self.customRadialMenu.setCheckable(True)
-
-    self.MAFilter = mdiAFilter()
+    # qwin = Krita.instance().activeWindow().qwindow()
+    # self.MAFilter = mdiAFilter()
+    self.rm = tt(window.qwindow())
 
 
 Krita.instance().addExtension(CustomRadialMenuExtension(Krita.instance()))
