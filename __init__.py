@@ -84,14 +84,14 @@ class tt(QWidget):
         self.setAttribute(QtCore.Qt.WA_TranslucentBackground)
         self.setStyleSheet("background: transparent;")
         self.setWindowTitle("RadialMenu")        
-        self.setGeometry(QCursor.pos().x(), QCursor.pos().y(), self.width, self.height)
+        self.setGeometry(0, 0, self.width, self.height)
         self.label = QLabel("this is a label", self)
         self.label.setFont(QFont('Times', 12))
         self.label.setStyleSheet("color: red")
 #        self.showFullScreen()
         self.painter = QPainter(self)
-        self.painter.setBrush(QBrush(Qt.black, Qt.RadialGradientPattern))
-        self.painter.drawEllipse(self.width / 2, self.height / 2, self.width, self.height)
+        self.painter.setBrush(QBrush(Qt.red, Qt.CrossPattern))
+        self.painter.drawEllipse(0, 0, self.width, self.height)
 
 
     def keyReleaseEvent(self, event):
