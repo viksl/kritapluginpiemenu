@@ -92,7 +92,16 @@ class tt(QWidget):
 #        self.showFullScreen()
 
     def paintEvent(self, event):
+    # QPainter painter;
+    # painter.begin(&pixmap);
+    # ... draw using 'painter' ...
+    # painter.end();
+    # painter.begin(this);
+    # painter.drawPixmap(QPoint(0,0), pixmap);
+    # painter.end();
+
       self.painter = QPainter(self)
+      self.painter.setRenderHints( QPainter.HighQualityAntialiasing )
       self.gradient = QRadialGradient(QPoint(self.radius, self.radius), self.radius)
       self.gradient.setColorAt(0, QColor(0, 1, 0, 1))
       self.gradient.setColorAt(0, QColor(0, 1, 0, 0))
@@ -100,12 +109,14 @@ class tt(QWidget):
       self.painter.drawRect(0, 0, self.width, self.height)
       self.painter.end()
 
+
+
     def keyReleaseEvent(self, event):
       # Dialog("release qwidget")
       if not event.isAutoRepeat() and self.cShortcut.matches(event.key()):
         self.label.setText("release")
         self.hide()
-        
+      
     # def keyPressEvent(self, event):
     #     # Dialog("press qwidget")
     #     self.label.setText("press")
