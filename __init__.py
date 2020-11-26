@@ -101,7 +101,7 @@ class tt(QWidget):
 
 def CRDTrigger(win):
   # Dialog("test trigger connect")
-  win.setPos(QCursor.pos())
+  win.move(QCursor.pos())
   win.show()
 
 class CustomRadialMenuExtension(Extension):
