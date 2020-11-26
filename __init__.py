@@ -90,8 +90,8 @@ class tt(QWidget):
         self.label.setStyleSheet("color: red")
 #        self.showFullScreen()
         self.painter = QPainter(self)
-        self.painter.setPen(QPen(Qt.black, 8, Qt.SolidLine))
-        self.painter.drawEllipse(self.width / 2, self.height / 2, 100, 100)
+        self.painter.setBrush(QPen(Qt.black, Qt.RadialGradientPattern))
+        self.painter.drawEllipse(self.width / 2, self.height / 2, self.width, self.height)
 
 
     def keyReleaseEvent(self, event):
