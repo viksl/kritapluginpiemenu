@@ -76,7 +76,7 @@ class mdiAFilter(QMdiArea):
 #   Dialog("test connect trigger")
 #   pass
 
-class tt(QWidget):
+class tt(QMdiArea):
     def __init__(self,  parent=None):
         QWidget.__init__(self, parent)
 
@@ -91,9 +91,7 @@ class tt(QWidget):
         self.label.setFont(QFont('Times', 12))
         self.label.setStyleSheet("color: red")
         self.show()
-        
-    def keyRelease(self, e):
-        self.label.setText(str( e.key() ))
+
     def eventFilter(self, obj, e):
         if e.type() == QEvent.KeyPress:
             Dialog("press")
