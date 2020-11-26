@@ -93,7 +93,7 @@ class tt(QWidget):
     def keyReleaseEvent(self, event):
         # Dialog("release qwidget")
         if not event.isAutoRepeat():
-          self.label.setText(str( self.cShortcut.matches(event.key) ))
+          self.label.setText(str( self.cShortcut.matches(event.key()) ))
           self.hide()
         
     # def keyPressEvent(self, event):
