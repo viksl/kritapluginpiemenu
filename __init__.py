@@ -93,12 +93,12 @@ class tt(QWidget):
     def keyReleaseEvent(self, event):
         # Dialog("release qwidget")
         if not event.isAutoRepeat():
-          self.label.setText("release")
+          self.label.setText(str( self.cShortcut ))
           self.hide()
         
-    def keyPressEvent(self, event):
-        # Dialog("press qwidget")
-        self.label.setText("press")
+    # def keyPressEvent(self, event):
+    #     # Dialog("press qwidget")
+    #     self.label.setText("press")
 
 def CRDTrigger(win):
   # Dialog("test trigger connect")
@@ -114,10 +114,10 @@ class CustomRadialMenuExtension(Extension):
 
   def createActions(self, window):
     self.rm = tt(window.qwindow())
-
     self.customRadialMenuAction = window.createAction("CustomRadialMenu", "Radial Menu")
-    self.customRadialMenuAction.setAutoRepeat(False)
+    self.rm.cShortcut = self.customRadialMenuAction.shortcut()
 
+    self.customRadialMenuAction.setAutoRepeat(False)
     self.customRadialMenuAction.triggered.connect(
       lambda checked, win=self.rm: CRDTrigger(win))
     # qwin = Krita.instance().activeWindow().qwindow()
