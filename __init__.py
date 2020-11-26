@@ -79,10 +79,10 @@ class tt(QWidget):
         self.height = 400
         # no window border
 #        self.setWindowFlags(self.windowFlags() | QtCore.Qt.Dialog | QtCore.Qt.FramelessWindowHint)
-        self.setWindowFlags(self.windowFlags() | QtCore.Qt.Window | QtCore.Qt.FramelessWindowHint)
-        # self.setWindowFlags(self.windowFlags() | QtCore.Qt.Window)
-        self.setAttribute(QtCore.Qt.WA_TranslucentBackground)
-        self.setStyleSheet("background: transparent;")
+        # self.setWindowFlags(self.windowFlags() | QtCore.Qt.Window | QtCore.Qt.FramelessWindowHint)
+        self.setWindowFlags(self.windowFlags() | QtCore.Qt.Window)
+        # self.setAttribute(QtCore.Qt.WA_TranslucentBackground)
+        # self.setStyleSheet("background: transparent;")
         self.setWindowTitle("RadialMenu")        
         self.setGeometry(0, 0, self.width, self.height)
         self.label = QLabel("this is a label", self)
