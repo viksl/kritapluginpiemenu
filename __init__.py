@@ -74,32 +74,33 @@ class mdiAFilter(QMdiArea):
 
 class tt(QWidget):
     def __init__(self, parent=None):
-        QWidget.__init__(self, parent)
-        self.width = 400
-        self.height = 400
-        # no window border
+      QWidget.__init__(self, parent)
+      self.width = 400
+      self.height = 400
+      # no window border
 #        self.setWindowFlags(self.windowFlags() | QtCore.Qt.Dialog | QtCore.Qt.FramelessWindowHint)
-        # self.setWindowFlags(self.windowFlags() | QtCore.Qt.Window | QtCore.Qt.FramelessWindowHint)
-        self.setWindowFlags(self.windowFlags() | QtCore.Qt.Window)
-        # self.setAttribute(QtCore.Qt.WA_TranslucentBackground)
-        # self.setStyleSheet("background: transparent;")
-        self.setWindowTitle("RadialMenu")        
-        self.setGeometry(0, 0, self.width, self.height)
-        self.label = QLabel("this is a label", self)
-        self.label.setFont(QFont('Times', 12))
-        self.label.setStyleSheet("color: red")
+      # self.setWindowFlags(self.windowFlags() | QtCore.Qt.Window | QtCore.Qt.FramelessWindowHint)
+      self.setWindowFlags(self.windowFlags() | QtCore.Qt.Window)
+      # self.setAttribute(QtCore.Qt.WA_TranslucentBackground)
+      # self.setStyleSheet("background: transparent;")
+      self.setWindowTitle("RadialMenu")        
+      self.setGeometry(0, 0, self.width, self.height)
+      self.label = QLabel("this is a label", self)
+      self.label.setFont(QFont('Times', 12))
+      self.label.setStyleSheet("color: red")
 #        self.showFullScreen()
 
     def paintEvent(self, event):
-        self.painter = QPainter(self)
-        self.painter.setBrush(QBrush(Qt.red, Qt.CrossPattern))
-        self.painter.drawEllipse(0, 0, self.width, self.height)
-
+      self.painter = QPainter(self)
+      self.painter.setBrush(QBrush(Qt.red, Qt.CrossPattern))
+      self.painter.drawEllipse(0, 0, self.width, self.height)
+      self.painter.end()
+      
     def keyReleaseEvent(self, event):
-        # Dialog("release qwidget")
-        if not event.isAutoRepeat() and self.cShortcut.matches(event.key()):
-          self.label.setText("release")
-          self.hide()
+      # Dialog("release qwidget")
+      if not event.isAutoRepeat() and self.cShortcut.matches(event.key()):
+        self.label.setText("release")
+        self.hide()
         
     # def keyPressEvent(self, event):
     #     # Dialog("press qwidget")
