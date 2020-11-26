@@ -75,8 +75,8 @@ class mdiAFilter(QMdiArea):
 class tt(QWidget):
     def __init__(self, parent=None):
         QWidget.__init__(self, parent)
-        self.width = 300
-        self.height = 300
+        self.width = 400
+        self.height = 400
         # no window border
 #        self.setWindowFlags(self.windowFlags() | QtCore.Qt.Dialog | QtCore.Qt.FramelessWindowHint)
         # self.setWindowFlags(self.windowFlags() | QtCore.Qt.Window | QtCore.Qt.FramelessWindowHint)
@@ -89,6 +89,10 @@ class tt(QWidget):
         self.label.setFont(QFont('Times', 12))
         self.label.setStyleSheet("color: red")
 #        self.showFullScreen()
+        self.painter = QPainter(self)
+        self.painter.setPen(QPen(Qt.black, 8, Qt.SolidLine))
+        self.painter.drawEllipse(self.width / 2, self.height / 2, 100, 100)
+
 
     def keyReleaseEvent(self, event):
         # Dialog("release qwidget")
