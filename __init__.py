@@ -92,8 +92,9 @@ class tt(QWidget):
 
     def keyReleaseEvent(self, event):
         # Dialog("release qwidget")
-        self.label.setText("release")
-        self.hide()
+        if not event.isAutoRepeat():
+          self.label.setText("release")
+          self.hide()
         
     def keyPressEvent(self, event):
         # Dialog("press qwidget")
