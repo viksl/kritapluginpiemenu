@@ -92,8 +92,8 @@ class tt(QWidget):
     def paintEvent(self, event):
       self.painter = QPainter(self)
       self.gradient = QRadialGradient(QPoint(self.radius / 2, self.radius / 2), self.radius)
-      self.gradient.setColorAt(0, QColor(0, 0, 0, 1))
-      self.gradient.setColorAt(0, QColor(0, 0, 0, 0))
+      self.gradient.setColorAt(0, QColor(0, 1, 0, 1))
+      self.gradient.setColorAt(0, QColor(0, 1, 0, 0))
       self.painter.setBrush(self.gradient)
       self.painter.drawRect(0, 0, self.radius, self.radius)
       self.painter.end()
