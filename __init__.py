@@ -92,7 +92,7 @@ class tt(QWidget):
         
     def keyRelease(self, e):
         self.label.setText(str( e.key() ))
-    def eventFilter(self, e):
+    def eventFilter(self, obj, e):
         if e.type() == QEvent.KeyPress:
             Dialog("press")
             self.label.setText("press")
