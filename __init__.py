@@ -72,10 +72,6 @@ class mdiAFilter(QMdiArea):
 
     return False
 
-def CRDTrigger():
-  Dialog("test trigger connect")
-  pass
-
 class tt(QWidget):
     def __init__(self, parent=None):
         QWidget.__init__(self, parent)
@@ -92,7 +88,6 @@ class tt(QWidget):
         self.label = QLabel("this is a label", self)
         self.label.setFont(QFont('Times', 12))
         self.label.setStyleSheet("color: red")
-        self.show()
 #        self.showFullScreen()
 
     def keyReleaseEvent(self, event):
@@ -103,6 +98,10 @@ class tt(QWidget):
         Dialog("press qwidget")
         self.label.setText("press")
 
+def CRDTrigger(win):
+  # Dialog("test trigger connect")
+  win.show()
+
 class CustomRadialMenuExtension(Extension):
   def __init__(self,parent):
     super(CustomRadialMenuExtension, self).__init__(parent)
@@ -111,12 +110,15 @@ class CustomRadialMenuExtension(Extension):
     pass
 
   def createActions(self, window):
+    self.rm = tt(window.qwindow())
+
     self.customRadialMenuAction = window.createAction("CustomRadialMenu", "Radial Menu")
     self.customRadialMenuAction.setAutoRepeat(False)
-    self.customRadialMenu.triggered.connect(CRDTrigger)
+
+    self.customRadialMenuAction.triggered.connect(
+      lambda checked, win=self.rm: CRDTrigger(win))
     # qwin = Krita.instance().activeWindow().qwindow()
     # self.MAFilter = mdiAFilter()
-    self.rm = tt(window.qwindow())
 
 
 Krita.instance().addExtension(CustomRadialMenuExtension(Krita.instance()))
