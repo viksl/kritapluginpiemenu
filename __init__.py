@@ -72,34 +72,36 @@ class mdiAFilter(QMdiArea):
 
     return False
 
-# def CRDTrigger():
-#   Dialog("test connect trigger")
-#   pass
+def CRDTrigger():
+  Dialog("test trigger connect")
+  pass
 
-class tt(QMdiArea):
-    def __init__(self,  parent=None):
+class tt(QWidget):
+    def __init__(self, parent=None):
         QWidget.__init__(self, parent)
-
+        self.width = 300
+        self.height = 300
         # no window border
 #        self.setWindowFlags(self.windowFlags() | QtCore.Qt.Dialog | QtCore.Qt.FramelessWindowHint)
-        self.setWindowFlags(self.windowFlags() | QtCore.Qt.Window | QtCore.Qt.FramelessWindowHint)
-        self.setAttribute(QtCore.Qt.WA_TranslucentBackground)
+        #self.setWindowFlags(self.windowFlags() | QtCore.Qt.Window | QtCore.Qt.FramelessWindowHint)
+        self.setWindowFlags(self.windowFlags() | QtCore.Qt.Window)
+#        self.setAttribute(QtCore.Qt.WA_TranslucentBackground)
         self.setStyleSheet("background: transparent;")
         self.setWindowTitle("Widget")        
-        self.setGeometry(QCursor.pos().x(), QCursor.pos().y(), 400, 300)
+        self.setGeometry(QCursor.pos().x(), QCursor.pos().y(), self.width, self.height )
         self.label = QLabel("this is a label", self)
         self.label.setFont(QFont('Times', 12))
         self.label.setStyleSheet("color: red")
         self.show()
+#        self.showFullScreen()
 
-    def eventFilter(self, obj, e):
-        if e.type() == QEvent.KeyPress:
-            Dialog("press")
-            self.label.setText("press")
-        if e.type() == QEvent.KeyRelease:
-            Dialog("release")
-            self.label.setText("release")
-        return False
+    def keyReleaseEvent(self, event):
+        Dialog("release qwidget")
+        self.label.setText("release")
+        
+    def keyPressEvent(self, event):
+        Dialog("press qwidget")
+        self.label.setText("press")
 
 class CustomRadialMenuExtension(Extension):
   def __init__(self,parent):
@@ -109,10 +111,9 @@ class CustomRadialMenuExtension(Extension):
     pass
 
   def createActions(self, window):
-    self.customRadialMenu = window.createAction("CustomRadialMenu", "Radial Menu")
-    self.customRadialMenu.setAutoRepeat(False)
-    # self.customRadialMenu.triggered.connect(CRDTrigger)
-    # self.customRadialMenu.setCheckable(True)
+    self.customRadialMenuAction = window.createAction("CustomRadialMenu", "Radial Menu")
+    self.customRadialMenuAction.setAutoRepeat(False)
+    self.customRadialMenu.triggered.connect(CRDTrigger)
     # qwin = Krita.instance().activeWindow().qwindow()
     # self.MAFilter = mdiAFilter()
     self.rm = tt(window.qwindow())
