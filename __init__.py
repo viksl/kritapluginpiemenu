@@ -75,8 +75,7 @@ class mdiAFilter(QMdiArea):
 class tt(QWidget):
     def __init__(self, parent=None):
       QWidget.__init__(self, parent)
-      self.width = 400
-      self.height = 400
+      self.radius = 400
       # no window border
 #        self.setWindowFlags(self.windowFlags() | QtCore.Qt.Dialog | QtCore.Qt.FramelessWindowHint)
       # self.setWindowFlags(self.windowFlags() | QtCore.Qt.Window | QtCore.Qt.FramelessWindowHint)
@@ -84,7 +83,7 @@ class tt(QWidget):
       # self.setAttribute(QtCore.Qt.WA_TranslucentBackground)
       # self.setStyleSheet("background: transparent;")
       self.setWindowTitle("RadialMenu")        
-      self.setGeometry(0, 0, self.width, self.height)
+      self.setGeometry(0, 0, self.radius, self.radius)
       self.label = QLabel("this is a label", self)
       self.label.setFont(QFont('Times', 12))
       self.label.setStyleSheet("color: red")
@@ -92,8 +91,11 @@ class tt(QWidget):
 
     def paintEvent(self, event):
       self.painter = QPainter(self)
-      self.painter.setBrush(QBrush(Qt.red, Qt.RadialGradientPattern))
-      self.painter.drawEllipse(0, 0, self.width, self.height)
+      self.gradient = QRadialGradient(QPoint(self.radius / 2, self.radius / 2), self.radius)
+      self.gradient.setColorAt(0, QColor(0, 0, 0, 1))
+      self.gradient.setColorAt(0, QColor(0, 0, 0, 0))
+      self.painter.setBrush(self.gradient)
+      self.painter.drawRect(0, 0, self.radius, self.radius)
       self.painter.end()
 
     def keyReleaseEvent(self, event):
