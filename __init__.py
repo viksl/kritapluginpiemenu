@@ -79,12 +79,12 @@ class tt(QWidget):
         self.height = 300
         # no window border
 #        self.setWindowFlags(self.windowFlags() | QtCore.Qt.Dialog | QtCore.Qt.FramelessWindowHint)
-        #self.setWindowFlags(self.windowFlags() | QtCore.Qt.Window | QtCore.Qt.FramelessWindowHint)
-        self.setWindowFlags(self.windowFlags() | QtCore.Qt.Window)
-#        self.setAttribute(QtCore.Qt.WA_TranslucentBackground)
+        self.setWindowFlags(self.windowFlags() | QtCore.Qt.Window | QtCore.Qt.FramelessWindowHint)
+        # self.setWindowFlags(self.windowFlags() | QtCore.Qt.Window)
+        self.setAttribute(QtCore.Qt.WA_TranslucentBackground)
         self.setStyleSheet("background: transparent;")
         self.setWindowTitle("Widget")        
-        self.setGeometry(QCursor.pos().x(), QCursor.pos().y(), self.width, self.height )
+        self.setGeometry(QCursor.pos().x(), QCursor.pos().y(), self.width, self.height)
         self.label = QLabel("this is a label", self)
         self.label.setFont(QFont('Times', 12))
         self.label.setStyleSheet("color: red")
@@ -102,7 +102,7 @@ class tt(QWidget):
 
 def CRDTrigger(win):
   # Dialog("test trigger connect")
-  win.move(QCursor.pos().x() - win.size().width(), QCursor.pos().y() - win.size().height())
+  win.move(QCursor.pos().x() - win.size().width() / 2, QCursor.pos().y() - win.size().height()  / 2)
   win.show()
 
 class CustomRadialMenuExtension(Extension):
