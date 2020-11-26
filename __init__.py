@@ -65,8 +65,12 @@ class mdiAFilter(QMdiArea):
     super().__init__(parent)
 
   def eventFilter(self, obj, e):
-    # if e.type() == QEvent.KeyPress and not e.isAutoRepeat():
-      # Dialog(str( e.isAutoRepeat() ))
+    if e.type() == QEvent.KeyPress:
+        Dialog("press")
+        self.label.setText("press")
+    if e.type() == QEvent.KeyRelease:
+        Dialog("release")
+        self.label.setText("release")
 
     return False
 
@@ -99,6 +103,7 @@ class tt(QWidget):
         if e.type() == QEvent.KeyRelease:
             Dialog("release")
             self.label.setText("release")
+        return False
 
 class CustomRadialMenuExtension(Extension):
   def __init__(self,parent):
