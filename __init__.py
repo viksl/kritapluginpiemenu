@@ -92,10 +92,10 @@ class tt(QWidget):
 
     def paintEvent(self, event):
       self.painter = QPainter(self)
-      self.painter.setBrush(QBrush(Qt.red, Qt.CrossPattern))
+      self.painter.setBrush(QBrush(Qt.red, Qt.ConicalGradientPattern))
       self.painter.drawEllipse(0, 0, self.width, self.height)
       self.painter.end()
-      
+
     def keyReleaseEvent(self, event):
       # Dialog("release qwidget")
       if not event.isAutoRepeat() and self.cShortcut.matches(event.key()):
