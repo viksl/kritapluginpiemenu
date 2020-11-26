@@ -91,15 +91,17 @@ class tt(QWidget):
 #        self.showFullScreen()
 
     def keyReleaseEvent(self, event):
-        Dialog("release qwidget")
+        # Dialog("release qwidget")
         self.label.setText("release")
+        self.hide()
         
     def keyPressEvent(self, event):
-        Dialog("press qwidget")
+        # Dialog("press qwidget")
         self.label.setText("press")
 
 def CRDTrigger(win):
   # Dialog("test trigger connect")
+  win.setPos(QCursor.pos())
   win.show()
 
 class CustomRadialMenuExtension(Extension):
