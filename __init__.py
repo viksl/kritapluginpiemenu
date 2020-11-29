@@ -41,90 +41,166 @@ timer_lock = False                                    # Locks out unnecessary us
 # Class for testing (replaces a print statement as I don't know how to print on win)
 class Dialog(QDialog):
   def __init__(self, text, parent=None):
-      super(Dialog, self).__init__(parent)
-      self.setLayout(QVBoxLayout())
-      self.label = QLabel(str(text))
-      self.layout().addWidget(self.label)
-      self.resize(200, 50)
-      self.exec_()
+    super(Dialog, self).__init__(parent)
+    self.setLayout(QVBoxLayout())
+    self.label = QLabel(str(text))
+    self.layout().addWidget(self.label)
+    self.resize(200, 50)
+    self.exec_()
 
-def dotProduct(v1, v2):
-  return v1[0] * v2[0] + v1[1] * v2[1]
-
-def determinant(v1, v2):
-  return v1[0] * v2[1] - v1[1] * v2[0]
-
-def vectorAngle(v1, v2):
-  return  math.degrees( math.atan2(determinant(v1, v2), dotProduct(v1, v2)) )
-
-def twoPointDistance(v1, v2):
-  return math.sqrt( math.pow(( v2.x() - v1.x() ), 2) + math.pow(( v2.y() - v1.y() ), 2)  )
-
-class mdiAFilter(QMdiArea):
+class win(QWidget):
   def __init__(self, parent=None):
-    super().__init__(parent)
+    QWidget.__init__(self, parent)
+    self.width = 400
+    self.height = 200
+    self.setWindowFlags(self.windowFlags() | QtCore.Qt.Window)
+    self.setWindowTitle("Print")        
+    self.setGeometry(0, 0, self.width, self.height )
+    self.label = QLabel("----", self)
+    self.label.setFont(QFont('Times', 12))
+    self.label.setStyleSheet("color: red")
+    self.label.move(10, 10)
 
-  def eventFilter(self, obj, e):
-    if e.type() == QEvent.KeyPress:
-        Dialog("press")
-    if e.type() == QEvent.KeyRelease:
-        Dialog("release")
+    self.label2 = QLabel("----", self)
+    self.label2.setFont(QFont('Times', 12))
+    self.label2.setStyleSheet("color: red")
+    self.label2.move(10, 40)        
 
-    return False
+    self.label3 = QLabel("----", self)
+    self.label3.setFont(QFont('Times', 12))
+    self.label3.setStyleSheet("color: red")
+    self.label3.move(10, 70)
 
-class tt(QWidget):
-    def __init__(self, parent=None):
-      QWidget.__init__(self, parent)
-      self.radius = 400
-      self.width = self.radius * 2
-      self.height = self.radius * 2
-      # no window border
-#        self.setWindowFlags(self.windowFlags() | QtCore.Qt.Dialog | QtCore.Qt.FramelessWindowHint)
-      # self.setWindowFlags(self.windowFlags() | QtCore.Qt.Window | QtCore.Qt.FramelessWindowHint)
-      self.setWindowFlags(self.windowFlags() | QtCore.Qt.Window)
-      # self.setAttribute(QtCore.Qt.WA_TranslucentBackground)
-      # self.setStyleSheet("background: transparent;")
-      self.setWindowTitle("RadialMenu")        
-      self.setGeometry(0, 0, self.width, self.height)
-      self.label = QLabel("this is a label", self)
-      self.label.setFont(QFont('Times', 12))
-      self.label.setStyleSheet("color: red")
-#        self.showFullScreen()
+    self.show()
 
-    def paintEvent(self, event):
-    # QPainter painter;
-    # painter.begin(&pixmap);
-    # ... draw using 'painter' ...
-    # painter.end();
-    # painter.begin(this);
-    # painter.drawPixmap(QPoint(0,0), pixmap);
-    # painter.end();
+  def p(self, txt):
+    self.label.resize(self.width, 20)
+    self.label.setText( format(txt,".2f") )
 
-      self.painter = QPainter(self)
-      self.painter.setRenderHints( QPainter.HighQualityAntialiasing )
-      self.gradient = QRadialGradient(QPoint(self.radius, self.radius), self.radius)
-      self.gradient.setColorAt(0, QColor(0, 1, 0, 1))
-      self.gradient.setColorAt(0, QColor(0, 1, 0, 0))
-      self.painter.setBrush(self.gradient)
-      self.painter.drawRect(0, 0, self.width, self.height)
-      self.painter.end()
+  def p2(self, txt):
+    self.label2.resize(self.width, 20)
+    self.label2.setText( str( txt ) )
 
+  def p3(self, txt):
+    self.label3.resize(self.width, 20)
+    self.label3.setText( str( txt ) )
+        
+class tt2(QWidget):
+  def __init__(self, parent=None):
+    QWidget.__init__(self, parent)
+    self.radius = 300
+    self.width = self.radius * 2
+    self.height = self.radius * 2
+    self.centreX = self.width / 2
+    self.centreY = self.height / 2
+    self.wheelIconOuterRadius = 30 *2
+    self.wheelIconInnerRadius = 20 *2
+    self.labelRadius = self.wheelIconInnerRadius + 100
+    self.totalSplitSections = 7
+    self.splitSectionAngle = 2 * math.pi / self.totalSplitSections
+    #        self.splitSectionOffAngle = (math.pi / 2) - self.splitSectionAngle
+    self.splitSectionOffAngle = -(math.pi / 2) - self.splitSectionAngle/2  #this one is ok
+    self.splitSectionOffAngle = 0
+    self.wheelColor = QColor(47, 47, 47, 150)
+    self.lineColor = QColor(255, 255, 255, 30)
+    self.wheelIconLineThickness = 1
+    self.baseVector = [1, 0]
+    #self.setWindowFlags(self.windowFlags() | QtCore.Qt.Window | QtCore.Qt.FramelessWindowHint)
+    self.setWindowFlags(self.windowFlags() | QtCore.Qt.Window)
+    #self.setAttribute(QtCore.Qt.WA_TranslucentBackground)
+    self.setStyleSheet("background: transparent;")
+    self.setWindowTitle("Widget")        
+    self.setGeometry(int( QCursor.pos().x() - self.width / 2 ), int( QCursor.pos().y() - self.height / 2 ), self.width, self.height )
+    self.cursorInitPosition = False
+    self.labelPaintPoint = False
+    self.distancePassed = False
+    self.w = win()
+    self.labels = [None] * self.totalSplitSections
+    self.labelMaxWidth = 150
+    #        self.showMaximized()
 
+    self.show()
+    Dialog(self.size())
 
-    def keyReleaseEvent(self, event):
-      # Dialog("release qwidget")
-      if not event.isAutoRepeat() and self.cShortcut.matches(event.key()):
-        self.label.setText("release")
-        self.hide()
-      
-    # def keyPressEvent(self, event):
-    #     # Dialog("press qwidget")
-    #     self.label.setText("press")
+    for i in range(len(self.labels)):
+      p = self.circleCoor(self.centreX, self.centreY, self.labelRadius, i * self.splitSectionAngle + self.splitSectionAngle / 2)
 
-def CRDTrigger(win):
-  # Dialog("test trigger connect")
-  win.move(QCursor.pos().x() - win.size().width() / 2, QCursor.pos().y() - win.size().height()  / 2)
-  win.show()
+      self.labels[i] = QLabel("this is a label " + str(i), self)
+      self.labels[i].setFont(QFont('Times', 12))
+      self.labels[i].setStyleSheet("color: red")
+      self.labels[i].move(p["x"] - self.labels[i].width() / 2, p["y"] - self.labels[i].height() / 2)
+      self.labels[i].show()
+
+  def dotProduct(self, v1, v2):
+    return v1[0] * v2[0] + v1[1] * v2[1]
+
+  def determinant(self, v1, v2):
+    return v1[0] * v2[1] - v1[1] * v2[0]
+
+  def vectorAngle(self, v1, v2):
+    angle = math.atan2(self.determinant(v1, v2), self.dotProduct(v1, v2))
+    if angle < 0:
+      angle += 2 * math.pi
+    return  angle
+
+  def twoPointDistance(self, v1, v2):
+    return math.sqrt( math.pow(( v2.x() - v1.x() ), 2) + math.pow(( v2.y() - v1.y() ), 2)  )
+
+  def circleCoor(self, x0, y0, r, angle):
+    return {
+        "x": x0 + r * math.cos(angle - self.splitSectionOffAngle),
+        "y": y0 + r * math.sin(angle - self.splitSectionOffAngle)
+    }
+
+  def drawWheel(self):
+    # Wheel ring
+    path = QPainterPath()
+    path.addEllipse(self.centreX - self.wheelIconOuterRadius, self.centreY - self.wheelIconOuterRadius, self.wheelIconOuterRadius * 2, self.wheelIconOuterRadius * 2)
+    path.addEllipse(self.centreX - self.wheelIconInnerRadius, self.centreY - self.wheelIconInnerRadius, self.wheelIconInnerRadius * 2, self.wheelIconInnerRadius * 2)
+    self.painter.fillPath(path, self.wheelColor)
+
+    # Split lines
+    self.painter.setPen(QPen(self.lineColor, self.wheelIconLineThickness, Qt.SolidLine))
+
+    for i in range(self.totalSplitSections):
+      p0 = self.circleCoor(self.centreX, self.centreY, self.wheelIconInnerRadius, i * self.splitSectionAngle)
+      p1 = self.circleCoor(self.centreX, self.centreY, self.wheelIconOuterRadius, i * self.splitSectionAngle)            
+      self.painter.drawLine(p0["x"], p0["y"], p1["x"], p1["y"])
+
+  def paintEvent(self, event):
+    self.painter = QPainter(self)
+    self.painter.setRenderHints( QPainter.HighQualityAntialiasing )
+    self.drawWheel()
+    self.painter.end()
+                    
+  def eventFilter(self, source, event):
+    if event.type() == QtCore.QEvent.MouseMove:
+      self.w.p3("cursor X: " + str(QCursor.pos().x()) + " Y:" +  str(QCursor.pos().y()))
+
+      for i in range(0, self.totalSplitSections):
+        self.labels[i-1].setStyleSheet("color: red")            
+
+      if (not self.cursorInitPosition):
+        self.cursorInitPosition = QCursor.pos()
+
+      distance = self.twoPointDistance(self.cursorInitPosition, QCursor.pos())
+
+      if distance > 10:
+        v1 = [self.baseVector[0], self.baseVector[1]]
+        v2 = [QCursor.pos().x() - self.cursorInitPosition.x(), QCursor.pos().y() - self.cursorInitPosition.y()]
+        angle = self.vectorAngle(v1, v2)
+
+        self.w.p(math.degrees(angle))
+
+        for i in range(0, self.totalSplitSections):
+          if i * self.splitSectionAngle < angle - self.splitSectionOffAngle and angle - self.splitSectionOffAngle <=  (i + 1) * self.splitSectionAngle:
+            self.w.p2("i: " + str(i) + ", " + str(math.degrees(i * self.splitSectionAngle)) + ", " + str(math.degrees((i + 1) * self.splitSectionAngle)))
+
+            self.labels[i].setStyleSheet("color: green")
+            self.w.p2(str(i))
+
+            break
+    return super(tt2, self).eventFilter(source, event)
 
 class CustomRadialMenuExtension(Extension):
   def __init__(self,parent):
@@ -139,8 +215,8 @@ class CustomRadialMenuExtension(Extension):
     self.rm.cShortcut = self.customRadialMenuAction.shortcut()
 
     self.customRadialMenuAction.setAutoRepeat(False)
-    self.customRadialMenuAction.triggered.connect(
-      lambda checked, win=self.rm: CRDTrigger(win))
+#    self.customRadialMenuAction.triggered.connect(
+#      lambda checked, win=self.rm: CRDTrigger(win))
     # qwin = Krita.instance().activeWindow().qwindow()
     # self.MAFilter = mdiAFilter()
 
