@@ -61,8 +61,9 @@ class win(QWidget):
         self.label4.setText( str( txt ) )
                 
 class tt2(QWidget):
-    def __init__(self, parent=None):
+    def __init__(self, cursoPosition=False, parent=None):
         QWidget.__init__(self, parent)
+        self.cursorInitPosition = cursoPosition
         self.radius = 300
         self.desktop = QApplication.desktop()
 #        self.screenRect = self.desktop.screenGeometry()
@@ -92,7 +93,6 @@ class tt2(QWidget):
         self.setWindowTitle("Widget")        
         #self.setGeometry(0, 0, int(self.screenWidth), int(self.screenHeight))
         self.setGeometry(0, 0, self.screenWidth, self.screenHeight)
-        self.cursorInitPosition = False
         self.labelPaintPoint = False
         self.distancePassed = False
         self.w = win()
@@ -104,13 +104,7 @@ class tt2(QWidget):
         self.initLabels()
                 
         self.w.p4(str( self.screenWidth ) + " x " + str( self.screenHeight ))
-        
-        self.setMouseTracking(True)
-        self.installEventFilter(self)
-        self.show()
 
-
-    def initLabels(self):
         for i in range(len(self.labels)):
             p = self.circleCoor(self.cursorInitPosition.x(), self.cursorInitPosition.y(), self.labelRadius, i * self.splitSectionAngle + self.splitSectionAngle / 2)
             
@@ -119,6 +113,10 @@ class tt2(QWidget):
             self.labels[i].setStyleSheet("color: red")
             self.labels[i].move(int(p["x"] - self.labels[i].width() / 2), int(p["y"] - self.labels[i].height() / 2))
             self.labels[i].show()
+        
+        self.setMouseTracking(True)
+        self.installEventFilter(self)
+        self.show()
 
     def dotProduct(self, v1, v2):
         return v1[0] * v2[0] + v1[1] * v2[1]
@@ -146,16 +144,16 @@ class tt2(QWidget):
         path = QPainterPath()
 #        path.addEllipse(self.centreX - self.wheelIconOuterRadius, self.centreY - self.wheelIconOuterRadius, self.wheelIconOuterRadius * 2, self.wheelIconOuterRadius * 2)
 #        path.addEllipse(self.centreX - self.wheelIconInnerRadius, self.centreY - self.wheelIconInnerRadius, self.wheelIconInnerRadius * 2, self.wheelIconInnerRadius * 2)
-        path.addEllipse(self.cursorInitPositionPosition.x() - self.wheelIconOuterRadius, self.cursorInitPositionPosition.y() - self.wheelIconOuterRadius, self.wheelIconOuterRadius * 2, self.wheelIconOuterRadius * 2)
-        path.addEllipse(self.cursorInitPositionPosition.x() - self.wheelIconInnerRadius, self.cursorInitPositionPosition.y() - self.wheelIconInnerRadius, self.wheelIconInnerRadius * 2, self.wheelIconInnerRadius * 2)
+        path.addEllipse(self.cursorInitPosition.x() - self.wheelIconOuterRadius, self.cursorInitPosition.y() - self.wheelIconOuterRadius, self.wheelIconOuterRadius * 2, self.wheelIconOuterRadius * 2)
+        path.addEllipse(self.cursorInitPosition.x() - self.wheelIconInnerRadius, self.cursorInitPosition.y() - self.wheelIconInnerRadius, self.wheelIconInnerRadius * 2, self.wheelIconInnerRadius * 2)
         self.painter.fillPath(path, self.wheelColor)
         
         # Split lines
         self.painter.setPen(QPen(self.lineColor, self.wheelIconLineThickness, Qt.SolidLine))
         
         for i in range(self.totalSplitSections):
-            p0 = self.circleCoor(self.cursorInitPositionPosition.x(), self.cursorInitPositionPosition.y(), self.wheelIconInnerRadius, i * self.splitSectionAngle)
-            p1 = self.circleCoor(self.cursorInitPositionPosition.x(), self.cursorInitPositionPosition.y(), self.wheelIconOuterRadius, i * self.splitSectionAngle)            
+            p0 = self.circleCoor(self.cursorInitPosition.x(), self.cursorInitPosition.y(), self.wheelIconInnerRadius, i * self.splitSectionAngle)
+            p1 = self.circleCoor(self.cursorInitPosition.x(), self.cursorInitPosition.y(), self.wheelIconOuterRadius, i * self.splitSectionAngle)            
             self.painter.drawLine(p0["x"], p0["y"], p1["x"], p1["y"])
 
     def paintEvent(self, event):
@@ -190,7 +188,7 @@ class tt2(QWidget):
                     if i * self.splitSectionAngle < angle - self.splitSectionOffAngle and angle - self.splitSectionOffAngle <=  (i + 1) * self.splitSectionAngle:
                         self.w.p2("i: " + str(i) + ", " + str(math.degrees(i * self.splitSectionAngle)) + ", " + str(math.degrees((i + 1) * self.splitSectionAngle)))
                         
-                        self.labels.currentlySelectedOption.setStyleSheet(self.labelBaseColor)
+                        self.labels[self.currentlySelectedOption].setStyleSheet(self.labelBaseColor)
                         self.labels[i].setStyleSheet(self.labelHighlightColor)
                         self.currentlySelectedOption = i
                         self.w.p2(str(i))
@@ -198,6 +196,4 @@ class tt2(QWidget):
                         
         return super(tt2, self).eventFilter(source, event)
 
-window = tt2(qwin)
-window.cursorInitPosition = QCursor.pos()
-window.initLabels()
+window = tt2(QCursor.pos(), qwin)
