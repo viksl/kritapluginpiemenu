@@ -16,7 +16,7 @@ class Dialog(QDialog):
 
 class win(QWidget):
     def __init__(self, parent=None):
-        QWidget.__init__(self, parent)
+        super(QWidget, self).__init__(parent)
         self.width = 400
         self.height = 200
         self.setWindowFlags(self.windowFlags() | QtCore.Qt.Window)
@@ -69,9 +69,30 @@ class win(QWidget):
         self.label5.resize(self.width, 20)
         self.label5.setText( str( txt ) )
 
-class tt2(QWidget):
+class mdiArea(QMdiArea):
+    def __init__(self, eventObj=None, parent=None):
+        super().__init__(parent)
+        self.w = win()
+        self.installEventFilter(self)
+        self.setMouseTracking(True)
+        self.counter = 0
+        self.eventObj = eventObj
+
+    def eventFilter(self, source, event):
+        if event.type() == QtCore.QEvent.MouseButtonPress:
+            self.w.p2("press ")
+            self.eventObj.eventHandler(event)
+        if event.type() == QtCore.QEvent.MouseMove:
+            self.counter += 1
+            self.w.p3("move" + str(self.counter))
+            self.eventObj.eventHandler(event)
+            
+        return super(mdiArea, self).eventFilter(source, event)
+    
+class PieMenu(QWidget):
     def __init__(self, cursoPosition=False, parent=None):
         QWidget.__init__(self, parent)
+
         self.cursorInitPosition = cursoPosition
         self.radius = 300
         self.desktop = QApplication.desktop()
@@ -111,7 +132,7 @@ class tt2(QWidget):
         self.labelMaxWidth = 150
         self.labelBaseColor = "color: red"
         self.labelHighlightColor = "color: green"
-                
+        
         self.w.p4(str( self.screenWidth ) + " x " + str( self.screenHeight ))
 
         for i in range(len(self.labels["children"])):
@@ -122,9 +143,10 @@ class tt2(QWidget):
             self.labels["children"][i].setStyleSheet("color: red")
             self.labels["children"][i].move(int(p["x"] - self.labels["children"][i].width() / 2), int(p["y"] - self.labels["children"][i].height() / 2))
             self.labels["children"][i].show()
-        
-        self.setMouseTracking(True)
-        self.installEventFilter(self)
+
+        self.eventController = mdiArea(self, parent)
+        #self.setMouseTracking(True)
+        #self.installEventFilter(self)
         self.show()
 
     def dotProduct(self, v1, v2):
@@ -170,8 +192,8 @@ class tt2(QWidget):
         self.painter.setRenderHints( QPainter.HighQualityAntialiasing )
         self.drawWheel()
         self.painter.end()
-                    
-    def eventFilter(self, source, event):        
+
+    def eventHandler(self, event):        
         if event.type() == QtCore.QEvent.MouseButtonPress:
             self.close()
         
@@ -196,13 +218,11 @@ class tt2(QWidget):
                 for i in range(0, self.totalSplitSections):
                     if i * self.splitSectionAngle < angle - self.splitSectionOffAngle and angle - self.splitSectionOffAngle <=  (i + 1) * self.splitSectionAngle:
                         self.w.p2("i: " + str(i) + ", " + str(math.degrees(i * self.splitSectionAngle)) + ", " + str(math.degrees((i + 1) * self.splitSectionAngle)))
-                        
+
+                        self.labels["children"][self.labels["activeLabel"]].setStyleSheet(self.labelBaseColor)                        
                         self.labels["children"][i].setStyleSheet(self.labelHighlightColor)
-                        self.labels["children"][self.labels["activeLabel"]].setStyleSheet(self.labelBaseColor)
                         self.labels["activeLabel"] = i
                         self.w.p2(str(i))
                         break
-                        
-        return super(tt2, self).eventFilter(source, event)
 
-window = tt2(QCursor.pos(), qwin)
+window = PieMenu(QCursor.pos(), qwin)
