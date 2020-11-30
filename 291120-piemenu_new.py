@@ -197,9 +197,9 @@ class tt2(QWidget):
                     if i * self.splitSectionAngle < angle - self.splitSectionOffAngle and angle - self.splitSectionOffAngle <=  (i + 1) * self.splitSectionAngle:
                         self.w.p2("i: " + str(i) + ", " + str(math.degrees(i * self.splitSectionAngle)) + ", " + str(math.degrees((i + 1) * self.splitSectionAngle)))
                         
-                        self.labels["children"][self.labels.activeLabel].setStyleSheet(self.labelBaseColor)
                         self.labels["children"][i].setStyleSheet(self.labelHighlightColor)
-                        self["currentlySelectedOption"] = i
+                        self.labels["children"][self.labels["activeLabel"]].setStyleSheet(self.labelBaseColor)
+                        self.labels["activeLabel"] = i
                         self.w.p2(str(i))
                         break
                         
