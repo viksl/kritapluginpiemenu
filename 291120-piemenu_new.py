@@ -61,7 +61,7 @@ class win(QWidget):
         self.label4.setText( str( txt ) )
                 
 class tt2(QWidget):
-    def __init__(self, cursorPosition, parent=None):
+    def __init__(self, parent=None):
         QWidget.__init__(self, parent)
         self.radius = 300
         self.desktop = QApplication.desktop()
@@ -92,7 +92,7 @@ class tt2(QWidget):
         self.setWindowTitle("Widget")        
         #self.setGeometry(0, 0, int(self.screenWidth), int(self.screenHeight))
         self.setGeometry(0, 0, self.screenWidth, self.screenHeight)
-        self.cursorInitPosition = cursorPosition
+        self.cursorInitPosition = False
         self.labelPaintPoint = False
         self.distancePassed = False
         self.w = win()
@@ -198,6 +198,6 @@ class tt2(QWidget):
                         
         return super(tt2, self).eventFilter(source, event)
 
-window = tt2(qwin, QCursor.pos())
-# window.cursorInitPosition = QCursor.pos()
+window = tt2(qwin)
+window.cursorInitPosition = QCursor.pos()
 window.initLabels()
