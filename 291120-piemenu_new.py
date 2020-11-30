@@ -41,6 +41,11 @@ class win(QWidget):
         self.label4.setFont(QFont('Times', 12))
         self.label4.setStyleSheet("color: red")
         self.label4.move(10, 100)
+
+        self.label5 = QLabel("----", self)
+        self.label5.setFont(QFont('Times', 12))
+        self.label5.setStyleSheet("color: red")
+        self.label5.move(10, 130)
         
         self.show()
 
@@ -59,7 +64,11 @@ class win(QWidget):
     def p4(self, txt):
         self.label4.resize(self.width, 20)
         self.label4.setText( str( txt ) )
-                
+
+    def p5(self, txt):
+        self.label5.resize(self.width, 20)
+        self.label5.setText( str( txt ) )
+
 class tt2(QWidget):
     def __init__(self, cursoPosition=False, parent=None):
         QWidget.__init__(self, parent)
@@ -86,33 +95,33 @@ class tt2(QWidget):
         self.lineColor = QColor(255, 255, 255, 30)
         self.wheelIconLineThickness = 1
         self.baseVector = [1, 0]
-        #self.setWindowFlags(self.windowFlags() | QtCore.Qt.Window | QtCore.Qt.FramelessWindowHint)
-        #self.setAttribute(QtCore.Qt.WA_TranslucentBackground)
-        self.setWindowFlags(self.windowFlags() | QtCore.Qt.Window)
+        self.setWindowFlags(self.windowFlags() | QtCore.Qt.Window | QtCore.Qt.FramelessWindowHint)
+        self.setAttribute(QtCore.Qt.WA_TranslucentBackground)
+        #self.setWindowFlags(self.windowFlags() | QtCore.Qt.Window)
         self.setStyleSheet("background: transparent;")
-        self.setWindowTitle("Widget")        
-        #self.setGeometry(0, 0, int(self.screenWidth), int(self.screenHeight))
+        self.setWindowTitle("Quick Access Pie Menu")        
         self.setGeometry(0, 0, self.screenWidth, self.screenHeight)
         self.labelPaintPoint = False
         self.distancePassed = False
         self.w = win()
-        self.labels = [None] * self.totalSplitSections
+        self.labels = {
+            "children": [None] * self.totalSplitSections,
+            "activeLabel": 0
+       }
         self.labelMaxWidth = 150
-        self.currentlySelectedOption = 0
         self.labelBaseColor = "color: red"
         self.labelHighlightColor = "color: green"
-        self.initLabels()
                 
         self.w.p4(str( self.screenWidth ) + " x " + str( self.screenHeight ))
 
-        for i in range(len(self.labels)):
+        for i in range(len(self.labels["children"])):
             p = self.circleCoor(self.cursorInitPosition.x(), self.cursorInitPosition.y(), self.labelRadius, i * self.splitSectionAngle + self.splitSectionAngle / 2)
             
-            self.labels[i] = QLabel("this is a label " + str(i), self)
-            self.labels[i].setFont(QFont('Times', 12))
-            self.labels[i].setStyleSheet("color: red")
-            self.labels[i].move(int(p["x"] - self.labels[i].width() / 2), int(p["y"] - self.labels[i].height() / 2))
-            self.labels[i].show()
+            self.labels["children"][i] = QLabel("this is a label " + str(i), self)
+            self.labels["children"][i].setFont(QFont('Times', 12))
+            self.labels["children"][i].setStyleSheet("color: red")
+            self.labels["children"][i].move(int(p["x"] - self.labels["children"][i].width() / 2), int(p["y"] - self.labels["children"][i].height() / 2))
+            self.labels["children"][i].show()
         
         self.setMouseTracking(True)
         self.installEventFilter(self)
@@ -163,14 +172,14 @@ class tt2(QWidget):
         self.painter.end()
                     
     def eventFilter(self, source, event):        
-        #if event.type() == QtCore.QEvent.MouseButtonPress:
-            #self.hide()
+        if event.type() == QtCore.QEvent.MouseButtonPress:
+            self.close()
         
         if event.type() == QtCore.QEvent.MouseMove:
             self.w.p3("cursor X: " + str(QCursor.pos().x()) + " Y:" +  str(QCursor.pos().y()))
 
             for i in range(0, self.totalSplitSections):
-                self.labels[i].setStyleSheet("color: red")            
+                self.labels["children"][i].setStyleSheet("color: red")            
             
             if (not self.cursorInitPosition):
                 self.cursorInitPosition = QCursor.pos()
@@ -188,9 +197,9 @@ class tt2(QWidget):
                     if i * self.splitSectionAngle < angle - self.splitSectionOffAngle and angle - self.splitSectionOffAngle <=  (i + 1) * self.splitSectionAngle:
                         self.w.p2("i: " + str(i) + ", " + str(math.degrees(i * self.splitSectionAngle)) + ", " + str(math.degrees((i + 1) * self.splitSectionAngle)))
                         
-                        self.labels[self.currentlySelectedOption].setStyleSheet(self.labelBaseColor)
-                        self.labels[i].setStyleSheet(self.labelHighlightColor)
-                        self.currentlySelectedOption = i
+                        self.labels["children"][self.labels.activeLabel].setStyleSheet(self.labelBaseColor)
+                        self.labels["children"][i].setStyleSheet(self.labelHighlightColor)
+                        self["currentlySelectedOption"] = i
                         self.w.p2(str(i))
                         break
                         
