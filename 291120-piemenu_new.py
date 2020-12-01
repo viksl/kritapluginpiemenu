@@ -18,11 +18,11 @@ class Dialog(QDialog):
 class win(QWidget):
     def __init__(self, parent=None):
         super(QWidget, self).__init__(parent)
-        self.width = 400
+        self.width = 900
         self.height = 200
         self.setWindowFlags(self.windowFlags() | QtCore.Qt.Window)
-        self.setWindowTitle("Print")        
-        self.setGeometry(0, 0, self.width, self.height )
+        self.setWindowTitle("Print")
+        self.setGeometry(0, 0, self.width, self.height)
         self.label = QLabel("----", self)
         self.label.setFont(QFont('Times', 12))
         self.label.setStyleSheet("color: red")
@@ -31,7 +31,7 @@ class win(QWidget):
         self.label2 = QLabel("----", self)
         self.label2.setFont(QFont('Times', 12))
         self.label2.setStyleSheet("color: red")
-        self.label2.move(10, 40)        
+        self.label2.move(10, 40)
 
         self.label3 = QLabel("----", self)
         self.label3.setFont(QFont('Times', 12))
@@ -172,6 +172,7 @@ class PieMenu(QWidget):
         self.totalSplitSections = len(self.menuSections)
         self.splitSectionAngle = 2 * math.pi / self.totalSplitSections
         self.splitSectionOffAngle = -(math.pi / 2) - self.splitSectionAngle/2 
+        #self.splitSectionOffAngle = 0
         self.labels = {
             "children": [None] * self.totalSplitSections,
             "activeLabel": 0
@@ -252,23 +253,27 @@ class PieMenu(QWidget):
                 self.cursorInitPosition = QCursor.pos()
 
             distance = self.twoPointDistance(self.cursorInitPosition, QCursor.pos())
-
+            
             if distance > self.wheelIconInnerRadius:
                 v1 = [self.baseVector[0], self.baseVector[1]]
                 v2 = [QCursor.pos().x() - self.cursorInitPosition.x(), QCursor.pos().y() - self.cursorInitPosition.y()]
                 angle = self.vectorAngle(v1, v2)
-
-                self.w.p(math.degrees(angle))                
+                
+                self.w.p(math.degrees(angle))
 
                 for i in range(0, self.totalSplitSections):
                     #self.w.p2(str( angle - self.splitSectionOffAngle ) + " i: " + str(i) + ", " + str(math.degrees(i * self.splitSectionAngle)) + ", " + str(math.degrees((i + 1) * self.splitSectionAngle)))
-                    if i * self.splitSectionAngle < angle - self.splitSectionOffAngle and angle - self.splitSectionOffAngle <=  (i + 1) * self.splitSectionAngle:
-                        self.w.p2("i: " + str(i) + ", " + str(math.degrees(i * self.splitSectionAngle)) + ", " + str(math.degrees((i + 1) * self.splitSectionAngle)))
-
+                    #if i * self.splitSectionAngle < angle - self.splitSectionOffAngle and angle - self.splitSectionOffAngle <=  (i + 1) * self.splitSectionAngle:
+                    if i == 6:
+                        if angle <=  ( (i + 1) * self.splitSectionAngle - self.splitSectionOffAngle ):
+                            self.w.p2("i: " + str(i) +  " angle: " + str(angle) + ", angle > con1: " + str(i * self.splitSectionAngle - self.splitSectionOffAngle) + ", angle <= con2: " + str((i + 1) * self.splitSectionAngle - self.splitSectionOffAngle))
+                    if ( angle > ( i * self.splitSectionAngle - self.splitSectionOffAngle ) % (2 * math.pi) ) and
+                        ( angle <=  (i + 1) * self.splitSectionAngle - self.splitSectionOffAngle ):
+                            
                         self.labels["children"][self.labels["activeLabel"]].setStyleSheet(self.labelStyleBase) 
                         self.labels["children"][i].setStyleSheet(self.labelStyleActive)
                         self.labels["activeLabel"] = i
                         break
-
+#####
 #window = PieMenu(QCursor.pos(), qwin)
 menus = MenuArea(QCursor.pos(), qwin)
