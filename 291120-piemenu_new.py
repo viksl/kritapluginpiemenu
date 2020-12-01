@@ -81,9 +81,7 @@ class MenuArea(QObject):
                                        {"name": "aaaaaaa3", "isSubmenu": False, "ref": None},
                                        {"name": "aaaaaa4", "isSubmenu": False, "ref": None},
                                        {"name": "a5", "isSubmenu": False, "ref": None},
-                                       {"name": "a6", "isSubmenu": False, "ref": None},
-                                       {"name": "a7", "isSubmenu": False, "ref": None},
-                                       {"name": "a7", "isSubmenu": False, "ref": None},
+                                       {"name": "a6", "isSubmenu": False, "ref": None}
                            ]     
                        },
                       {
@@ -109,8 +107,7 @@ class MenuArea(QObject):
     def initNewMenu(self):
         index = self.menu.labels["activeLabel"]
         p = self.menu.getLabelPositionAt(index)
-        self.menu.initNewMenuAt(self, self.menus[self.menus[index]["ref"]]["sections"], QPoint(p["x"], p["y"]))
-        pass
+        self.menu.initNewMenuAt(self, self.menus[self.menus[0]["sections"][index]["ref"]]["sections"] , QPoint(p["x"], p["y"]))
 
 #Handles events mouse move + mouse press and sends it where needed (TODO: key release)
 class EventController(QMdiArea):
@@ -241,9 +238,9 @@ class PieMenu(QWidget):
 
     def eventHandler(self, event):        
         if event.type() == QtCore.QEvent.MouseButtonPress:
-            self.close()
-            #if self.menuSections[self.labels["activeLabel"]]["isSubmenu"]:
-                #self.initNewMenuSignal.emit()
+            #self.close()
+            if self.menuSections[self.labels["activeLabel"]]["isSubmenu"]:
+                self.initNewMenuSignal.emit()
         
         if event.type() == QtCore.QEvent.MouseMove:
             self.w.p3("cursor X: " + str(QCursor.pos().x()) + " Y:" +  str(QCursor.pos().y()))
