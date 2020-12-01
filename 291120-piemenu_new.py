@@ -83,6 +83,7 @@ class MenuArea(QObject):
                                        {"name": "a5", "isSubmenu": False, "ref": None},
                                        {"name": "a6", "isSubmenu": False, "ref": None},
                                        {"name": "a7", "isSubmenu": False, "ref": None},
+                                       {"name": "a7", "isSubmenu": False, "ref": None},
                            ]     
                        },
                       {
@@ -172,14 +173,12 @@ class PieMenu(QWidget):
         self.totalSplitSections = len(self.menuSections)
         self.splitSectionAngle = 2 * math.pi / self.totalSplitSections
         self.splitSectionOffAngle = -(math.pi / 2) - self.splitSectionAngle/2 
-        #self.splitSectionOffAngle = 0
+
         self.labels = {
             "children": [None] * self.totalSplitSections,
             "activeLabel": 0
         }
-        self.w2 = win()
-        self.w2.p2(str(self.splitSectionOffAngle))
-        self.w2.move(500, 40)
+
         for i in range(len(self.labels["children"])):
             p = self.circleCoor(self.cursorInitPosition.x(), self.cursorInitPosition.y(), self.labelRadius, i * self.splitSectionAngle + self.splitSectionAngle / 2)
     
@@ -269,7 +268,7 @@ class PieMenu(QWidget):
                         self.labels["children"][self.labels["activeLabel"]].setStyleSheet(self.labelStyleBase) 
                         self.labels["children"][i].setStyleSheet(self.labelStyleActive)
                         self.labels["activeLabel"] = i
-                        #break
+                        break
 #####
 #window = PieMenu(QCursor.pos(), qwin)
 menus = MenuArea(QCursor.pos(), qwin)
