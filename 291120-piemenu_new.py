@@ -262,18 +262,14 @@ class PieMenu(QWidget):
                 self.w.p(math.degrees(angle))
 
                 for i in range(0, self.totalSplitSections):
-                    #self.w.p2(str( angle - self.splitSectionOffAngle ) + " i: " + str(i) + ", " + str(math.degrees(i * self.splitSectionAngle)) + ", " + str(math.degrees((i + 1) * self.splitSectionAngle)))
-                    #if i * self.splitSectionAngle < angle - self.splitSectionOffAngle and angle - self.splitSectionOffAngle <=  (i + 1) * self.splitSectionAngle:
-                    if i == 6:
-                        if angle <=  ( (i + 1) * self.splitSectionAngle - self.splitSectionOffAngle ):
-                            self.w.p2("i: " + str(i) +  " angle: " + str(angle) + ", angle > con1: " + str(i * self.splitSectionAngle - self.splitSectionOffAngle) + ", angle <= con2: " + str((i + 1) * self.splitSectionAngle - self.splitSectionOffAngle))
-                    if ( angle > ( i * self.splitSectionAngle - self.splitSectionOffAngle ) % (2 * math.pi) ) and
-                        ( angle <=  (i + 1) * self.splitSectionAngle - self.splitSectionOffAngle ):
-                            
+                    self.w.p2("i: " + str(i) +  " angle: " + str(angle) + ", angle > con1: " + str(i * self.splitSectionAngle - self.splitSectionOffAngle) + ", angle <= con2: " + str((i + 1) * self.splitSectionAngle - self.splitSectionOffAngle))
+                    if ((angle + self.splitSectionOffAngle) % (2*math.pi) > i * self.splitSectionAngle and
+                        (angle + self.splitSectionOffAngle) % (2*math.pi) <=  (i + 1) * self.splitSectionAngle):
+
                         self.labels["children"][self.labels["activeLabel"]].setStyleSheet(self.labelStyleBase) 
                         self.labels["children"][i].setStyleSheet(self.labelStyleActive)
                         self.labels["activeLabel"] = i
-                        break
+                        #break
 #####
 #window = PieMenu(QCursor.pos(), qwin)
 menus = MenuArea(QCursor.pos(), qwin)
