@@ -107,7 +107,7 @@ class MenuArea(QObject):
     def initNewMenu(self):
         index = self.menu.labels["activeLabel"]
         p = self.menu.getLabelPositionAt(index)
-        self.menu.initNewMenuAt(self, self.menus[self.menus[0]["sections"][index]["ref"]]["sections"] , QPoint(p["x"], p["y"]))
+        self.menu.initNewMenuAt(self.menus[self.menus[0]["sections"][index]["ref"]]["sections"] , QPoint(p["x"], p["y"]))
 
 #Handles events mouse move + mouse press and sends it where needed (TODO: key release)
 class EventController(QMdiArea):
@@ -133,31 +133,34 @@ class PieMenu(QWidget):
         QWidget.__init__(self, parent)
 
         self.setGeometry(0, 0, screenWidth, screenHeight)
+        self.setWindowFlags(self.windowFlags() | QtCore.Qt.Window | QtCore.Qt.FramelessWindowHint)
+        self.setAttribute(QtCore.Qt.WA_TranslucentBackground)
+        self.setStyleSheet("background: transparent;")
+        self.setWindowTitle("Quick Access Pie Menu")        
         self.radius = 300
         self.width = int(self.radius * 2)
         self.height = int(self.radius * 2)
         self.halfWidth = int(self.width / 2)
         self.halfHeight = int(self.height / 2)
+
         self.wheelIconOuterRadius = 22 *2
         self.wheelIconInnerRadius = 13 *2
-        self.labelRadius = self.wheelIconInnerRadius + 180
-
-        self.splitSectionOffAngle = 0
         self.wheelColor = QColor(47, 47, 47, 200)
         self.lineColor = QColor(255, 255, 255, 30)
         self.wheelIconLineThickness = 1
+        
+        self.labelRadius = self.wheelIconInnerRadius + 180
+
         self.baseVector = [1, 0]
-        self.setWindowFlags(self.windowFlags() | QtCore.Qt.Window | QtCore.Qt.FramelessWindowHint)
-        self.setAttribute(QtCore.Qt.WA_TranslucentBackground)
-        self.setStyleSheet("background: transparent;")
-        self.setWindowTitle("Quick Access Pie Menu")        
+
         self.labelPaintPoint = False
         self.distancePassed = False
         self.labelBaseColor = "rgba(47, 47, 47, 200)"
         self.labelActiveColor = "rgba(30, 30, 30, 250)"
-        self.labelHighlightColor = "green"    
+        self.labelHighlightColor = "green"
         self.labelStyleBase = "background-color:" + self.labelBaseColor + "; color: white;"
         self.labelStyleActive = "background-color:" + self.labelActiveColor + "; color: white;"
+
         self.initNewMenuAt(menuSections, cursorPosition)
 
         self.w = win()
@@ -170,6 +173,11 @@ class PieMenu(QWidget):
         self.totalSplitSections = len(self.menuSections)
         self.splitSectionAngle = 2 * math.pi / self.totalSplitSections
         self.splitSectionOffAngle = -(math.pi / 2) - self.splitSectionAngle/2 
+
+        if hasattr(self, "labels") and len(self.labels["children"]) > 0:
+            for label in self.labels["children"]:
+                label.hide()
+                label.deleteLater()
 
         self.labels = {
             "children": [None] * self.totalSplitSections,
