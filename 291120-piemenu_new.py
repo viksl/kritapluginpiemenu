@@ -181,7 +181,7 @@ class PieMenu(QWidget):
 
         self.labels = {
             "children": [None] * self.totalSplitSections,
-            "activeLabel": 0
+            "activeLabel": None
         }
 
         for i in range(len(self.labels["children"])):
@@ -270,7 +270,8 @@ class PieMenu(QWidget):
                     if ((angle + self.splitSectionOffAngle) % (2*math.pi) > i * self.splitSectionAngle and
                         (angle + self.splitSectionOffAngle) % (2*math.pi) <=  (i + 1) * self.splitSectionAngle):
 
-                        self.labels["children"][self.labels["activeLabel"]].setStyleSheet(self.labelStyleBase) 
+                        if not (self.labels["activeLabel"] is None):
+                            self.labels["children"][self.labels["activeLabel"]].setStyleSheet(self.labelStyleBase) 
                         self.labels["children"][i].setStyleSheet(self.labelStyleActive)
                         self.labels["activeLabel"] = i
                         break
