@@ -73,41 +73,44 @@ class win(QWidget):
 class MenuArea(QObject):
     def __init__(self, cursorPosition, qWin, parent=None):
         super().__init__(parent)
-        self.menus = [
-                      {
-                           "sections": [
-                                       {"name": "aaaaaaaaa aaaaaaa1", "isSubmenu": False, "ref": None},
-                                       {"name": "aaaaaaaaaaaaaaaaa2", "isSubmenu": True, "ref": 1},
-                                       {"name": "aaaaaaa3", "isSubmenu": False, "ref": None},
-                                       {"name": "aaaaaa4", "isSubmenu": False, "ref": None},
-                                       {"name": "a5", "isSubmenu": False, "ref": None},
-                                       {"name": "a6", "isSubmenu": False, "ref": None}
-                           ]     
-                       },
-                      {
-                           "sections": [
-                                       {"name": "b1", "isSubmenu": False, "ref": None},
-                                       {"name": "b2", "isSubmenu": False, "ref": None},
-                                       {"name": "b3", "isSubmenu": False, "ref": None},
-                                       {"name": "b4", "isSubmenu": False, "ref": None},
-                                       {"name": "b5", "isSubmenu": False, "ref": None},
-                                       {"name": "b6", "isSubmenu": False, "ref": None},
-                                       {"name": "b7", "isSubmenu": False, "ref": None},
-                           ]     
-                       },
-        ]
+        self.menus = {
+            "menu": {
+                "sections": [
+                    {"name": "aaaaaaaaa aaaaaaa1", "isSubmenu": False, "ref": None},
+                    {"name": "aaaaaaaaaaaaaaaaa2", "isSubmenu": True, "ref": "s1"},
+                    {"name": "aaaaaaa3", "isSubmenu": False, "ref": None},
+                    {"name": "aaaaaa4", "isSubmenu": False, "ref": None},
+                    {"name": "a5", "isSubmenu": False, "ref": None},
+                    {"name": "a6", "isSubmenu": False, "ref": None}
+                ]     
+            },
+            "submenus": {
+                "s1": {
+                    "sections": [
+                        {"name": "b1", "isSubmenu": False, "ref": None},
+                        {"name": "b2", "isSubmenu": False, "ref": None},
+                        {"name": "b3", "isSubmenu": False, "ref": None},
+                        {"name": "b4", "isSubmenu": False, "ref": None},
+                        {"name": "b5", "isSubmenu": False, "ref": None},
+                        {"name": "b6", "isSubmenu": False, "ref": None},
+                        {"name": "b7", "isSubmenu": False, "ref": None},
+                    ]
+                }
+            }
+        }
 
         self.screenWidth = QApplication.desktop().screenGeometry().width()
         self.screenHeight = QApplication.desktop().screenGeometry().height()
         
-        self.menu = PieMenu(QCursor.pos(), self.screenWidth, self.screenHeight, self.menus[0]["sections"], qWin)
+        self.menu = PieMenu(QCursor.pos(), self.screenWidth, self.screenHeight, self.menus["menu"]["sections"], qWin)
         self.menu.initNewMenuSignal.connect(self.initNewMenu)
         self.eventController = EventController(self.menu, qWin)
         
     def initNewMenu(self):
         index = self.menu.labels["activeLabel"]
         p = self.menu.getLabelPositionAt(index)
-        self.menu.initNewMenuAt(self.menus[self.menus[0]["sections"][index]["ref"]]["sections"] , QPoint(p["x"], p["y"]))
+        submenuRef = self.menus["menu"]["sections"][index]["ref"]
+        self.menu.initNewMenuAt(self.menus["submenus"][submenuRef]["sections"] , QPoint(p["x"], p["y"]))
 
 #Handles events mouse move + mouse press and sends it where needed (TODO: key release)
 class EventController(QMdiArea):
@@ -247,7 +250,7 @@ class PieMenu(QWidget):
     def eventHandler(self, event):        
         if event.type() == QtCore.QEvent.MouseButtonPress:
             #self.close()
-            if self.menuSections[self.labels["activeLabel"]]["isSubmenu"]:
+            if not(self.labels["activeLabel"] is None) and self.menuSections[self.labels["activeLabel"]]["isSubmenu"]:
                 self.initNewMenuSignal.emit()
         
         if event.type() == QtCore.QEvent.MouseMove:
