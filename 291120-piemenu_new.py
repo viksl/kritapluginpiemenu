@@ -77,7 +77,7 @@ class MenuArea(QObject):
             "menu": {
                 "sections": [
                     {"name": "aaaaaaaaa aaaaaaa1", "actionID": "", "isSubmenu": False, "ref": None},
-                    {"name": "aaaaaaaaaaaaaaaaa2", "actionID": "", "isSubmenu": True, "ref": "s1"},
+                    {"name": "aaaaaaaaaaaaaaaaa2", "actionID": "", "isSubmenu": True, "ref": "s0"},
                     {"name": "aaaaaaa3", "actionID": "", "isSubmenu": False, "ref": None},
                     {"name": "aaaaaa4", "actionID": "", "isSubmenu": False, "ref": None},
                     {"name": "a5", "actionID": "", "isSubmenu": False, "ref": None},
@@ -85,7 +85,7 @@ class MenuArea(QObject):
                 ]     
             },
             "submenus": {
-                "s1": {
+                "s0": {
                     "sections": [
                         {"name": "b1", "actionID": "", "isSubmenu": False, "ref": None},
                         {"name": "b2", "actionID": "", "isSubmenu": False, "ref": None},
