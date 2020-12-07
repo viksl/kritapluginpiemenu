@@ -76,24 +76,24 @@ class MenuArea(QObject):
         self.menus = {
             "menu": {
                 "sections": [
-                    {"name": "aaaaaaaaa aaaaaaa1", "isSubmenu": False, "ref": None},
-                    {"name": "aaaaaaaaaaaaaaaaa2", "isSubmenu": True, "ref": "s1"},
-                    {"name": "aaaaaaa3", "isSubmenu": False, "ref": None},
-                    {"name": "aaaaaa4", "isSubmenu": False, "ref": None},
-                    {"name": "a5", "isSubmenu": False, "ref": None},
-                    {"name": "a6", "isSubmenu": False, "ref": None}
+                    {"name": "aaaaaaaaa aaaaaaa1", "actionID": "", "isSubmenu": False, "ref": None},
+                    {"name": "aaaaaaaaaaaaaaaaa2", "actionID": "", "isSubmenu": True, "ref": "s1"},
+                    {"name": "aaaaaaa3", "actionID": "", "isSubmenu": False, "ref": None},
+                    {"name": "aaaaaa4", "actionID": "", "isSubmenu": False, "ref": None},
+                    {"name": "a5", "actionID": "", "isSubmenu": False, "ref": None},
+                    {"name": "a6", "actionID": "", "isSubmenu": False, "ref": None}
                 ]     
             },
             "submenus": {
                 "s1": {
                     "sections": [
-                        {"name": "b1", "isSubmenu": False, "ref": None},
-                        {"name": "b2", "isSubmenu": False, "ref": None},
-                        {"name": "b3", "isSubmenu": False, "ref": None},
-                        {"name": "b4", "isSubmenu": False, "ref": None},
-                        {"name": "b5", "isSubmenu": False, "ref": None},
-                        {"name": "b6", "isSubmenu": False, "ref": None},
-                        {"name": "b7", "isSubmenu": False, "ref": None},
+                        {"name": "b1", "actionID": "", "isSubmenu": False, "ref": None},
+                        {"name": "b2", "actionID": "", "isSubmenu": False, "ref": None},
+                        {"name": "b3", "actionID": "", "isSubmenu": False, "ref": None},
+                        {"name": "b4", "actionID": "", "isSubmenu": False, "ref": None},
+                        {"name": "b5", "actionID": "", "isSubmenu": False, "ref": None},
+                        {"name": "b6", "actionID": "", "isSubmenu": False, "ref": None},
+                        {"name": "b7", "actionID": "", "isSubmenu": False, "ref": None},
                     ]
                 }
             }
