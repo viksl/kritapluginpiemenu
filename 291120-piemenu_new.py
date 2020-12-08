@@ -76,14 +76,14 @@ class MenuArea(QObject):
         self.menus = {
             "menu": [
                 {"name": "aaaaaaaaa aaaaaaa1", "actionID": "", "isSubmenu": False, "ref": None},
-                {"name": "aaaaaaaaaaaaaaaaa2", "actionID": "", "isSubmenu": True, "ref": "s0"},
+                {"name": "aaaaaaaaaaaaaaaaa2", "actionID": "", "isSubmenu": True, "ref": "0"},
                 {"name": "aaaaaaa3", "actionID": "", "isSubmenu": False, "ref": None},
                 {"name": "aaaaaa4", "actionID": "", "isSubmenu": False, "ref": None},
                 {"name": "a5", "actionID": "", "isSubmenu": False, "ref": None},
                 {"name": "a6", "actionID": "", "isSubmenu": False, "ref": None}
             ],
             "submenus": {
-                "s0": [
+                "0": [
                     {"name": "b1", "actionID": "", "isSubmenu": False, "ref": None},
                     {"name": "b2", "actionID": "", "isSubmenu": False, "ref": None},
                     {"name": "b3", "actionID": "", "isSubmenu": False, "ref": None},
