@@ -74,43 +74,39 @@ class MenuArea(QObject):
     def __init__(self, cursorPosition, qWin, parent=None):
         super().__init__(parent)
         self.menus = {
-            "menu": {
-                "sections": [
-                    {"name": "aaaaaaaaa aaaaaaa1", "actionID": "", "isSubmenu": False, "ref": None},
-                    {"name": "aaaaaaaaaaaaaaaaa2", "actionID": "", "isSubmenu": True, "ref": "s0"},
-                    {"name": "aaaaaaa3", "actionID": "", "isSubmenu": False, "ref": None},
-                    {"name": "aaaaaa4", "actionID": "", "isSubmenu": False, "ref": None},
-                    {"name": "a5", "actionID": "", "isSubmenu": False, "ref": None},
-                    {"name": "a6", "actionID": "", "isSubmenu": False, "ref": None}
-                ]     
-            },
+            "menu": [
+                {"name": "aaaaaaaaa aaaaaaa1", "actionID": "", "isSubmenu": False, "ref": None},
+                {"name": "aaaaaaaaaaaaaaaaa2", "actionID": "", "isSubmenu": True, "ref": "s0"},
+                {"name": "aaaaaaa3", "actionID": "", "isSubmenu": False, "ref": None},
+                {"name": "aaaaaa4", "actionID": "", "isSubmenu": False, "ref": None},
+                {"name": "a5", "actionID": "", "isSubmenu": False, "ref": None},
+                {"name": "a6", "actionID": "", "isSubmenu": False, "ref": None}
+            ],
             "submenus": {
-                "s0": {
-                    "sections": [
-                        {"name": "b1", "actionID": "", "isSubmenu": False, "ref": None},
-                        {"name": "b2", "actionID": "", "isSubmenu": False, "ref": None},
-                        {"name": "b3", "actionID": "", "isSubmenu": False, "ref": None},
-                        {"name": "b4", "actionID": "", "isSubmenu": False, "ref": None},
-                        {"name": "b5", "actionID": "", "isSubmenu": False, "ref": None},
-                        {"name": "b6", "actionID": "", "isSubmenu": False, "ref": None},
-                        {"name": "b7", "actionID": "", "isSubmenu": False, "ref": None},
-                    ]
-                }
+                "s0": [
+                    {"name": "b1", "actionID": "", "isSubmenu": False, "ref": None},
+                    {"name": "b2", "actionID": "", "isSubmenu": False, "ref": None},
+                    {"name": "b3", "actionID": "", "isSubmenu": False, "ref": None},
+                    {"name": "b4", "actionID": "", "isSubmenu": False, "ref": None},
+                    {"name": "b5", "actionID": "", "isSubmenu": False, "ref": None},
+                    {"name": "b6", "actionID": "", "isSubmenu": False, "ref": None},
+                    {"name": "b7", "actionID": "", "isSubmenu": False, "ref": None},
+                ]
             }
         }
 
         self.screenWidth = QApplication.desktop().screenGeometry().width()
         self.screenHeight = QApplication.desktop().screenGeometry().height()
         
-        self.menu = PieMenu(QCursor.pos(), self.screenWidth, self.screenHeight, self.menus["menu"]["sections"], qWin)
+        self.menu = PieMenu(QCursor.pos(), self.screenWidth, self.screenHeight, self.menus["menu"], qWin)
         self.menu.initNewMenuSignal.connect(self.initNewMenu)
         self.eventController = EventController(self.menu, qWin)
         
     def initNewMenu(self):
         index = self.menu.labels["activeLabel"]
         p = self.menu.getLabelPositionAt(index)
-        submenuRef = self.menus["menu"]["sections"][index]["ref"]
-        self.menu.initNewMenuAt(self.menus["submenus"][submenuRef]["sections"] , QPoint(p["x"], p["y"]))
+        submenuRef = self.menus["menu"][index]["ref"]
+        self.menu.initNewMenuAt(self.menus["submenus"][submenuRef] , QPoint(p["x"], p["y"]))
 
 #Handles events mouse move + mouse press and sends it where needed (TODO: key release)
 class EventController(QMdiArea):
