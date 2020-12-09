@@ -1,5 +1,5 @@
 from krita import *
-from .Settings import Settings
+from .Settings import *
 from .MenuArea import MenuArea
 
 class PieMenuExtension(Extension):
