@@ -10,9 +10,9 @@ class CustomComboBox (QComboBox):
     def wheelEvent(self, event):
         pass
 
-class PMSettings(QDialog):
+class Settings(QDialog):
     def __init__(self, parent=None):
-        super(PMSettings, self).__init__(parent)
+        super(Settings, self).__init__(parent)
 
         self.setGeometry(50, 50, 300, 400)
         self.setMinimumSize(400, 500)
@@ -307,10 +307,7 @@ class PMSettings(QDialog):
         return elms
 
     def accept(self):
-        super(PMSettings, self).accept()
+        super(Settings, self).accept()
 
     def reject(self):
-        super(PMSettings, self).reject()
-
-qwin = Krita.instance().activeWindow().qwindow()
-tt = PMSettings(qwin)
+        super(Settings, self).reject()

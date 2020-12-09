@@ -1,4 +1,5 @@
 from krita import *
+from .Settings import Settings
 from .MenuArea import MenuArea
 
 class PieMenuExtension(Extension):
@@ -10,4 +11,5 @@ class PieMenuExtension(Extension):
 
   def createActions(self, window):
     self.PMAction = window.createAction("pieMenu", "Pie Menu")
+    self.settings = Settings(window.qwindow())
     self.menuArea = MenuArea(QCursor.pos(), window.qwindow())
