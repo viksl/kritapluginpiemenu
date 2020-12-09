@@ -1,5 +1,5 @@
-#from krita import *
-#from PyQt5 import *
+from krita import *
+from PyQt5 import *
 import os
 import json
 
