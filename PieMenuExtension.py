@@ -1,5 +1,5 @@
 from krita import *
-from MenuArea import MenuArea
+from .MenuArea import MenuArea
 
 class PieMenuExtension(Extension):
   def __init__(self,parent):
