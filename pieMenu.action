@@ -10,7 +10,7 @@
         <iconText></iconText>
         <activationFlags>10000</activationFlags>
         <activationConditions>0</activationConditions>
-        <shortcut>Alt+Q</shortcut>
+        <shortcut>alt+Q</shortcut>
         <isCheckable>false</isCheckable>
         <statusTip></statusTip>
         </Action>

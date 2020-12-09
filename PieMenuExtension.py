@@ -10,6 +10,7 @@ class PieMenuExtension(Extension):
     pass
 
   def createActions(self, window):
-    self.PMAction = window.createAction("pieMenu", "Pie Menu")
+    self.pieMenuAction = window.createAction("pieMenu", "Pie Menu")
+    self.pieMenuSettingsAction = window.createAction("pieMenuSettings", "Pie Menu Settings")
     self.settings = Settings(window.qwindow())
     self.menuArea = MenuArea(QCursor.pos(), window.qwindow())
