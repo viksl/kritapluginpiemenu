@@ -3,15 +3,6 @@ from PyQt5 import *
 from PyQt5.QtCore import pyqtSignal
 import math
 
-class Dialog(QDialog):
-  def __init__(self, text, parent=None):
-      super(Dialog, self).__init__(parent)
-      self.setLayout(QVBoxLayout())
-      self.label = QLabel(str(text))
-      self.layout().addWidget(self.label)
-      self.resize(200, 50)
-      self.exec_()
-
 class MenuArea(QObject):
     def __init__(self, cursorPosition, qWin, parent=None):
         super().__init__(parent)
