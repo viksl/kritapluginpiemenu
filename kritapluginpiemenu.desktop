@@ -1,7 +1,7 @@
 [Desktop Entry]
 Type=Service
 ServiceTypes=Krita/PythonPlugin
-X-KDE-Library=krita-plugin-pie-menu
+X-KDE-Library=kritapluginpiemenu
 X-Python-2-Compatible=false
 Name=Pie Menu
 Comment=Pie Menu Plugin
