@@ -1,5 +1,3 @@
-from krita import *
-
 class PieMenuExtension(Extension):
   def __init__(self,parent):
     super(PieMenuExtension, self).__init__(parent)
