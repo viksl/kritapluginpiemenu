@@ -1,7 +1,0 @@
-[Desktop Entry]
-Type=Service
-ServiceTypes=Krita/PythonPlugin
-X-KDE-Library=krita-plugin-radial-menu
-X-Python-2-Compatible=false
-Name=Custom Radial Menu
-Comment=Custom Radial Menu Plugin

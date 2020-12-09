@@ -1,17 +1,17 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ActionCollection version="2" name="Scripts">
     <Actions category="Scripts">
-        <text>Custom Radial Menu</text>
+        <text>Pie Menu Menu</text>
 
-        <Action name="CustomRadialMenu">
+        <Action name="pieMenu">
         <icon></icon>
-        <text>Custom Radial Menu</text>
+        <text>Pie Menu</text>
         <whatsThis></whatsThis>
         <toolTip></toolTip>
         <iconText></iconText>
         <activationFlags>10000</activationFlags>
         <activationConditions>0</activationConditions>
-        <shortcut>D</shortcut>
+        <shortcut>Alt+Q</shortcut>
         <isCheckable>false</isCheckable>
         <statusTip></statusTip>
         </Action>
