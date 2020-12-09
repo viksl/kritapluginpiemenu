@@ -14,7 +14,7 @@ class Settings(QDialog):
     def __init__(self, parent=None):
         super(Settings, self).__init__(parent)
 
-        self.setGeometry(50, 50, 300, 400)
+        self.setGeometry(QCursor().pos().x(), QCursor().pos().y(), 300, 400)
         self.setMinimumSize(400, 500)
         self.setWindowTitle("Pie Menu Settings")
 
