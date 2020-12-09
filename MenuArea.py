@@ -6,6 +6,7 @@ import math
 class MenuArea(QObject):
     def __init__(self, cursorPosition, qWin, parent=None):
         super().__init__(parent)
+        
         self.menus = {
             "menu": {
                 "sections": [
