@@ -15,8 +15,8 @@ class Dialog(QDialog):
 class MenuArea(QObject):
     def __init__(self, cursorPosition, qWin, parent=None):
         super().__init__(parent)
-        Dialog("test")
-        
+        #Dialog("test")
+
         self.menus = {
             "menu": {
                 "sections": [
