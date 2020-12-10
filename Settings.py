@@ -11,7 +11,7 @@ class CustomComboBox (QComboBox):
         pass
 
 class Settings(QDialog):
-    def __init__(self, parent=None):
+    def __init__(self, actionsList, parent=None):
         super(Settings, self).__init__(parent)
 
         self.setGeometry(QCursor().pos().x(), QCursor().pos().y(), 300, 400)
@@ -40,13 +40,7 @@ class Settings(QDialog):
 
         self.settingsFormLayout.addRow( self.addLine() )
       
-        self.actionsList = [
-            {"name": "your action name", "actionID": "qaction id here"},
-            {"name": "your action name2", "actionID": "qaction id here2"},
-            {"name": "your action name3", "actionID": "qaction id here3"},
-            {"name": "your action name4", "actionID": "qaction id here4"},
-            {"name": "your action name5", "actionID": "qaction id here5"}
-        ]      
+        self.actionsList = actionsList  
         
         self.menus = {
             "menu": [],
