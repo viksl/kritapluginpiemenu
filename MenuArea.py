@@ -4,34 +4,12 @@ from PyQt5.QtCore import pyqtSignal
 import math
 
 class MenuArea(QObject):
-    def __init__(self, cursorPosition, qWin, parent=None):
+    def __init__(self, menus, qWin, parent=None):
         super().__init__(parent)
+        
+        self.setAttribute(Qt.WA_DeleteOnClose)
 
-        self.menus = {
-            "menu": {
-                "sections": [
-                    {"name": "aaaaaaaaa aaaaaaa1", "isSubmenu": False, "ref": None},
-                    {"name": "aaaaaaaaaaaaaaaaa2", "isSubmenu": True, "ref": "s1"},
-                    {"name": "aaaaaaa3", "isSubmenu": False, "ref": None},
-                    {"name": "aaaaaa4", "isSubmenu": False, "ref": None},
-                    {"name": "a5", "isSubmenu": False, "ref": None},
-                    {"name": "a6", "isSubmenu": False, "ref": None}
-                ]     
-            },
-            "submenus": {
-                "s1": {
-                    "sections": [
-                        {"name": "b1", "isSubmenu": False, "ref": None},
-                        {"name": "b2", "isSubmenu": False, "ref": None},
-                        {"name": "b3", "isSubmenu": False, "ref": None},
-                        {"name": "b4", "isSubmenu": False, "ref": None},
-                        {"name": "b5", "isSubmenu": False, "ref": None},
-                        {"name": "b6", "isSubmenu": False, "ref": None},
-                        {"name": "b7", "isSubmenu": False, "ref": None},
-                    ]
-                }
-            }
-        }
+        self.menus = menus
         
         self.menu = PieMenu(QCursor.pos(), self.menus["menu"]["sections"], qWin)
         self.menu.initNewMenuSignal.connect(self.initNewMenu)

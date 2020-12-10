@@ -12,18 +12,21 @@ class PieMenuExtension(Extension):
         {"name": "your action name3", "actionID": "qaction id here3"},
         {"name": "your action name4", "actionID": "qaction id here4"},
         {"name": "your action name5", "actionID": "qaction id here5"}
-    ]  
+    ]
 
     self.settings = Settings(self.actionsList, Krita.instance().activeWindow().qwindow())
     self.settings.menusChanged.connect(self.updateMenus)
-
-    self.menuArea = MenuArea(QCursor.pos(), Krita.instance().activeWindow().qwindow())
+    self.menus = self.settings.menus
+    
+    self.menuArea = MenuArea(self.menus, Krita.instance().activeWindow().qwindow())
 
   def setup(self):
     pass
 
   def updateMenus(self):
+    self.menuArea.deleteLater()
     self.menus = self.settings.menus
+    self.menuArea = MenuArea(self.menus, Krita.instance().activeWindow().qwindow())
 
   def openPieMenu(self):
     if (not self.qWin.underMouse()):
