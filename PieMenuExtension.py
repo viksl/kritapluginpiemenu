@@ -6,30 +6,13 @@ class PieMenuExtension(Extension):
   def __init__(self,parent):
     super(PieMenuExtension, self).__init__(parent)
 
-    if Krita.instance().activeWindow() == None:
-      return
-
-    self.actionsList = [
-        {"name": "your action name", "actionID": "qaction id here"},
-        {"name": "your action name2", "actionID": "qaction id here2"},
-        {"name": "your action name3", "actionID": "qaction id here3"},
-        {"name": "your action name4", "actionID": "qaction id here4"},
-        {"name": "your action name5", "actionID": "qaction id here5"}
-    ]
-
-    self.settings = Settings(self.actionsList, Krita.instance().activeWindow().qwindow())
-    self.settings.menusChanged.connect(self.updateMenus)
-    self.menus = self.settings.menus
-
-    self.menuArea = MenuArea(self.menus, Krita.instance().activeWindow().qwindow())
-
   def setup(self):
     pass
 
   def updateMenus(self):
     self.menuArea.deleteLater()
     self.menus = self.settings.menus
-    self.menuArea = MenuArea(self.menus, Krita.instance().activeWindow().qwindow())
+    self.menuArea = MenuArea(self.menus, self.qWin)
 
   def openPieMenu(self):
     if (not self.qWin.underMouse()):
@@ -43,6 +26,20 @@ class PieMenuExtension(Extension):
   def createActions(self, window):
     self.qWin = window
     
+    self.actionsList = [
+        {"name": "your action name", "actionID": "qaction id here"},
+        {"name": "your action name2", "actionID": "qaction id here2"},
+        {"name": "your action name3", "actionID": "qaction id here3"},
+        {"name": "your action name4", "actionID": "qaction id here4"},
+        {"name": "your action name5", "actionID": "qaction id here5"}
+    ]
+
+    self.settings = Settings(self.actionsList, window)
+    self.settings.menusChanged.connect(self.updateMenus)
+    self.menus = self.settings.menus
+
+    self.menuArea = MenuArea(self.menus, window)
+
     self.pieMenuAction = window.createAction("pieMenu", "Pie Menu")
     self.pieMenuSettingsAction = window.createAction("pieMenuSettings", "Pie Menu Settings")
 
