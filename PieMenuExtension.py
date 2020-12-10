@@ -15,19 +15,23 @@ class PieMenuExtension(Extension):
     ]  
 
     self.settings = Settings(self.actionsList, Krita.instance().activeWindow().qwindow())
+    self.settings.menusChanged.connect(self.updateMenus)
+
     self.menuArea = MenuArea(QCursor.pos(), Krita.instance().activeWindow().qwindow())
-    self.settings.loadSettings()
 
   def setup(self):
     pass
 
-  def openPieMenu( self ):
+  def updateMenus(self):
+    self.menus = self.settings.menus
+
+  def openPieMenu(self):
     if (not self.qWin.underMouse()):
       return
     
     # self.menuArea.menu.showMenuAt()
 
-  def openSettings( self ):
+  def openSettings(self):
     self.settings.show()
 
   def createActions(self, window):

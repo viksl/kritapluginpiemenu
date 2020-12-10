@@ -11,6 +11,8 @@ class CustomComboBox (QComboBox):
         pass
 
 class Settings(QDialog):
+    menusChanged = pyqtSignal()
+
     def __init__(self, actionsList, parent=None):
         super(Settings, self).__init__(parent)
 
@@ -114,7 +116,9 @@ class Settings(QDialog):
 
         self.baseMenuSectionsCombo.setCurrentIndex( len( self.menus["menu"]) )
         
-        self.setMenuItems(self.menus, layout) 
+        self.setMenuItems(self.menus, layout)
+        
+        self.menusChanged.emit()
 
     def setMenuItems( self, menu, layout, isSubmenu=False, submenuRef=None ):
         start = 2 if isSubmenu else 3
@@ -151,6 +155,8 @@ class Settings(QDialog):
 
         # write to file
         self.writeSettingsFile()
+
+        self.menusChanged.emit()
 
     def generateMenuStructure( self, settings, actionsList ):
         menus = {
