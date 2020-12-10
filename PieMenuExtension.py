@@ -7,6 +7,7 @@ class PieMenuExtension(Extension):
     super(PieMenuExtension, self).__init__(parent)
     self.settings = None
     self.menuArea = None
+    self.menuArea = MenuArea(QCursor.pos(), Krita.instance().activeWindow().qwindow())
 
   def setup(self):
     pass
@@ -14,14 +15,14 @@ class PieMenuExtension(Extension):
   def openPieMenu( self ):
     if (not self.qWin.underMouse()):
       return
-    self.menuArea = MenuArea(QCursor.pos(), Krita.instance().activeWindow().qwindow())
+    #self.menuArea.show()
 
   def openSettings( self ):
     self.settings = Settings(Krita.instance().activeWindow().qwindow())
 
   def createActions(self, window):
     self.qWin = window
-    
+
     self.pieMenuAction = window.createAction("pieMenu", "Pie Menu")
     self.pieMenuSettingsAction = window.createAction("pieMenuSettings", "Pie Menu Settings")
 

@@ -32,9 +32,6 @@ class MenuArea(QObject):
                 }
             }
         }
-
-        #self.screenWidth = QApplication.desktop().screenGeometry().width()
-        #self.screenHeight = QApplication.desktop().screenGeometry().height()
         
         self.menu = PieMenu(QCursor.pos(), self.menus["menu"]["sections"], qWin)
         self.menu.initNewMenuSignal.connect(self.initNewMenu)
@@ -98,8 +95,6 @@ class PieMenu(QWidget):
         self.labelStyleActive = "background-color:" + self.labelActiveColor + "; color: white;"
 
         self.initNewMenuAt( menuSections, cursorPosition )
-        
-        self.show()
 
     def initNewMenuAt(self, menuSections, cursorPosition):
         screen = QGuiApplication.screenAt(cursorPosition)
@@ -134,6 +129,7 @@ class PieMenu(QWidget):
             self.labels["children"][i].show()
 
         self.update()
+        self.show()
 
     def getLabelPositionAt(self, index):
         return self.circleCoor(self.cursorInitPosition.x(), self.cursorInitPosition.y(), self.labelRadius, index * self.splitSectionAngle + self.splitSectionAngle / 2)
