@@ -9,7 +9,7 @@ class MenuArea(QObject):
 
         self.menus = menus
         
-        self.menu = PieMenu(QCursor.pos(), self.menus["menu"]["sections"], parent)
+        self.menu = PieMenu(QCursor.pos(), self.menus["menu"]["sections"], self)
         self.menu.initNewMenuSignal.connect(self.initNewMenu)
         self.eventController = EventController(self.menu, parent)
 
