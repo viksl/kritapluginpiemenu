@@ -24,7 +24,7 @@ class PieMenuExtension(Extension):
     self.settings.show()
 
   def createActions(self, window):
-    self.qWin = window
+    self.qWin = window.qwindow()
     
     self.actionsList = [
         {"name": "your action name", "actionID": "qaction id here"},
@@ -34,11 +34,11 @@ class PieMenuExtension(Extension):
         {"name": "your action name5", "actionID": "qaction id here5"}
     ]
 
-    self.settings = Settings(self.actionsList, window)
+    self.settings = Settings(self.actionsList, self.qWin)
     self.settings.menusChanged.connect(self.updateMenus)
     self.menus = self.settings.menus
 
-    self.menuArea = MenuArea(self.menus, window)
+    self.menuArea = MenuArea(self.menus, self.qWin)
 
     self.pieMenuAction = window.createAction("pieMenu", "Pie Menu")
     self.pieMenuSettingsAction = window.createAction("pieMenuSettings", "Pie Menu Settings")
