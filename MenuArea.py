@@ -4,16 +4,14 @@ from PyQt5.QtCore import pyqtSignal
 import math
 
 class MenuArea(QObject):
-    def __init__(self, menus, qWin, parent=None):
+    def __init__(self, menus, parent=None):
         super().__init__(parent)
-        
-        self.setAttribute(Qt.WA_DeleteOnClose)
 
         self.menus = menus
         
-        self.menu = PieMenu(QCursor.pos(), self.menus["menu"]["sections"], qWin)
+        self.menu = PieMenu(QCursor.pos(), self.menus["menu"]["sections"], parent)
         self.menu.initNewMenuSignal.connect(self.initNewMenu)
-        self.eventController = EventController(self.menu, qWin)
+        self.eventController = EventController(self.menu, parent)
 
     def initNewMenu(self):
         index = self.menu.labels["activeLabel"]
