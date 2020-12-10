@@ -17,10 +17,12 @@ class PieMenuExtension(Extension):
   def openPieMenu(self):
     if (not self.qWin.underMouse()):
       return
-    
-    # self.menuArea.menu.showMenuAt()
+    # self.menuArea.show()
+    self.menuArea.menu.initNewMenuAt(self.menus["menu"], QCursor.pos())
+    self.menuArea.menu.show()
 
   def openSettings(self):
+    self.settings.move(QCursor.pos())
     self.settings.show()
 
   def createActions(self, window):

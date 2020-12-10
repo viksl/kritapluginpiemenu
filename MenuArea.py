@@ -15,9 +15,8 @@ class MenuArea(QObject):
 
     def initNewMenu(self):
         index = self.menu.labels["activeLabel"]
-        p = self.menu.getLabelPositionAt(index)
         submenuRef = self.menus["menu"][index]["ref"]
-        self.menu.initNewMenuAt(self.menus["submenus"][submenuRef] , QPoint(p["x"], p["y"]))
+        self.menu.initNewMenuAt(self.menus["submenus"][str(submenuRef)] , QCursor.pos() )
 
 #Handles events mouse move + mouse press and sends it where needed (TODO: key release)
 class EventController(QMdiArea):
@@ -76,7 +75,7 @@ class PieMenu(QWidget):
         screen = QGuiApplication.screenAt(cursorPosition)
         self.setGeometry(screen.geometry())
         self.menuSections = menuSections
-        self.cursorInitPosition = QPoint( cursorPosition.x() - screen.geometry().x(), cursorPosition.x() - screen.geometry().y() )
+        self.cursorInitPosition = QPoint( cursorPosition.x() - screen.geometry().x(), cursorPosition.y() - screen.geometry().y() )
         self.totalSplitSections = len(self.menuSections)
         self.splitSectionAngle = 2 * math.pi / self.totalSplitSections
         self.splitSectionOffAngle = -(math.pi / 2) - self.splitSectionAngle/2 
@@ -105,7 +104,7 @@ class PieMenu(QWidget):
             self.labels["children"][i].show()
 
         self.update()
-        self.show()
+        #self.show()
 
     def getLabelPositionAt(self, index):
         return self.circleCoor(self.cursorInitPosition.x(), self.cursorInitPosition.y(), self.labelRadius, index * self.splitSectionAngle + self.splitSectionAngle / 2)

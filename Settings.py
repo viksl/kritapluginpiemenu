@@ -16,7 +16,7 @@ class Settings(QDialog):
     def __init__(self, actionsList, parent=None):
         super(Settings, self).__init__(parent)
 
-        self.setGeometry(QCursor().pos().x(), QCursor().pos().y(), 300, 400)
+        self.setGeometry(0, 0, 300, 500)
         self.setMinimumSize(400, 500)
         self.setWindowTitle("Pie Menu Settings")
 
@@ -53,7 +53,7 @@ class Settings(QDialog):
              "menu": [],
              "submenus": {}
         }
-        
+
         self.saveButton = QPushButton("Save Settings", self)
         self.saveButton.clicked.connect( lambda: self.saveSettings(self.settingsFormLayout, self.actionsList) )
         self.settingsFormLayout.addRow( self.saveButton )
