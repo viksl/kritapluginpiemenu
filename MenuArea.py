@@ -36,7 +36,7 @@ class MenuArea(QObject):
         self.menu = PieMenu(QCursor.pos(), self.menus["menu"]["sections"], qWin)
         self.menu.initNewMenuSignal.connect(self.initNewMenu)
         self.eventController = EventController(self.menu, qWin)
-        
+
     def initNewMenu(self):
         index = self.menu.labels["activeLabel"]
         p = self.menu.getLabelPositionAt(index)
