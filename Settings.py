@@ -65,7 +65,7 @@ class Settings(QDialog):
         self.loadSettings( self.settingsFormLayout )
         
         #self.show()
-        self.exec()
+        #self.exec()
 
     def settingsPaths (self ):
         paths = {"dirpath": "", "filepath": ""}
