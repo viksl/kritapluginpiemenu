@@ -6,6 +6,9 @@ class PieMenuExtension(Extension):
   def __init__(self,parent):
     super(PieMenuExtension, self).__init__(parent)
 
+    if Krita.instance().activeWindow() == None:
+      return
+
     self.actionsList = [
         {"name": "your action name", "actionID": "qaction id here"},
         {"name": "your action name2", "actionID": "qaction id here2"},
@@ -17,7 +20,7 @@ class PieMenuExtension(Extension):
     self.settings = Settings(self.actionsList, Krita.instance().activeWindow().qwindow())
     self.settings.menusChanged.connect(self.updateMenus)
     self.menus = self.settings.menus
-    
+
     self.menuArea = MenuArea(self.menus, Krita.instance().activeWindow().qwindow())
 
   def setup(self):
