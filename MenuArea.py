@@ -33,10 +33,10 @@ class MenuArea(QObject):
             }
         }
 
-        self.screenWidth = QApplication.desktop().screenGeometry().width()
-        self.screenHeight = QApplication.desktop().screenGeometry().height()
+        #self.screenWidth = QApplication.desktop().screenGeometry().width()
+        #self.screenHeight = QApplication.desktop().screenGeometry().height()
         
-        self.menu = PieMenu(QCursor.pos(), self.screenWidth, self.screenHeight, self.menus["menu"]["sections"], qWin)
+        self.menu = PieMenu(QCursor.pos(), self.menus["menu"]["sections"], qWin)
         self.menu.initNewMenuSignal.connect(self.initNewMenu)
         self.eventController = EventController(self.menu, qWin)
         
@@ -66,10 +66,9 @@ class EventController(QMdiArea):
 class PieMenu(QWidget):
     initNewMenuSignal = pyqtSignal()
 
-    def __init__(self, cursorPosition, screenWidth, screenHeight, menuSections, parent=None):
+    def __init__(self, cursorPosition, menuSections, parent=None):
         QWidget.__init__(self, parent)
 
-        self.setGeometry(0, 0, screenWidth, screenHeight)
         self.setWindowFlags(self.windowFlags() | QtCore.Qt.Window | QtCore.Qt.FramelessWindowHint)
         self.setAttribute(QtCore.Qt.WA_TranslucentBackground)
         self.setStyleSheet("background: transparent;")
@@ -98,13 +97,15 @@ class PieMenu(QWidget):
         self.labelStyleBase = "background-color:" + self.labelBaseColor + "; color: white;"
         self.labelStyleActive = "background-color:" + self.labelActiveColor + "; color: white;"
 
-        self.initNewMenuAt(menuSections, cursorPosition)
+        self.initNewMenuAt( menuSections, cursorPosition )
         
         self.show()
 
     def initNewMenuAt(self, menuSections, cursorPosition):
+        screen = QGuiApplication.screenAt(cursorPosition)
+        self.setGeometry(screen.geometry())
         self.menuSections = menuSections
-        self.cursorInitPosition = cursorPosition
+        self.cursorInitPosition = QPoint( cursorPosition.x() - screen.geometry().x(), cursorPosition.x() - screen.geometry().y() )
         self.totalSplitSections = len(self.menuSections)
         self.splitSectionAngle = 2 * math.pi / self.totalSplitSections
         self.splitSectionOffAngle = -(math.pi / 2) - self.splitSectionAngle/2 
@@ -192,8 +193,9 @@ class PieMenu(QWidget):
             distance = self.twoPointDistance(self.cursorInitPosition, QCursor.pos())
             
             if distance > self.wheelIconInnerRadius:
+                screen = QGuiApplication.screenAt(QCursor.pos())
                 v1 = [self.baseVector[0], self.baseVector[1]]
-                v2 = [QCursor.pos().x() - self.cursorInitPosition.x(), QCursor.pos().y() - self.cursorInitPosition.y()]
+                v2 = [QCursor.pos().x() - screen.geometry().x() - self.cursorInitPosition.x(), QCursor.pos().y() - screen.geometry().y() - self.cursorInitPosition.y()]
                 angle = self.vectorAngle(v1, v2)
 
                 for i in range(0, self.totalSplitSections):
