@@ -47,12 +47,12 @@ class Settings(QDialog):
         self.menus = {
             "menu": [],
              "submenus": {}
-        }        
+        }
         
         self.defaultMenus = {
              "menu": [],
              "submenus": {}
-        }        
+        }
         
         self.saveButton = QPushButton("Save Settings", self)
         self.saveButton.clicked.connect( lambda: self.saveSettings(self.settingsFormLayout, self.actionsList) )
@@ -117,7 +117,7 @@ class Settings(QDialog):
         self.baseMenuSectionsCombo.setCurrentIndex( len( self.menus["menu"]) )
         
         self.setMenuItems(self.menus, layout)
-        
+
         self.menusChanged.emit()
 
     def setMenuItems( self, menu, layout, isSubmenu=False, submenuRef=None ):

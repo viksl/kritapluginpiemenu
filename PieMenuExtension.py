@@ -36,9 +36,9 @@ class PieMenuExtension(Extension):
 
     self.settings = Settings(self.actionsList, self.qWin)
     self.menus = self.settings.menus
-    
+
     self.menuArea = MenuArea(self.menus, self.qWin)
-    
+
     self.settings.menusChanged.connect(self.updateMenus)
 
     self.pieMenuAction = window.createAction("pieMenu", "Pie Menu")

@@ -9,15 +9,15 @@ class MenuArea(QObject):
 
         self.menus = menus
         
-        self.menu = PieMenu(QCursor.pos(), self.menus["menu"]["sections"], parent)
+        self.menu = PieMenu(QCursor.pos(), self.menus["menu"], parent)
         self.menu.initNewMenuSignal.connect(self.initNewMenu)
         self.eventController = EventController(self.menu, parent)
 
     def initNewMenu(self):
         index = self.menu.labels["activeLabel"]
         p = self.menu.getLabelPositionAt(index)
-        submenuRef = self.menus["menu"]["sections"][index]["ref"]
-        self.menu.initNewMenuAt(self.menus["submenus"][submenuRef]["sections"] , QPoint(p["x"], p["y"]))
+        submenuRef = self.menus["menu"][index]["ref"]
+        self.menu.initNewMenuAt(self.menus["submenus"][submenuRef] , QPoint(p["x"], p["y"]))
 
 #Handles events mouse move + mouse press and sends it where needed (TODO: key release)
 class EventController(QMdiArea):
