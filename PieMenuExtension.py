@@ -31,8 +31,6 @@ class PieMenuExtension(Extension):
     self.menuArea.menu.initNewMenuAt(self.menus["menu"], QCursor.pos())
     self.menuArea.eventController = EventController(self.menuArea.menu, self.menuArea.menu.parent(), self.menuArea)
     self.menuArea.menu.show()
-    self.menuArea.menu.hide()
-    self.menuArea.menu.show()
 
   def openSettings(self):
     self.settings.move(QCursor.pos())

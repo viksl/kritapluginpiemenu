@@ -111,8 +111,6 @@ class PieMenu(QWidget):
             "children": [None] * self.totalSplitSections,
             "activeLabel": None
         }
-        
-        QApplication.processEvents()
 
         for i in range(len(self.labels["children"])):
             p = self.circleCoor(self.cursorInitPosition.x(), self.cursorInitPosition.y(), self.labelRadius, i * self.splitSectionAngle + self.splitSectionAngle / 2)
