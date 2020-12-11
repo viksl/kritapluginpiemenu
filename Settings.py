@@ -113,7 +113,10 @@ class Settings(QDialog):
     
   def loadSettings( self, layout ):
     # load file here into self.menus else go default
-    if not self.readSettingsFile() or len(self.menus["menu"]) == 0:
+    if not self.readSettingsFile():
+      self.menus = self.defaultMenus
+
+    if len(self.menus["menu"]) == 0:
       self.menus = self.defaultMenus
 
     self.baseMenuSectionsCombo.setCurrentIndex( len( self.menus["menu"]) )
