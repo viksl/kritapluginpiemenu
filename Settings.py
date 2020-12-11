@@ -3,6 +3,15 @@ from PyQt5 import *
 import os
 import json
 
+class Dialog(QDialog):
+  def __init__(self, text, parent=None):
+      super(Dialog, self).__init__(parent)
+      self.setLayout(QVBoxLayout())
+      self.label = QLabel(str(text))
+      self.layout().addWidget(self.label)
+      self.resize(200, 50)
+      self.exec_()
+
 class CustomComboBox (QComboBox):
   def __init__(self, parent=None):
     super(CustomComboBox, self).__init__(parent)    
@@ -157,6 +166,9 @@ class Settings(QDialog):
   def saveSettings( self, layout, actionsList ):
     settings = self.getSettings( layout )
     self.menus = self.generateMenuStructure( settings, actionsList )
+
+    if len(self.menus["menu"]) == 0:
+      self.menus = self.defaultMenus
 
     # write to file
     self.writeSettingsFile()

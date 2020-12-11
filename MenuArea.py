@@ -3,6 +3,15 @@ from PyQt5 import *
 from PyQt5.QtCore import pyqtSignal
 import math
 
+class Dialog(QDialog):
+  def __init__(self, text, parent=None):
+      super(Dialog, self).__init__(parent)
+      self.setLayout(QVBoxLayout())
+      self.label = QLabel(str(text))
+      self.layout().addWidget(self.label)
+      self.resize(200, 50)
+      self.exec_()
+
 class MenuArea(QObject):
     def __init__(self, menus, parent=None):
         super().__init__(parent)
@@ -11,7 +20,7 @@ class MenuArea(QObject):
         
         self.menu = PieMenu(QCursor.pos(), self.menus["menu"], parent)
         self.menu.initNewMenuSignal.connect(self.initNewMenu)
-        self.eventController = EventController(self.menu, parent)
+        #self.eventController = EventController(self.menu, parent)
 
     def initNewMenu(self):
         index = self.menu.labels["activeLabel"]
@@ -20,18 +29,32 @@ class MenuArea(QObject):
 
 #Handles events mouse move + mouse press and sends it where needed (TODO: key release)
 class EventController(QMdiArea):
-    def __init__(self, eventObj=None, parent=None):
+    def __init__(self, eventObj=None, parent=None, controllerOwner=None):
         super().__init__(parent)
 
         self.installEventFilter(self)
         self.setMouseTracking(True)
         self.eventObj = eventObj
-
+        self.controllerOwner = controllerOwner
+        
     def eventFilter(self, source, event):
-        if event.type() == QtCore.QEvent.MouseButtonPress:
+        if (event.type() == QEvent.KeyRelease
+            and not event.isAutoRepeat()
+            and Krita.instance().action("pieMenu").shortcut().matches(event.key()) > 0
+            and not self.controllerOwner.keyReleased):
+
+            if hasattr( self.controllerOwner, "eventController" ):
+                self.controllerOwner.keyReleased = True
+                self.eventObj.hide()
+                self.removeEventFilter(self)
+                self.controllerOwner.eventController.deleteLater()
+                # self.eventObj.eventHandler(event, self.controllerOwner.keyReleased)
+        elif (event.type() == QtCore.QEvent.MouseMove
+            and not self.controllerOwner.keyReleased):
             self.eventObj.eventHandler(event)
-        elif event.type() == QtCore.QEvent.MouseMove:
-            self.eventObj.eventHandler(event)
+        elif (event.type() == QEvent.MouseButtonPress and 
+            event.button() == QtCore.Qt.LeftButton):
+            return True
             
         return super(EventController, self).eventFilter(source, event)
 
@@ -40,7 +63,6 @@ class PieMenu(QWidget):
 
     def __init__(self, cursorPosition, menuSections, parent=None):
         QWidget.__init__(self, parent)
-
         self.setWindowFlags(self.windowFlags() | QtCore.Qt.Window | QtCore.Qt.FramelessWindowHint)
         self.setAttribute(QtCore.Qt.WA_TranslucentBackground)
         self.setStyleSheet("background: transparent;")
@@ -89,6 +111,8 @@ class PieMenu(QWidget):
             "children": [None] * self.totalSplitSections,
             "activeLabel": None
         }
+        
+        QApplication.processEvents()
 
         for i in range(len(self.labels["children"])):
             p = self.circleCoor(self.cursorInitPosition.x(), self.cursorInitPosition.y(), self.labelRadius, i * self.splitSectionAngle + self.splitSectionAngle / 2)
@@ -101,9 +125,9 @@ class PieMenu(QWidget):
             self.labels["children"][i].setStyleSheet(self.labelStyleBase)
             self.labels["children"][i].setAlignment(QtCore.Qt.AlignCenter) 
             self.labels["children"][i].setWordWrap(True)
-            self.labels["children"][i].show()
+            #self.labels["children"][i].show()
 
-        self.update()
+        #self.update()
         #self.show()
 
     def getLabelPositionAt(self, index):
@@ -151,11 +175,11 @@ class PieMenu(QWidget):
         self.drawWheel()
         self.painter.end()
 
-    def eventHandler(self, event):        
-        if event.type() == QtCore.QEvent.MouseButtonPress:
+    def eventHandler(self, event, keyReleased=False):        
+        # if event.type() == QtCore.QEvent.MouseButtonPress:
             #self.close()
-            if not(self.labels["activeLabel"] is None) and self.menuSections[self.labels["activeLabel"]]["isSubmenu"]:
-                self.initNewMenuSignal.emit()
+            #if not(self.labels["activeLabel"] is None) and self.menuSections[self.labels["activeLabel"]]["isSubmenu"]:
+                #self.initNewMenuSignal.emit()
         
         if event.type() == QtCore.QEvent.MouseMove:
             if (not self.cursorInitPosition):
@@ -178,3 +202,6 @@ class PieMenu(QWidget):
                         self.labels["children"][i].setStyleSheet(self.labelStyleActive)
                         self.labels["activeLabel"] = i
                         break
+
+                # if not(self.labels["activeLabel"] is None) and self.menuSections[self.labels["activeLabel"]]["isSubmenu"]:
+                    #self.initNewMenuSignal.emit()

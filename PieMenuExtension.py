@@ -1,6 +1,15 @@
 from krita import *
 from .Settings import Settings
-from .MenuArea import MenuArea
+from .MenuArea import MenuArea, EventController
+
+class Dialog(QDialog):
+  def __init__(self, text, parent=None):
+      super(Dialog, self).__init__(parent)
+      self.setLayout(QVBoxLayout())
+      self.label = QLabel(str(text))
+      self.layout().addWidget(self.label)
+      self.resize(200, 50)
+      self.exec_()
 
 class PieMenuExtension(Extension):
   def __init__(self,parent):
@@ -17,8 +26,12 @@ class PieMenuExtension(Extension):
   def openPieMenu(self):
     if (not self.qWin.underMouse()):
       return
-    # self.menuArea.show()
+
+    self.menuArea.keyReleased = False
     self.menuArea.menu.initNewMenuAt(self.menus["menu"], QCursor.pos())
+    self.menuArea.eventController = EventController(self.menuArea.menu, self.menuArea.menu.parent(), self.menuArea)
+    self.menuArea.menu.show()
+    self.menuArea.menu.hide()
     self.menuArea.menu.show()
 
   def openSettings(self):
@@ -40,14 +53,14 @@ class PieMenuExtension(Extension):
     self.menus = self.settings.menus
 
     self.menuArea = MenuArea(self.menus, self.qWin)
-
     self.settings.menusChanged.connect(self.updateMenus)
 
     self.pieMenuAction = window.createAction("pieMenu", "Pie Menu")
-    self.pieMenuSettingsAction = window.createAction("pieMenuSettings", "Pie Menu Settings")
-
-    self.pieMenuAction.triggered.connect(self.openPieMenu)
     self.pieMenuAction.setAutoRepeat(False)
 
-    self.pieMenuSettingsAction.triggered.connect(self.openSettings)
+    self.pieMenuSettingsAction = window.createAction("pieMenuSettings", "Pie Menu Settings")
     self.pieMenuSettingsAction.setAutoRepeat(False)
+
+    self.pieMenuAction.triggered.connect(self.openPieMenu)
+
+    self.pieMenuSettingsAction.triggered.connect(self.openSettings)
