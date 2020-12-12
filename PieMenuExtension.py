@@ -26,9 +26,10 @@ class PieMenuExtension(Extension):
   def openPieMenu(self):
     if (not self.qWin.underMouse()):
       return
-
+    self.menuArea.deleteLater()
+    self.menuArea = MenuArea(self.menus, self.qWin)
     self.menuArea.keyReleased = False
-    self.menuArea.menu.initNewMenuAt(self.menus["menu"], QCursor.pos())
+    #self.menuArea.menu.initNewMenuAt(self.menus["menu"], QCursor.pos())
     self.menuArea.eventController = EventController(self.menuArea.menu, self.menuArea.menu.parent(), self.menuArea)
     self.menuArea.menu.show()
 

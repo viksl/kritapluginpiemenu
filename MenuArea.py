@@ -124,8 +124,8 @@ class PieMenu(QWidget):
             self.labels["children"][i].setAlignment(QtCore.Qt.AlignCenter) 
             self.labels["children"][i].setWordWrap(True)
             #self.labels["children"][i].show()
-
-        #self.update()
+        
+        # self.update()
         #self.show()
 
     def getLabelPositionAt(self, index):
