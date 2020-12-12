@@ -25,6 +25,8 @@ class MenuArea(QObject):
     def initNewMenu(self):
         index = self.menu.labels["activeLabel"]
         submenuRef = self.menus["menu"][index]["ref"]
+        Dialog( self.menus["submenus"] )
+        Dialog( str(submenuRef) )
         self.menu.initNewMenuAt(self.menus["submenus"][str(submenuRef)] , QCursor.pos() )
 
 #Handles events mouse move + mouse press and sends it where needed (TODO: key release)
@@ -45,10 +47,13 @@ class EventController(QMdiArea):
 
             if hasattr( self.controllerOwner, "eventController" ):
                 self.controllerOwner.keyReleased = True
+
+                self.eventObj.ResetGUI()
                 self.eventObj.hide()
+                
                 self.removeEventFilter(self)
                 self.controllerOwner.eventController.deleteLater()
-                # self.eventObj.eventHandler(event, self.controllerOwner.keyReleased)
+                self.eventObj.eventHandler(event, self.controllerOwner.keyReleased)
         elif (event.type() == QtCore.QEvent.MouseMove
             and not self.controllerOwner.keyReleased):
             self.eventObj.eventHandler(event)
@@ -90,10 +95,12 @@ class PieMenu(QWidget):
         self.labelHighlightColor = "green"
         self.labelStyleBase = "background-color:" + self.labelBaseColor + "; color: white;"
         self.labelStyleActive = "background-color:" + self.labelActiveColor + "; color: white;"
+        self.clearPainter = False
 
-        self.initNewMenuAt( menuSections, cursorPosition )
+        #self.initNewMenuAt( menuSections, cursorPosition )
 
     def initNewMenuAt(self, menuSections, cursorPosition):
+        self.clearPainter = False
         screen = QGuiApplication.screenAt(cursorPosition)
         self.setGeometry(screen.geometry())
         self.menuSections = menuSections
@@ -123,10 +130,21 @@ class PieMenu(QWidget):
             self.labels["children"][i].setStyleSheet(self.labelStyleBase)
             self.labels["children"][i].setAlignment(QtCore.Qt.AlignCenter) 
             self.labels["children"][i].setWordWrap(True)
-            #self.labels["children"][i].show()
+            self.labels["children"][i].show()
         
-        # self.update()
-        #self.show()
+        self.update()
+
+    def ResetGUI( self ):
+        self.clearPainter = True
+
+        if hasattr(self, "labels") and len(self.labels["children"]) > 0:
+            for label in self.labels["children"]:
+                label.hide()
+                label.deleteLater()
+            self.labels["children"] = []
+
+        self.update()
+        QApplication.processEvents()
 
     def getLabelPositionAt(self, index):
         return self.circleCoor(self.cursorInitPosition.x(), self.cursorInitPosition.y(), self.labelRadius, index * self.splitSectionAngle + self.splitSectionAngle / 2)
@@ -169,17 +187,21 @@ class PieMenu(QWidget):
 
     def paintEvent(self, event):
         self.painter = QPainter(self)
+        self.painter.eraseRect(event.rect())
         self.painter.setRenderHints( QPainter.HighQualityAntialiasing )
-        self.drawWheel()
+        if not self.clearPainter:
+            self.drawWheel()
         self.painter.end()
 
     def eventHandler(self, event, keyReleased=False):        
-        # if event.type() == QtCore.QEvent.MouseButtonPress:
-            #self.close()
-            #if not(self.labels["activeLabel"] is None) and self.menuSections[self.labels["activeLabel"]]["isSubmenu"]:
-                #self.initNewMenuSignal.emit()
-        
-        if event.type() == QtCore.QEvent.MouseMove:
+        if event.type() == QEvent.KeyRelease:
+            if not(self.labels["activeLabel"] is None):
+                action = Krita.instance().action( (self.menuSections[self.labels["activeLabel"]]["actionID"]) )
+                # Krita.instance().action( (self.menuSections[self.labels["activeLabel"]]["actionID"]) ).trigger()
+                if action != None:
+                    action.trigger()
+
+        elif event.type() == QtCore.QEvent.MouseMove:
             if (not self.cursorInitPosition):
                 self.cursorInitPosition = QCursor.pos()
 
@@ -196,10 +218,13 @@ class PieMenu(QWidget):
                         (angle + self.splitSectionOffAngle) % (2*math.pi) <=  (i + 1) * self.splitSectionAngle):
 
                         if not (self.labels["activeLabel"] is None):
-                            self.labels["children"][self.labels["activeLabel"]].setStyleSheet(self.labelStyleBase) 
+                            self.labels["children"][self.labels["activeLabel"]].setStyleSheet(self.labelStyleBase)
+                        
                         self.labels["children"][i].setStyleSheet(self.labelStyleActive)
                         self.labels["activeLabel"] = i
+
+                        # Display submenu
+                        if not(self.labels["activeLabel"] is None) and self.menuSections[self.labels["activeLabel"]]["isSubmenu"]:
+                            self.initNewMenuSignal.emit()
                         break
 
-                # if not(self.labels["activeLabel"] is None) and self.menuSections[self.labels["activeLabel"]]["isSubmenu"]:
-                    #self.initNewMenuSignal.emit()
