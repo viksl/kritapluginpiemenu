@@ -29,6 +29,7 @@ class PieMenuExtension(Extension):
       return
 
     self.menuArea.keyReleased = False
+    self.menuArea.menu.previousAction = None
     self.menuArea.menu.initNewMenuAt(self.menus["menu"], QCursor.pos())
     self.menuArea.eventController = EventController(self.menuArea.menu, self.menuArea.menu.parent(), self.menuArea)
     self.menuArea.menu.show()

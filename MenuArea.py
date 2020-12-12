@@ -25,8 +25,6 @@ class MenuArea(QObject):
     def initNewMenu(self):
         index = self.menu.labels["activeLabel"]
         submenuRef = self.menus["menu"][index]["ref"]
-        Dialog( self.menus["submenus"] )
-        Dialog( str(submenuRef) )
         self.menu.initNewMenuAt(self.menus["submenus"][str(submenuRef)] , QCursor.pos() )
 
 #Handles events mouse move + mouse press and sends it where needed (TODO: key release)
@@ -54,9 +52,11 @@ class EventController(QMdiArea):
                 self.removeEventFilter(self)
                 self.controllerOwner.eventController.deleteLater()
                 self.eventObj.eventHandler(event, self.controllerOwner.keyReleased)
+
         elif (event.type() == QtCore.QEvent.MouseMove
             and not self.controllerOwner.keyReleased):
             self.eventObj.eventHandler(event)
+
         elif (event.type() == QEvent.MouseButtonPress and 
             event.button() == QtCore.Qt.LeftButton):
             return True
@@ -77,9 +77,8 @@ class PieMenu(QWidget):
         self.height = int(self.radius * 2)
         self.halfWidth = int(self.width / 2)
         self.halfHeight = int(self.height / 2)
-
-        self.wheelIconOuterRadius = 22 *2
-        self.wheelIconInnerRadius = 13 *2
+        self.wheelIconOuterRadius = 13 *2
+        self.wheelIconInnerRadius = 5 *2
         self.wheelColor = QColor(47, 47, 47, 200)
         self.lineColor = QColor(255, 255, 255, 30)
         self.wheelIconLineThickness = 1
@@ -96,11 +95,13 @@ class PieMenu(QWidget):
         self.labelStyleBase = "background-color:" + self.labelBaseColor + "; color: white;"
         self.labelStyleActive = "background-color:" + self.labelActiveColor + "; color: white;"
         self.clearPainter = False
-
+        
+        self.previousAction = None
         #self.initNewMenuAt( menuSections, cursorPosition )
 
     def initNewMenuAt(self, menuSections, cursorPosition):
         self.clearPainter = False
+        self.distance = None
         screen = QGuiApplication.screenAt(cursorPosition)
         self.setGeometry(screen.geometry())
         self.menuSections = menuSections
@@ -189,15 +190,26 @@ class PieMenu(QWidget):
         self.painter = QPainter(self)
         self.painter.eraseRect(event.rect())
         self.painter.setRenderHints( QPainter.HighQualityAntialiasing )
+
         if not self.clearPainter:
             self.drawWheel()
+
         self.painter.end()
 
     def eventHandler(self, event, keyReleased=False):        
         if event.type() == QEvent.KeyRelease:
-            if not(self.labels["activeLabel"] is None):
-                action = Krita.instance().action( (self.menuSections[self.labels["activeLabel"]]["actionID"]) )
-                # Krita.instance().action( (self.menuSections[self.labels["activeLabel"]]["actionID"]) ).trigger()
+            if self.distance < self.wheelIconInnerRadius:
+                return
+
+            elif not (self.previousAction is None) and self.distance >= self.wheelIconInnerRadius and self.distance < self.wheelIconOuterRadius:
+                action = Krita.instance().action( self.previousAction )
+
+                if action != None:
+                    action.trigger()
+
+            elif not(self.labels["activeLabel"] is None):
+                action = Krita.instance().action( self.menuSections[self.labels["activeLabel"]]["actionID"] )
+
                 if action != None:
                     action.trigger()
 
@@ -205,9 +217,9 @@ class PieMenu(QWidget):
             if (not self.cursorInitPosition):
                 self.cursorInitPosition = QCursor.pos()
 
-            distance = self.twoPointDistance(self.cursorInitPosition, QCursor.pos())
+            self.distance = self.twoPointDistance(self.cursorInitPosition, QCursor.pos())
             
-            if distance > self.wheelIconInnerRadius:
+            if self.distance >= self.wheelIconOuterRadius:
                 screen = QGuiApplication.screenAt(QCursor.pos())
                 v1 = [self.baseVector[0], self.baseVector[1]]
                 v2 = [QCursor.pos().x() - screen.geometry().x() - self.cursorInitPosition.x(), QCursor.pos().y() - screen.geometry().y() - self.cursorInitPosition.y()]
@@ -225,6 +237,9 @@ class PieMenu(QWidget):
 
                         # Display submenu
                         if not(self.labels["activeLabel"] is None) and self.menuSections[self.labels["activeLabel"]]["isSubmenu"]:
+                            self.previousAction = self.menuSections[self.labels["activeLabel"]]["actionID"]
                             self.initNewMenuSignal.emit()
                         break
-
+            else:
+                for label in self.labels["children"]:
+                    label.setStyleSheet(self.labelStyleBase)

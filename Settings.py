@@ -198,12 +198,12 @@ class Settings(QDialog):
       submenuIndex = settings[1][index + 1]
 
       menus["menu"][submenuIndex]["isSubmenu"] = True
-      menus["menu"][submenuIndex]["ref"] = submenuIndex
+      menus["menu"][submenuIndex]["ref"] = str(submenuIndex)
 
-      menus["submenus"][submenuIndex] = []
+      menus["submenus"][str(submenuIndex)] = []
       
       for actionName in settings[1] [index]:
-        menus["submenus"][submenuIndex].append({
+        menus["submenus"][str(submenuIndex)].append({
           "name": actionName,
           "actionID": self.GetActionID(actionName, actionsList),
           "isSubmenu": False,
