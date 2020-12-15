@@ -3,6 +3,8 @@ from .ActionsList import ActionsList
 from .Settings import Settings
 from .MenuArea import MenuArea, EventController
 
+# TODO: if key release is before 
+
 class PieMenuExtension(Extension):
   def __init__(self,parent):
     super(PieMenuExtension, self).__init__(parent)
