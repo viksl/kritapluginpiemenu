@@ -1,27 +1,17 @@
 from krita import *
 from PyQt5 import *
 from PyQt5.QtCore import pyqtSignal
-from .Win import Win
 import math
-
-class Dialog(QDialog):
-  def __init__(self, text, parent=None):
-      super(Dialog, self).__init__(parent)
-      self.setLayout(QVBoxLayout())
-      self.label = QLabel(str(text))
-      self.layout().addWidget(self.label)
-      self.resize(200, 50)
-      self.exec_()
 
 class MenuArea(QObject):
     def __init__(self, menus, parent=None):
         super().__init__(parent)
 
         self.menus = menus
-        
+        self.keyReleased = False
+
         self.menu = PieMenu(QCursor.pos(), self.menus["menu"], parent)
         self.menu.initNewMenuSignal.connect(self.initNewMenu)
-        #self.eventController = EventController(self.menu, parent)
 
     def initNewMenu(self):
         index = self.menu.labels["activeLabel"]
@@ -37,33 +27,49 @@ class EventController(QMdiArea):
         self.setMouseTracking(True)
         self.eventObj = eventObj
         self.controllerOwner = controllerOwner
-        
+        self.mouseButtonPress = False
+
     def eventFilter(self, source, event):
         if (event.type() == QEvent.KeyRelease
             and not event.isAutoRepeat()
             and Krita.instance().action("pieMenu").shortcut().matches(event.key()) > 0
             and not self.controllerOwner.keyReleased):
 
-            if hasattr( self.controllerOwner, "eventController" ):
-                self.controllerOwner.keyReleased = True
+            self.deleteEventFilter(source, event)
 
-                self.eventObj.ResetGUI()
-                self.eventObj.hide()
-                
-                self.removeEventFilter(self)
-                self.controllerOwner.eventController.deleteLater()
-                self.eventObj.eventHandler(event, self.controllerOwner.keyReleased)
-                QApplication.processEvents()
+        elif (event.type() == QEvent.MouseButtonPress
+            and event.button() == QtCore.Qt.LeftButton
+            and not self.mouseButtonPress):
 
-        elif (event.type() == QtCore.QEvent.MouseMove
-            and not self.controllerOwner.keyReleased):
-            self.eventObj.eventHandler(event)
-
-        elif (event.type() == QEvent.MouseButtonPress and 
-            event.button() == QtCore.Qt.LeftButton):
+            self.mouseButtonPress = True
+            self.controllerOwner.menu.previousAction = None
+            self.controllerOwner.menu.initNewMenuAt(self.controllerOwner.menus["menu"], QCursor.pos())
+            self.controllerOwner.menu.show()
+            
             return True
+
+        elif event.type() == QEvent.MouseButtonRelease:
+            self.mouseButtonPress = False
+            self.deleteEventFilter(source, event)
+
+        elif ( event.type() == QtCore.QEvent.MouseMove
+            and not self.controllerOwner.keyReleased
+            and self.mouseButtonPress ):
+            self.eventObj.eventHandler(event)
             
         return super(EventController, self).eventFilter(source, event)
+
+    def deleteEventFilter(self, source, event):
+        if hasattr( self.controllerOwner, "eventController" ):
+            self.controllerOwner.keyReleased = True
+
+            self.eventObj.ResetGUI()
+            self.eventObj.hide()
+            
+            self.removeEventFilter(self)
+            self.controllerOwner.eventController.deleteLater()
+            self.eventObj.eventHandler(event, self.controllerOwner.keyReleased)
+
 
 class PieMenu(QWidget):
     initNewMenuSignal = pyqtSignal()
@@ -99,7 +105,6 @@ class PieMenu(QWidget):
         self.clearPainter = False
         
         self.previousAction = None
-        #self.initNewMenuAt( menuSections, cursorPosition )
 
     def initNewMenuAt(self, menuSections, cursorPosition):
         self.clearPainter = False
@@ -201,10 +206,11 @@ class PieMenu(QWidget):
     def getCurrentPosition(self, aPosition=None):
         position = QCursor.pos() if aPosition == None else aPosition
         screen = QGuiApplication.screenAt(position)
+
         return QPoint(position.x() - screen.geometry().x(), position.y() - screen.geometry().y())
 
     def eventHandler(self, event, keyReleased=False):
-        if event.type() == QEvent.KeyRelease:
+        if event.type() == QEvent.MouseButtonRelease:
             if self.distance == None or self.distance < self.wheelIconInnerRadius:
                 return
 
@@ -220,7 +226,7 @@ class PieMenu(QWidget):
                 if action != None:
                     action.trigger()
 
-        elif event.type() == QtCore.QEvent.MouseMove:
+        if event.type() == QtCore.QEvent.MouseMove:
             if (not self.cursorInitPosition):
                 self.cursorInitPosition = QCursor.pos()
 

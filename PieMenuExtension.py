@@ -3,15 +3,6 @@ from .ActionsList import ActionsList
 from .Settings import Settings
 from .MenuArea import MenuArea, EventController
 
-class Dialog(QDialog):
-  def __init__(self, text, parent=None):
-      super(Dialog, self).__init__(parent)
-      self.setLayout(QVBoxLayout())
-      self.label = QLabel(str(text))
-      self.layout().addWidget(self.label)
-      self.resize(200, 50)
-      self.exec_()
-
 class PieMenuExtension(Extension):
   def __init__(self,parent):
     super(PieMenuExtension, self).__init__(parent)
@@ -23,16 +14,14 @@ class PieMenuExtension(Extension):
     self.menuArea.deleteLater()
     self.menus = self.settings.menus
     self.menuArea = MenuArea(self.menus, self.qWin)
+    self.menuArea.menus = self.menus
 
   def openPieMenu(self):
     if (not self.qWin.underMouse()):
       return
 
     self.menuArea.keyReleased = False
-    self.menuArea.menu.previousAction = None
-    self.menuArea.menu.initNewMenuAt(self.menus["menu"], QCursor.pos())
     self.menuArea.eventController = EventController(self.menuArea.menu, self.menuArea.menu.parent(), self.menuArea)
-    self.menuArea.menu.show()
 
   def openSettings(self):
     self.settings.move(QCursor.pos())
@@ -48,7 +37,8 @@ class PieMenuExtension(Extension):
     self.menus = self.settings.menus
 
     self.menuArea = MenuArea(self.menus, self.qWin)
-
+    self.menuArea.menus = self.menus
+    
     self.pieMenuAction = window.createAction("pieMenu", "Pie Menu")
     self.pieMenuAction.setAutoRepeat(False)
 
