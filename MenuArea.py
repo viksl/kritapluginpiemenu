@@ -1,7 +1,10 @@
 from krita import *
 from PyQt5 import *
 from PyQt5.QtCore import pyqtSignal
+from .Win import Win
 import math
+
+win = Win()
 
 class Dialog(QDialog):
   def __init__(self, text, parent=None):
@@ -105,7 +108,7 @@ class PieMenu(QWidget):
         screen = QGuiApplication.screenAt(cursorPosition)
         self.setGeometry(screen.geometry())
         self.menuSections = menuSections
-        self.cursorInitPosition = QPoint( cursorPosition.x() - screen.geometry().x(), cursorPosition.y() - screen.geometry().y() )
+        self.cursorInitPosition = self.getCurrentPosition( cursorPosition )
         self.totalSplitSections = len(self.menuSections)
         self.splitSectionAngle = 2 * math.pi / self.totalSplitSections
         self.splitSectionOffAngle = -(math.pi / 2) - self.splitSectionAngle/2 
@@ -196,7 +199,14 @@ class PieMenu(QWidget):
 
         self.painter.end()
 
-    def eventHandler(self, event, keyReleased=False):        
+    def getCurrentPosition(self, aPosition=None):
+        position = QCursor.pos() if aPosition == None else aPosition
+        screen = QGuiApplication.screenAt(position)
+        return QPoint(position.x() - screen.geometry().x(), position.y() - screen.geometry().y())
+
+    def eventHandler(self, event, keyReleased=False):
+        global win
+
         if event.type() == QEvent.KeyRelease:
             if self.distance < self.wheelIconInnerRadius:
                 return
@@ -217,12 +227,14 @@ class PieMenu(QWidget):
             if (not self.cursorInitPosition):
                 self.cursorInitPosition = QCursor.pos()
 
-            self.distance = self.twoPointDistance(self.cursorInitPosition, QCursor.pos())
-            
+            self.distance = self.twoPointDistance(self.cursorInitPosition, self.getCurrentPosition())
+
             if self.distance >= self.wheelIconOuterRadius:
-                screen = QGuiApplication.screenAt(QCursor.pos())
+                cursor = self.getCurrentPosition()
+
                 v1 = [self.baseVector[0], self.baseVector[1]]
-                v2 = [QCursor.pos().x() - screen.geometry().x() - self.cursorInitPosition.x(), QCursor.pos().y() - screen.geometry().y() - self.cursorInitPosition.y()]
+                v2 = [cursor.x() - self.cursorInitPosition.x(), cursor.y() - self.cursorInitPosition.y()]
+
                 angle = self.vectorAngle(v1, v2)
 
                 for i in range(0, self.totalSplitSections):
