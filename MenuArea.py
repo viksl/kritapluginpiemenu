@@ -53,6 +53,7 @@ class EventController(QMdiArea):
                 self.removeEventFilter(self)
                 self.controllerOwner.eventController.deleteLater()
                 self.eventObj.eventHandler(event, self.controllerOwner.keyReleased)
+                QApplication.processEvents()
 
         elif (event.type() == QtCore.QEvent.MouseMove
             and not self.controllerOwner.keyReleased):
@@ -204,7 +205,7 @@ class PieMenu(QWidget):
 
     def eventHandler(self, event, keyReleased=False):
         if event.type() == QEvent.KeyRelease:
-            if self.distance < self.wheelIconInnerRadius:
+            if self.distance == None or self.distance < self.wheelIconInnerRadius:
                 return
 
             elif not (self.previousAction is None) and self.distance >= self.wheelIconInnerRadius and self.distance < self.wheelIconOuterRadius:
