@@ -211,10 +211,10 @@ class PieMenu(QWidget):
 
     def eventHandler(self, event, keyReleased=False):
         if event.type() == QEvent.MouseButtonRelease:
-            if self.distance == None or self.distance < self.wheelIconInnerRadius:
+            if self.distance == None:
                 return
 
-            elif not (self.previousAction is None) and self.distance >= self.wheelIconInnerRadius and self.distance < self.wheelIconOuterRadius:
+            elif not (self.previousAction is None) and self.distance < self.wheelIconOuterRadius:
                 action = Krita.instance().action( self.previousAction )
 
                 if action != None:
