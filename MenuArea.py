@@ -4,8 +4,6 @@ from PyQt5.QtCore import pyqtSignal
 from .Win import Win
 import math
 
-win = Win()
-
 class Dialog(QDialog):
   def __init__(self, text, parent=None):
       super(Dialog, self).__init__(parent)
@@ -205,8 +203,6 @@ class PieMenu(QWidget):
         return QPoint(position.x() - screen.geometry().x(), position.y() - screen.geometry().y())
 
     def eventHandler(self, event, keyReleased=False):
-        global win
-
         if event.type() == QEvent.KeyRelease:
             if self.distance < self.wheelIconInnerRadius:
                 return
