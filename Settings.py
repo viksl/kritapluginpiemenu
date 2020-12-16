@@ -51,7 +51,7 @@ class Settings(QDialog):
 
     self.settingsFormLayout.addRow( self.addLine() )
     
-    self.actionsList = actionsList  
+    self.actionsList = actionsList.actionsList
     
     self.menus = {
       "menu": [],
@@ -60,10 +60,10 @@ class Settings(QDialog):
 
     self.defaultMenus = {
       "menu": [
-        {"name": "your action name", "actionID": "qaction id here", "isSubmenu": False, "ref": None},
-        {"name": "your action name", "actionID": "qaction id here", "isSubmenu": False, "ref": None},
-        {"name": "your action name", "actionID": "qaction id here", "isSubmenu": False, "ref": None},
-        {"name": "your action name", "actionID": "qaction id here", "isSubmenu": False, "ref": None}
+        {"name": "your action name", "actionID": "qaction id here", "isSubmenu": False, "ref": None, "callback": None},
+        {"name": "your action name", "actionID": "qaction id here", "isSubmenu": False, "ref": None, "callback": None},
+        {"name": "your action name", "actionID": "qaction id here", "isSubmenu": False, "ref": None, "callback": None},
+        {"name": "your action name", "actionID": "qaction id here", "isSubmenu": False, "ref": None, "callback": None}
       ],
       "submenus": {}
     }
@@ -187,7 +187,8 @@ class Settings(QDialog):
         "name": actionName,
         "actionID": self.GetActionID(actionName, actionsList),
         "isSubmenu": False,
-        "ref": None
+        "ref": None,
+        "callback": self.GetCallback(actionName, actionsList)
       })
       
     # Submenus
@@ -207,10 +208,16 @@ class Settings(QDialog):
           "name": actionName,
           "actionID": self.GetActionID(actionName, actionsList),
           "isSubmenu": False,
-          "ref": None
+          "ref": None,
+          "callback": self.GetCallback(actionName, actionsList)
         })
 
     return menus
+
+  def GetCallback (self, actionName, actionsList):
+    for action in actionsList:
+      if action["name"] == actionName:
+        return action["callback"]
 
   def GetActionID (self, actionName, actionsList):
     for action in actionsList:

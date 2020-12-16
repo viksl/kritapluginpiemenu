@@ -4,13 +4,15 @@ from PyQt5.QtCore import pyqtSignal
 import math
 
 class MenuArea(QObject):
-    def __init__(self, menus, parent=None):
+    def __init__(self, menus, actionsList, parent=None):
         super().__init__(parent)
 
         self.menus = menus
+        # self.actionsList = actionsList
+
         self.keyReleased = False
 
-        self.menu = PieMenu(QCursor.pos(), self.menus["menu"], parent)
+        self.menu = PieMenu(actionsList, parent)
         self.menu.initNewMenuSignal.connect(self.initNewMenu)
 
     def initNewMenu(self):
@@ -74,8 +76,11 @@ class EventController(QMdiArea):
 class PieMenu(QWidget):
     initNewMenuSignal = pyqtSignal()
 
-    def __init__(self, cursorPosition, menuSections, parent=None):
+    def __init__(self, actionsList, parent=None):
         QWidget.__init__(self, parent)
+
+        self.actionsList = actionsList
+
         self.setWindowFlags(self.windowFlags() | QtCore.Qt.Window | QtCore.Qt.FramelessWindowHint)
         self.setAttribute(QtCore.Qt.WA_TranslucentBackground)
         self.setStyleSheet("background: transparent;")
@@ -105,10 +110,12 @@ class PieMenu(QWidget):
         self.clearPainter = False
         
         self.previousAction = None
+        self.callback = None
 
     def initNewMenuAt(self, menuSections, cursorPosition):
         self.clearPainter = False
         self.distance = None
+        self.callback = None
         screen = QGuiApplication.screenAt(cursorPosition)
         self.setGeometry(screen.geometry())
         self.menuSections = menuSections
@@ -153,6 +160,63 @@ class PieMenu(QWidget):
 
         self.update()
         QApplication.processEvents()
+
+    def eventHandler(self, event, keyReleased=False):
+        if event.type() == QEvent.MouseButtonRelease:
+            if self.distance == None:
+                return
+
+            elif not (self.previousAction is None) and self.distance < self.wheelIconOuterRadius:
+                action = Krita.instance().action( self.previousAction )
+
+                if action != None:
+                    action.trigger()
+
+            elif not(self.labels["activeLabel"] is None):
+                action = Krita.instance().action( self.menuSections[self.labels["activeLabel"]]["actionID"] )
+
+                if action != None:
+                    action.trigger()
+
+        if event.type() == QtCore.QEvent.MouseMove:
+            if (not self.cursorInitPosition):
+                self.cursorInitPosition = QCursor.pos()
+
+            if self.callback != None:
+                self.callback()
+                return
+
+            self.distance = self.twoPointDistance(self.cursorInitPosition, self.getCurrentPosition())
+
+            if self.distance >= self.wheelIconOuterRadius:
+                cursor = self.getCurrentPosition()
+
+                v1 = [self.baseVector[0], self.baseVector[1]]
+                v2 = [cursor.x() - self.cursorInitPosition.x(), cursor.y() - self.cursorInitPosition.y()]
+
+                angle = self.vectorAngle(v1, v2)
+
+                for i in range(0, self.totalSplitSections):
+                    if ((angle + self.splitSectionOffAngle) % (2*math.pi) > i * self.splitSectionAngle and
+                        (angle + self.splitSectionOffAngle) % (2*math.pi) <=  (i + 1) * self.splitSectionAngle):
+
+                        if not (self.labels["activeLabel"] is None):
+                            self.labels["children"][self.labels["activeLabel"]].setStyleSheet(self.labelStyleBase)
+                        
+                        self.labels["children"][i].setStyleSheet(self.labelStyleActive)
+                        self.labels["activeLabel"] = i
+
+                        # Display submenu
+                        if not(self.labels["activeLabel"] is None) and self.menuSections[self.labels["activeLabel"]]["isSubmenu"] and self.menuSections[self.labels["activeLabel"]]["callback"] == None:
+                            self.previousAction = self.menuSections[self.labels["activeLabel"]]["actionID"]
+                            self.initNewMenuSignal.emit()
+                        elif  not( self.labels["activeLabel"] is None ) and not( self.menuSections[self.labels["activeLabel"]]["callback"] == None ):
+                            self.actionsList.Init()
+                            self.callback = getattr(self.actionsList, self.menuSections[self.labels["activeLabel"]]["callback"] )
+                        break
+            else:
+                for label in self.labels["children"]:
+                    label.setStyleSheet(self.labelStyleBase)
 
     def getLabelPositionAt(self, index):
         return self.circleCoor(self.cursorInitPosition.x(), self.cursorInitPosition.y(), self.labelRadius, index * self.splitSectionAngle + self.splitSectionAngle / 2)
@@ -208,53 +272,3 @@ class PieMenu(QWidget):
         screen = QGuiApplication.screenAt(position)
 
         return QPoint(position.x() - screen.geometry().x(), position.y() - screen.geometry().y())
-
-    def eventHandler(self, event, keyReleased=False):
-        if event.type() == QEvent.MouseButtonRelease:
-            if self.distance == None:
-                return
-
-            elif not (self.previousAction is None) and self.distance < self.wheelIconOuterRadius:
-                action = Krita.instance().action( self.previousAction )
-
-                if action != None:
-                    action.trigger()
-
-            elif not(self.labels["activeLabel"] is None):
-                action = Krita.instance().action( self.menuSections[self.labels["activeLabel"]]["actionID"] )
-
-                if action != None:
-                    action.trigger()
-
-        if event.type() == QtCore.QEvent.MouseMove:
-            if (not self.cursorInitPosition):
-                self.cursorInitPosition = QCursor.pos()
-
-            self.distance = self.twoPointDistance(self.cursorInitPosition, self.getCurrentPosition())
-
-            if self.distance >= self.wheelIconOuterRadius:
-                cursor = self.getCurrentPosition()
-
-                v1 = [self.baseVector[0], self.baseVector[1]]
-                v2 = [cursor.x() - self.cursorInitPosition.x(), cursor.y() - self.cursorInitPosition.y()]
-
-                angle = self.vectorAngle(v1, v2)
-
-                for i in range(0, self.totalSplitSections):
-                    if ((angle + self.splitSectionOffAngle) % (2*math.pi) > i * self.splitSectionAngle and
-                        (angle + self.splitSectionOffAngle) % (2*math.pi) <=  (i + 1) * self.splitSectionAngle):
-
-                        if not (self.labels["activeLabel"] is None):
-                            self.labels["children"][self.labels["activeLabel"]].setStyleSheet(self.labelStyleBase)
-                        
-                        self.labels["children"][i].setStyleSheet(self.labelStyleActive)
-                        self.labels["activeLabel"] = i
-
-                        # Display submenu
-                        if not(self.labels["activeLabel"] is None) and self.menuSections[self.labels["activeLabel"]]["isSubmenu"]:
-                            self.previousAction = self.menuSections[self.labels["activeLabel"]]["actionID"]
-                            self.initNewMenuSignal.emit()
-                        break
-            else:
-                for label in self.labels["children"]:
-                    label.setStyleSheet(self.labelStyleBase)

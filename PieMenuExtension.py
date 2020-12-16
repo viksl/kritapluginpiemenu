@@ -15,7 +15,7 @@ class PieMenuExtension(Extension):
   def updateMenus(self):
     self.menuArea.deleteLater()
     self.menus = self.settings.menus
-    self.menuArea = MenuArea(self.menus, self.qWin)
+    self.menuArea = MenuArea(self.menus, self.actionsList, self.qWin)
     self.menuArea.menus = self.menus
 
   def openPieMenu(self):
@@ -32,14 +32,14 @@ class PieMenuExtension(Extension):
   def createActions(self, window):
     self.qWin = window.qwindow()
     
-    self.actionsList = ActionsList().actionsList
+    self.actionsList = ActionsList()
 
     self.settings = Settings(self.actionsList, self.qWin)
     self.settings.menusChanged.connect(self.updateMenus)
     self.menus = self.settings.menus
 
-    self.menuArea = MenuArea(self.menus, self.qWin)
-    self.menuArea.menus = self.menus
+    self.menuArea = MenuArea(self.menus, self.actionsList, self.qWin)
+    # self.menuArea.menus = self.menus
     
     self.pieMenuAction = window.createAction("pieMenu", "Pie Menu")
     self.pieMenuAction.setAutoRepeat(False)
