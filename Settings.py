@@ -60,10 +60,10 @@ class Settings(QDialog):
 
     self.defaultMenus = {
       "menu": [
-        {"name": "your action name", "actionID": "qaction id here", "isSubmenu": False, "ref": None, "callback": None},
-        {"name": "your action name", "actionID": "qaction id here", "isSubmenu": False, "ref": None, "callback": None},
-        {"name": "your action name", "actionID": "qaction id here", "isSubmenu": False, "ref": None, "callback": None},
-        {"name": "your action name", "actionID": "qaction id here", "isSubmenu": False, "ref": None, "callback": None}
+        {"name": "your action name", "actionID": "qaction id here", "isSubmenu": False, "ref": None, "callback": None, "resetCallback": None},
+        {"name": "your action name", "actionID": "qaction id here", "isSubmenu": False, "ref": None, "callback": None, "resetCallback": None},
+        {"name": "your action name", "actionID": "qaction id here", "isSubmenu": False, "ref": None, "callback": None, "resetCallback": None},
+        {"name": "your action name", "actionID": "qaction id here", "isSubmenu": False, "ref": None, "callback": None, "resetCallback": None}
       ],
       "submenus": {}
     }
@@ -188,9 +188,10 @@ class Settings(QDialog):
         "actionID": self.GetActionID(actionName, actionsList),
         "isSubmenu": False,
         "ref": None,
-        "callback": self.GetCallback(actionName, actionsList)
+        "callback": self.GetCallback(actionName, actionsList),
+        "resetCallback": self.GetResetCallback(actionName, actionsList)
       })
-      
+
     # Submenus
     for index in range( 0, len(settings[1]), 2 ):
       if len( settings[1][index] ) == 0:
@@ -209,17 +210,23 @@ class Settings(QDialog):
           "actionID": self.GetActionID(actionName, actionsList),
           "isSubmenu": False,
           "ref": None,
-          "callback": self.GetCallback(actionName, actionsList)
+          "callback": self.GetCallback(actionName, actionsList),
+          "resetCallback": self.GetResetCallback(actionName, actionsList)
         })
 
     return menus
 
-  def GetCallback (self, actionName, actionsList):
+  def GetResetCallback(self, actionName, actionsList):
+    for action in actionsList:
+      if action["name"] == actionName:
+        return action["resetCallback"]
+
+  def GetCallback(self, actionName, actionsList):
     for action in actionsList:
       if action["name"] == actionName:
         return action["callback"]
 
-  def GetActionID (self, actionName, actionsList):
+  def GetActionID(self, actionName, actionsList):
     for action in actionsList:
       if action["name"] == actionName:
         return action["actionID"]

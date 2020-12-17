@@ -14,11 +14,16 @@ class MenuArea(QObject):
 
         self.menu = PieMenu(actionsList, parent)
         self.menu.initNewMenuSignal.connect(self.initNewMenu)
+        actionsList.hidePieMenuSignal.connect(self.hidePieMenu)
 
     def initNewMenu(self):
         index = self.menu.labels["activeLabel"]
         submenuRef = self.menus["menu"][index]["ref"]
         self.menu.initNewMenuAt(self.menus["submenus"][str(submenuRef)] , QCursor.pos() )
+
+    def hidePieMenu(self):
+        self.menu.ResetGUI()
+        self.menu.hide()
 
 #Handles events mouse move + mouse press and sends it where needed (TODO: key release)
 class EventController(QMdiArea):
@@ -36,7 +41,8 @@ class EventController(QMdiArea):
             and not event.isAutoRepeat()
             and Krita.instance().action("pieMenu").shortcut().matches(event.key()) > 0
             and not self.controllerOwner.keyReleased):
-
+            
+            self.eventObj.eventHandler(event)
             self.deleteEventFilter(source, event)
 
         elif (event.type() == QEvent.MouseButtonPress
@@ -54,7 +60,7 @@ class EventController(QMdiArea):
             self.mouseButtonPress = False
             self.deleteEventFilter(source, event)
 
-        elif ( event.type() == QtCore.QEvent.MouseMove
+        elif ( event.type() == QEvent.MouseMove
             and not self.controllerOwner.keyReleased
             and self.mouseButtonPress ):
             self.eventObj.eventHandler(event)
@@ -111,11 +117,13 @@ class PieMenu(QWidget):
         
         self.previousAction = None
         self.callback = None
+        self.resetCallback = None
 
     def initNewMenuAt(self, menuSections, cursorPosition):
         self.clearPainter = False
         self.distance = None
         self.callback = None
+        self.resetCallback = None
         screen = QGuiApplication.screenAt(cursorPosition)
         self.setGeometry(screen.geometry())
         self.menuSections = menuSections
@@ -162,7 +170,14 @@ class PieMenu(QWidget):
         QApplication.processEvents()
 
     def eventHandler(self, event, keyReleased=False):
-        if event.type() == QEvent.MouseButtonRelease:
+        if event.type() == QEvent.KeyRelease:
+            if self.resetCallback != None:
+                self.resetCallback()
+
+        elif event.type() == QEvent.MouseButtonRelease:
+            if self.resetCallback != None:
+                self.resetCallback()
+
             if self.distance == None:
                 return
 
@@ -178,7 +193,7 @@ class PieMenu(QWidget):
                 if action != None:
                     action.trigger()
 
-        if event.type() == QtCore.QEvent.MouseMove:
+        elif event.type() == QtCore.QEvent.MouseMove:
             if (not self.cursorInitPosition):
                 self.cursorInitPosition = QCursor.pos()
 
@@ -213,6 +228,10 @@ class PieMenu(QWidget):
                         elif  not( self.labels["activeLabel"] is None ) and not( self.menuSections[self.labels["activeLabel"]]["callback"] == None ):
                             self.actionsList.Init()
                             self.callback = getattr(self.actionsList, self.menuSections[self.labels["activeLabel"]]["callback"] )
+
+                            if self.menuSections[self.labels["activeLabel"]]["resetCallback"] != None:
+                                self.resetCallback = getattr(self.actionsList, self.menuSections[self.labels["activeLabel"]]["resetCallback"] )
+
                         break
             else:
                 for label in self.labels["children"]:
