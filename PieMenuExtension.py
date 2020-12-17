@@ -36,6 +36,7 @@ class PieMenuExtension(Extension):
 
   def openSettings(self):
     Dialog("test")
+
     self.settings.move(QCursor.pos())
     self.settings.show()
 
