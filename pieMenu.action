@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ActionCollection version="2" name="Scripts">
     <Actions category="Scripts">
+    
         <text>Pie Menu Menu</text>
         <Action name="pieMenu">
         <icon></icon>
@@ -11,18 +12,6 @@
         <activationFlags>10000</activationFlags>
         <activationConditions>0</activationConditions>
         <shortcut>`</shortcut>
-        <isCheckable>false</isCheckable>
-        <statusTip></statusTip>
-        </Action>
-        <Action name="pieMenuSettings">
-        <icon></icon>
-        <text>Pie Menu Settings</text>
-        <whatsThis></whatsThis>
-        <toolTip></toolTip>
-        <iconText></iconText>
-        <activationFlags>10000</activationFlags>
-        <activationConditions>0</activationConditions>
-        <shortcut>ctrl+alt+Q</shortcut>
         <isCheckable>false</isCheckable>
         <statusTip></statusTip>
         </Action>

@@ -49,12 +49,11 @@ class PieMenuExtension(Extension):
     self.menus = self.settings.menus
 
     self.menuArea = MenuArea(self.menus, self.actionsList, self.qWin)
-    # self.menuArea.menus = self.menus
     
-    self.pieMenuAction = window.createAction("pieMenu", "Pie Menu")
+    self.pieMenuAction = window.createAction("pieMenu", "Pie Menu", "tools/scripts")
     self.pieMenuAction.setAutoRepeat(False)
 
-    self.pieMenuSettingsAction = window.createAction("pieMenuSettings", "Pie Menu Settings")
+    self.pieMenuSettingsAction = window.createAction("pieMenuSettings", "Pie Menu Settings", "tools/scripts")
     self.pieMenuSettingsAction.setAutoRepeat(False)
 
     self.pieMenuAction.triggered.connect(self.openPieMenu)
