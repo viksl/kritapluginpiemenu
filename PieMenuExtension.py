@@ -13,6 +13,76 @@ class Dialog(QDialog):
       self.layout().addWidget(self.label)
       self.resize(200, 50)
       self.exec_()
+      
+class Win(QWidget):
+    def __init__(self, parent=None):
+        super(QWidget, self).__init__(parent)
+        self.width = 900
+        self.height = 200
+        self.setWindowFlags(self.windowFlags() | QtCore.Qt.Window)
+        self.setWindowTitle("Print")
+        self.setGeometry(0, 0, self.width, self.height)
+        self.label = QLabel("----", self)
+        self.label.setFont(QFont('Times', 12))
+        self.label.setStyleSheet("color: red")
+        self.label.move(10, 10)
+
+        self.label2 = QLabel("----", self)
+        self.label2.setFont(QFont('Times', 12))
+        self.label2.setStyleSheet("color: red")
+        self.label2.move(10, 40)
+
+        self.label3 = QLabel("----", self)
+        self.label3.setFont(QFont('Times', 12))
+        self.label3.setStyleSheet("color: red")
+        self.label3.move(10, 70)
+
+        self.label4 = QLabel("----", self)
+        self.label4.setFont(QFont('Times', 12))
+        self.label4.setStyleSheet("color: red")
+        self.label4.move(10, 100)
+
+        self.label5 = QLabel("----", self)
+        self.label5.setFont(QFont('Times', 12))
+        self.label5.setStyleSheet("color: red")
+        self.label5.move(10, 130)
+        
+        self.show()
+
+    def p(self, txt):
+        self.label.resize(self.width, 20)
+        self.label.setText( format(txt,".2f") )
+        
+    def p2(self, txt):
+        self.label2.resize(self.width, 20)
+        self.label2.setText( str( txt ) )
+        
+    def p3(self, txt):
+        self.label3.resize(self.width, 20)
+        self.label3.setText( str( txt ) )
+
+    def p4(self, txt):
+        self.label4.resize(self.width, 20)
+        self.label4.setText( str( txt ) )
+
+    def p5(self, txt):
+        self.label5.resize(self.width, 20)
+        self.label5.setText( str( txt ) )
+
+class mdiAFilter(QMdiArea):
+    def __init__(self, parent=None):
+        super().__init__(parent)
+        self.win = Win()
+        self.count = 0
+    def eventFilter(self, obj, event):
+        # if event.type() == QtCore.QEvent.MouseMove:
+        if event.type() == QEvent.KeyRelease:
+            self.count += 1
+            self.win.p2("test " + str(self.count))
+            
+        return False
+        
+mdi = mdiAFilter()
 
 class PieMenuExtension(Extension):
   def __init__(self,parent):
@@ -35,8 +105,6 @@ class PieMenuExtension(Extension):
     self.menuArea.eventController = EventController(self.menuArea.menu, self.menuArea.menu.parent(), self.menuArea)
 
   def openSettings(self):
-    Dialog("test")
-
     self.settings.move(QCursor.pos())
     self.settings.show()
 
