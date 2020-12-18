@@ -3,6 +3,8 @@ from PyQt5 import *
 from .HelperLib import *
 from .Win import Win
 
+win = Win()
+
 class ActionsList(QObject):
     hidePieMenuSignal = pyqtSignal()
 
@@ -15,12 +17,14 @@ class ActionsList(QObject):
         {"name": "Rotate Canvas", "actionID": None, "callback": "RotateCanvas", "resetCallback": "RemoveGizmo"},
         {"name": "Brush Size", "actionID": None, "callback": "BrushSize", "resetCallback": "RemoveGizmo"},
         {"name": "Brush Opacity", "actionID": None, "callback": "BrushOpacity", "resetCallback": "RemoveGizmo"},
+        {"name": "Brush Flow", "actionID": None, "callback": "BrushFlow", "resetCallback": "RemoveGizmo"},
     ]
 
     h = HelperLib()
 
     zoomStep = 1/100
     brushSizeStep = 0.2
+    paintingOpacityStep = 0.01
     baseVector = QPoint(1, 0)
     baseDPI = 72    # If the setzoomlevel and zoomlevel ever return same values this value might not be needed
 
@@ -146,7 +150,100 @@ class ActionsList(QObject):
         self.previousPosition = cursor
 
     def BrushOpacity( self ):
-        pass
+        global win
+
+        self.hidePieMenu()
+
+        cursor = QCursor.pos()
+
+        if self.position == None:
+            self.position = cursor
+        
+        if self.previousPosition == None:
+            self.previousPosition = self.position
+
+        view = Krita.instance().activeWindow().activeView()
+        canvas = Krita.instance().activeWindow().activeView().canvas()
+        res = Krita.instance().activeDocument().resolution()
+        
+        zoom = canvas.zoomLevel() * self.baseDPI / res
+
+        if self.gizmo == None:
+            self.gizmo = GizmoIcon(self.position, 10, 10, self.parent())
+            self.gizmo.changeSize(view.brushSize() * zoom)
+            self.gizmo.show()
+
+        direction = 1
+        steps = 0
+
+        if cursor.x() == self.previousPosition.x() or abs( self.previousPosition.x() - cursor.x() ) < 2:
+            return
+
+        if self.previousPosition.x() - cursor.x() > 0:
+            direction = -1
+
+        steps = int( abs( self.previousPosition.x() - cursor.x() ) )
+
+        alpha = view.paintingOpacity() + self.paintingOpacityStep * steps * direction
+
+        if alpha > 1:
+            alpha = 1
+        elif alpha < 0:
+            alpha = 0
+
+        view.setPaintingOpacity( alpha )
+
+        self.gizmo.changeOpacity( alpha * 255 )
+
+        self.previousPosition = cursor
+
+    def BrushFlow( self ):
+        global win
+
+        self.hidePieMenu()
+
+        cursor = QCursor.pos()
+
+        if self.position == None:
+            self.position = cursor
+        
+        if self.previousPosition == None:
+            self.previousPosition = self.position
+
+        view = Krita.instance().activeWindow().activeView()
+        canvas = Krita.instance().activeWindow().activeView().canvas()
+        res = Krita.instance().activeDocument().resolution()
+        
+        zoom = canvas.zoomLevel() * self.baseDPI / res
+
+        if self.gizmo == None:
+            self.gizmo = GizmoIcon(self.position, 10, 10, self.parent())
+            self.gizmo.changeSize(view.brushSize() * zoom)
+            self.gizmo.show()
+
+        direction = 1
+        steps = 0
+
+        if cursor.x() == self.previousPosition.x() or abs( self.previousPosition.x() - cursor.x() ) < 2:
+            return
+
+        if self.previousPosition.x() - cursor.x() > 0:
+            direction = -1
+
+        steps = int( abs( self.previousPosition.x() - cursor.x() ) )
+
+        alpha = view.paintingFlow() + self.paintingOpacityStep * steps * direction
+
+        if alpha > 1:
+            alpha = 1
+        elif alpha < 0:
+            alpha = 0
+
+        view.setPaintingFlow( alpha )
+
+        self.gizmo.changeOpacity( alpha * 255 )
+
+        self.previousPosition = cursor
 
     def RemoveGizmo( self ):
         if self.gizmo != None:

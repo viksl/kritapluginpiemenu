@@ -41,7 +41,7 @@ class EventController(QMdiArea):
             and not event.isAutoRepeat()
             and Krita.instance().action("pieMenu").shortcut().matches(event.key()) > 0
             and not self.controllerOwner.keyReleased):
-            self.win.p2("test")
+
             self.eventObj.eventHandler(event)
             self.deleteEventFilter(source, event)
 

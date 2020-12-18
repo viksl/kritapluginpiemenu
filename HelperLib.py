@@ -28,6 +28,7 @@ class GizmoIcon(QWidget):
     self.setAttribute(QtCore.Qt.WA_TranslucentBackground)
     self.setStyleSheet("background: transparent;")
     self.setWindowTitle("icon")
+    self.alpha = 255
 
   def showAt(self, position):
     self.move(position.x() - self.width / 2, position.y() - self.height / 2)
@@ -39,12 +40,15 @@ class GizmoIcon(QWidget):
     self.setGeometry(int(self.position.x() - self.width / 2), int(self.position.y() - self.height / 2), self.width, self.height)
     self.update()
 
+  def changeOpacity(self, val):
+    self.alpha = val
+    self.update()
+
   def paintEvent(self, event):
     self.painter = QPainter(self)
     self.painter.eraseRect(event.rect())
     self.painter.setRenderHints( QPainter.HighQualityAntialiasing )
     self.painter.setPen( QPen(QColor(255, 255, 255, 150), 2) )
-    # self.painter.setBrush( QColor(47, 47, 47, 150) )
-    self.painter.setBrush( QColor(224, 5, 5, 255) )
+    self.painter.setBrush( QColor(224, 5, 5, self.alpha) )
     self.painter.drawEllipse(0, 0, self.width, self.height)
     self.painter.end()
