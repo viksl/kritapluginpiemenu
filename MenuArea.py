@@ -185,13 +185,19 @@ class PieMenu(QWidget):
                 action = Krita.instance().action( self.previousAction )
 
                 if action != None:
-                    action.trigger()
+                    if action.checkable:
+                        action.toggle()
+                    else:
+                        action.trigger()
 
             elif not(self.labels["activeLabel"] is None):
                 action = Krita.instance().action( self.menuSections[self.labels["activeLabel"]]["actionID"] )
 
                 if action != None:
-                    action.trigger()
+                    if action.checkable:
+                        action.toggle()
+                    else:
+                        action.trigger()
 
         elif event.type() == QtCore.QEvent.MouseMove:
             if (not self.cursorInitPosition):
