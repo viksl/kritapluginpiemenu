@@ -30,11 +30,11 @@ Default shortcut: ` + (Mouse left/middle button or Pen touch)
   - Free plugin for Krita (<https://krita.org>)
   - Youtube video (<https://youtu.be/-rUf6Qz3nwU>)
 
-Pie Menu plugin allows you to set up your own custom menu for a quick access of various tools and actions in Krita to stremline the whole painting process.
+Pie Menu plugin allows you to set up your own custom menu for a quick access of various tools and actions in Krita to streamline the whole painting process.
 
 ## 2/ Installation:
 
-    Method 1.
+    Method A
      1. Download this plugin from:
         https://github.com/viksl/kritapluginpiemenu
         (on the right side there's a green button labeled Code, press it
@@ -45,7 +45,7 @@ Pie Menu plugin allows you to set up your own custom menu for a quick access of 
     5. In the pop up window open the file "kritapluginpiemenu.zip" from step 2.
     6. Restart Krita
 
-    Method 2.
+    Method B
     1. Download this plugin from:
         https://github.com/viksl/kritapluginpiemenu
         (on the right side there's a green button labeled Code, press it
@@ -99,7 +99,7 @@ In settings you can:
     b. Opens a submenu
     c. Gets triggered by releasing left mouse button or lifting the pen
 4. If the action requires it you might need to move the pen around, for example:
-    If the action is Brush Size then moving pen left and right chagnes the size of the brush
+    If the action is Brush Size then moving pen left and right changes the size of the brush
 
 ## 4/ Adjustments you can make if needed:
 
