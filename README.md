@@ -29,6 +29,7 @@ Default shortcut: ` + (Mouse left/middle button or Pen touch)
 
   - Free plugin for Krita (<https://krita.org>)
   - Youtube video (<>)
+  - Krita Artists thread (<https://krita-artists.org/>)
 
 Pie Menu plugin allows you to set up your own custom menu for a quick access of various tools and actions in Krita to streamline the whole painting process.
 
