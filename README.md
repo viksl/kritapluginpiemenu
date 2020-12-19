@@ -36,11 +36,11 @@ Pie Menu plugin allows you to set up your own custom menu for a quick access of 
 
 ![PieMenu1](https://github.com/viksl/kritapluginpiemenu/blob/main/images/piemenu1.png)
 
-![PieMenu2](https://github.com/viksl/kritapluginpiemenu/blob/main/images/piemenu1.png)
+![PieMenu2](https://github.com/viksl/kritapluginpiemenu/blob/main/images/piemenu2.png)
 
 *Settings:*
 
-![PieMenuSettings](https://github.com/viksl/kritapluginpiemenu/blob/main/images/piemenu1.png)
+![PieMenuSettings](https://github.com/viksl/kritapluginpiemenu/blob/main/images/piemenusettings.png)
 
 ## 2/ Installation:
 
