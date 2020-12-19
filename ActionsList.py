@@ -219,7 +219,7 @@ class ActionsList(QObject):
 
         if self.gizmo == None:
             self.gizmo = GizmoIcon(self.position, 10, 10, self.parent())
-            self.gizmo.changeSize(view.brushSize() * zoom)
+            self.gizmo.changeOpacity(view.paintingOpacity() * 255)
             self.gizmo.show()
 
         direction = 1
@@ -267,7 +267,7 @@ class ActionsList(QObject):
 
         if self.gizmo == None:
             self.gizmo = GizmoIcon(self.position, 10, 10, self.parent())
-            self.gizmo.changeSize(view.brushSize() * zoom)
+            self.gizmo.changeOpacity(view.paintingFlow() * 255)
             self.gizmo.show()
 
         direction = 1
