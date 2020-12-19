@@ -33,7 +33,6 @@ class ActionsList(QObject):
         {"name": "Crop Tool", "actionID": "KisToolCrop", "callback": None, "resetCallback": None},
         {"name": "Gradient Tool", "actionID": "KritaFill/KisToolGradient", "callback": None, "resetCallback": None},
         {"name": "Color Picker", "actionID": "KritaSelected/KisToolColorPicker", "callback": None, "resetCallback": None},
-        {"name": "Color Selector", "actionID": "show_color_selector", "callback": None, "resetCallback": None},
         {"name": "Colorize Mask Tool", "actionID": "KritaShape/KisToolLazyBrush", "callback": None, "resetCallback": None},
         {"name": "Smart Patch Tool", "actionID": "KritaShape/KisToolSmartPatch", "callback": None, "resetCallback": None},
         {"name": "Assistant Tool", "actionID": "KisAssistantTool", "callback": None, "resetCallback": None},

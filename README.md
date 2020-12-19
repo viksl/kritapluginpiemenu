@@ -122,4 +122,6 @@ None (will be updated when something appears)
 
 ## 6/ Possible future updates
 - New actions
+    Color Selector
+
 Currently no plans, depends on what is needed through testing, feel free to let me know here:
