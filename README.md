@@ -93,7 +93,7 @@ Pie Menu plugin allows you to set up your own custom menu for a quick access of 
 
 ## 3/ How to use:
 
--   Settings
+-   **Settings**
 
 First set up your Pie Menu through krita's top menu: Tools - Scripts - Pie Menu Settings.
 In settings you can:
@@ -101,7 +101,7 @@ In settings you can:
 2. Assign actions to sections
 3. Set any action as a submenu (opens a sub pie menu)
 
--   Use
+-   **Use**
 
 1. Press the shortcut, press the left mouse button or use your pen on your tablet/screen to trigger the Pie menu.
 2. Slide the cursor to an option in the menu.
@@ -114,7 +114,7 @@ In settings you can:
 
 ## 4/ Adjustments you can make if needed:
 
-Check the video in section 1/.
+Check the video in section 1/
 
 ## 5/ Known Issues
 None (will be updated when something appears)
