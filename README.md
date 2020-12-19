@@ -45,6 +45,7 @@ Pie Menu plugin allows you to set up your own custom menu for a quick access of 
     5. In the pop up window open the file "kritapluginpiemenu.zip" from step 2.
     6. Restart Krita
 
+
     Method B
     1. Download this plugin from:
         https://github.com/viksl/kritapluginpiemenu
