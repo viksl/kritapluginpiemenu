@@ -1,9 +1,6 @@
 from krita import *
 from PyQt5 import *
 from .HelperLib import *
-from .Win import Win
-
-win = Win()
 
 class ActionsList(QObject):
     hidePieMenuSignal = pyqtSignal()
@@ -219,6 +216,7 @@ class ActionsList(QObject):
 
         if self.gizmo == None:
             self.gizmo = GizmoIcon(self.position, 10, 10, self.parent())
+            self.gizmo.changeSize(view.brushSize() * zoom)
             self.gizmo.changeOpacity(view.paintingOpacity() * 255)
             self.gizmo.show()
 
@@ -267,6 +265,7 @@ class ActionsList(QObject):
 
         if self.gizmo == None:
             self.gizmo = GizmoIcon(self.position, 10, 10, self.parent())
+            self.gizmo.changeSize(view.brushSize() * zoom)
             self.gizmo.changeOpacity(view.paintingFlow() * 255)
             self.gizmo.show()
 

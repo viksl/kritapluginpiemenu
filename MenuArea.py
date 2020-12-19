@@ -96,8 +96,8 @@ class PieMenu(QWidget):
         self.height = int(self.radius * 2)
         self.halfWidth = int(self.width / 2)
         self.halfHeight = int(self.height / 2)
-        self.wheelIconOuterRadius = 13 *2
-        self.wheelIconInnerRadius = 5 *2
+        self.wheelIconOuterRadius = 18 *2
+        self.wheelIconInnerRadius = 13 *2
         self.wheelColor = QColor(47, 47, 47, 200)
         self.lineColor = QColor(255, 255, 255, 30)
         self.wheelIconLineThickness = 1
@@ -185,7 +185,7 @@ class PieMenu(QWidget):
                 action = Krita.instance().action( self.previousAction )
 
                 if action != None:
-                    if action.checkable:
+                    if action.isCheckable():
                         action.toggle()
                     else:
                         action.trigger()
@@ -194,7 +194,7 @@ class PieMenu(QWidget):
                 action = Krita.instance().action( self.menuSections[self.labels["activeLabel"]]["actionID"] )
 
                 if action != None:
-                    if action.checkable:
+                    if action.isCheckable():
                         action.toggle()
                     else:
                         action.trigger()
