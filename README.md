@@ -34,28 +34,45 @@ Pie Menu plugin allows you to set up your own custom menu for a quick access of 
 
 ## 2/ Installation:
 
+    Method 1.
+     1. Download this plugin from:
+        https://github.com/viksl/kritapluginpiemenu
+        (on the right side there's a green button labeled Code, press it
+        then click on Download ZIP)
+    2. Open the zip file and locate file "kritapluginpiemenu.zip" inside
+    3. Open Krita
+    4. Inside Krita in the top menu: Tools - Scripts - Import Python Plugin...
+    5. In the pop up window open the file "kritapluginpiemenu.zip" from step 2.
+    6. Restart Krita
+
+    Method 2.
     1. Download this plugin from:
         https://github.com/viksl/kritapluginpiemenu
         (on the right side there's a green button labeled Code, press it
         then click on Download ZIP)
-    2. Open the zip file
-    3. Locate directory kritapluginpiemenu and kritapluginpiemenu.desktop
-        file inside kritapluginpiemenu directory
-    4. Copy the file and the directory to pykrita directory located
-        through: Open Krita, go to:
+    2. Open the zip file and locate file "kritapluginpiemenu.zip" inside
+    3. Locate directory "kritapluginpiemenu", "kritapluginpiemenu.desktop"
+        and "kritapluginpiemenu.action" file inside "kritapluginpiemenu" directory
+    4. Copy the "kritapluginpiemenu.desktop" and the directory to pykrita directory
+        located through: Open Krita, go to:
         Settings
             - Manage Resources...
                 - Press the button Open Resource Folder
                 (there you can find the pykrita directory)
-    5. Restart Krita
-    6. Enable the plugin
+    5. Copy "kritapluginpiemenu.action" to directory: Open Krita, go to:
+        Settings
+            - Manage Resources...
+                - Press the button Open Resource Folder
+                (there you can find the actions directory)
+    6. Restart Krita
+    7. Enable the plugin
         Settings
             - Configure Krita ...
                 - Python Plugin Manager
                 (Locate name Pie Menu and tick it to enable it)
                 Press OK
-    7. Restart Krita
-    8. Setup your shortcut
+    8. Restart Krita
+    9. Setup your shortcut
         Settings
             - Configure Krita ...
                 - Keyboard Shortcuts
