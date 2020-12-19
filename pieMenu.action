@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ActionCollection version="2" name="Scripts">
     <Actions category="Scripts">
-        <text>Pie Menu Menu</text>
+        <text>Pie Menu</text>
         
         <Action name="pieMenu">
         <icon></icon>

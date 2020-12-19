@@ -4,7 +4,7 @@ Author: viksl
 
 Github: https://github.com/viksl
 
-Github for this project: https://github.com/viksl/krita-plugin-custom-canvas-rotation
+Github for this project: https://github.com/viksl/kritapluginpiemenu
 
 Krita version: 4.4.1
 
@@ -35,7 +35,7 @@ Pie Menu plugin allows you to set up your own custom menu for a quick access of 
 ## 2/ Installation:
 
     1. Download this plugin from:
-        https://github.com/viksl/krita-plugin-custom-canvas-rotation
+        https://github.com/viksl/kritapluginpiemenu
         (on the right side there's a green button labeled Code, press it
         then click on Download ZIP)
     2. Open the zip file
