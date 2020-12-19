@@ -32,7 +32,11 @@ Default shortcut: ` + (Mouse left/middle button or Pen touch)
 
 Pie Menu plugin allows you to set up your own custom menu for a quick access of various tools and actions in Krita to streamline the whole painting process.
 
+*Visuals*
 ![PieMenu1](https://github.com/viksl/kritapluginpiemenu/blob/main/images/piemenu1.png)
+![PieMenu2](https://github.com/viksl/kritapluginpiemenu/blob/main/images/piemenu1.png)
+*Settings:*
+![PieMenuSettings](https://github.com/viksl/kritapluginpiemenu/blob/main/images/piemenu1.png)
 
 ## 2/ Installation:
 
