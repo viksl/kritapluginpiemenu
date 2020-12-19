@@ -65,6 +65,10 @@ class EventController(QMdiArea):
             and self.mouseButtonPress ):
             self.eventObj.eventHandler(event)
 
+        elif (event.type() == QEvent.TabletMove
+            or event.type() == QEvent.TabletPress):
+            return True
+
         return super(EventController, self).eventFilter(source, event)
 
     def deleteEventFilter(self, source, event):
@@ -297,3 +301,12 @@ class PieMenu(QWidget):
         screen = QGuiApplication.screenAt(position)
 
         return QPoint(position.x() - screen.geometry().x(), position.y() - screen.geometry().y())
+
+class Dialog(QDialog):
+  def __init__(self, text, parent=None):
+      super(Dialog, self).__init__(parent)
+      self.setLayout(QVBoxLayout())
+      self.label = QLabel(str(text))
+      self.layout().addWidget(self.label)
+      self.resize(200, 50)
+      self.exec_()
