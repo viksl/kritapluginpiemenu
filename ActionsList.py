@@ -57,6 +57,7 @@ class ActionsList(QObject):
         {"name": "Layer Visibility", "actionID": "toggle_layer_visibility", "callback": None, "resetCallback": None},
         {"name": "Undo", "actionID": "edit_undo", "callback": None, "resetCallback": None},
         {"name": "Redo", "actionID": "edit_redo", "callback": None, "resetCallback": None},
+        {"name": "Color Selector", "actionID": "show_color_selector", "callback": None, "resetCallback": None},
 
         {"name": "Zoom", "actionID": None, "callback": "Zoom", "resetCallback": None},
         {"name": "Rotate Canvas", "actionID": None, "callback": "RotateCanvas", "resetCallback": "RemoveGizmo"},

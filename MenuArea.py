@@ -67,14 +67,7 @@ class EventController(QMdiArea):
             or event.type() == QEvent.TabletPress):
             return True
 
-        elif (
-            (
-                event.type() == QEvent.KeyPress and event.isAutoRepeat()
-            )
-            or (
-                event.type() == QEvent.KeyRelease and event.isAutoRepeat()
-            )
-        ):
+        elif event.type() == QEvent.KeyPress or event.type() == QEvent.KeyRelease:
             return True
 
         return super(EventController, self).eventFilter(source, event)
