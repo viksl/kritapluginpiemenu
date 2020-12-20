@@ -8,8 +8,6 @@ class MenuArea(QObject):
         super().__init__(parent)
 
         self.menus = menus
-        # self.actionsList = actionsList
-
         self.keyReleased = False
 
         self.menu = PieMenu(actionsList, parent)
@@ -67,6 +65,16 @@ class EventController(QMdiArea):
 
         elif (event.type() == QEvent.TabletMove
             or event.type() == QEvent.TabletPress):
+            return True
+
+        elif (
+            (
+                event.type() == QEvent.KeyPress and event.isAutoRepeat()
+            )
+            or (
+                event.type() == QEvent.KeyRelease and event.isAutoRepeat()
+            )
+        ):
             return True
 
         return super(EventController, self).eventFilter(source, event)
