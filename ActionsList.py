@@ -59,6 +59,7 @@ class ActionsList(QObject):
         {"name": "Redo", "actionID": "edit_redo", "callback": None, "resetCallback": None},
         {"name": "Color Selector", "actionID": "show_color_selector", "callback": None, "resetCallback": None},
 
+        {"name": "ColSel", "actionID": None, "callback": "ColSelCallback", "resetCallback": "ColSel"},
         {"name": "Zoom", "actionID": None, "callback": "Zoom", "resetCallback": None},
         {"name": "Rotate Canvas", "actionID": None, "callback": "RotateCanvas", "resetCallback": "RemoveGizmo"},
         {"name": "Brush Size", "actionID": None, "callback": "BrushSize", "resetCallback": "RemoveGizmo"},
@@ -88,6 +89,14 @@ class ActionsList(QObject):
         self.gizmo = None
         self.hidePieMenuSignalEmitted = False
 
+    def ColSelCallback( self ):
+        pass
+
+    def ColSel( self ):
+        action = Krita.instance().action( "show_color_selector" )
+        action.setAutoRepeat(False)
+        action.trigger()
+        
     def Zoom( self ):
         self.hidePieMenu()
 

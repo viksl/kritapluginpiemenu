@@ -8,6 +8,8 @@ class MenuArea(QObject):
         super().__init__(parent)
 
         self.menus = menus
+        # self.actionsList = actionsList
+
         self.keyReleased = False
 
         self.menu = PieMenu(actionsList, parent)
@@ -57,6 +59,7 @@ class EventController(QMdiArea):
         elif event.type() == QEvent.MouseButtonRelease:
             self.mouseButtonPress = False
             self.deleteEventFilter(source, event)
+            return True
 
         elif ( event.type() == QEvent.MouseMove
             and not self.controllerOwner.keyReleased
@@ -64,23 +67,25 @@ class EventController(QMdiArea):
             self.eventObj.eventHandler(event)
 
         elif (event.type() == QEvent.TabletMove
-            or event.type() == QEvent.TabletPress):
-            return True
-
-        elif event.type() == QEvent.KeyPress or event.type() == QEvent.KeyRelease:
+            or event.type() == QEvent.TabletPress
+            or event.type() == QEvent.KeyPress
+            or event.type() == QEvent.MouseButtonPress
+            or event.type() == QEvent.MouseButtonRelease):
+            
             return True
 
         return super(EventController, self).eventFilter(source, event)
 
     def deleteEventFilter(self, source, event):
         if hasattr( self.controllerOwner, "eventController" ):
-            self.controllerOwner.keyReleased = True
-
             self.eventObj.ResetGUI()
             self.eventObj.hide()
+
+            if event.type() != QEvent.MouseButtonRelease:
+                self.controllerOwner.keyReleased = True
+                self.removeEventFilter(self)
+                self.controllerOwner.eventController.deleteLater()
             
-            self.removeEventFilter(self)
-            self.controllerOwner.eventController.deleteLater()
             self.eventObj.eventHandler(event, self.controllerOwner.keyReleased)
 
 
@@ -177,12 +182,14 @@ class PieMenu(QWidget):
     def eventHandler(self, event, keyReleased=False):
         if event.type() == QEvent.KeyRelease:
             if self.resetCallback != None:
-                self.resetCallback()
+                #self.resetCallback()
+                return
 
         elif event.type() == QEvent.MouseButtonRelease:
             if self.resetCallback != None:
                 self.resetCallback()
-
+                return
+                
             if self.distance == None:
                 return
 
@@ -236,7 +243,7 @@ class PieMenu(QWidget):
                         if not(self.labels["activeLabel"] is None) and self.menuSections[self.labels["activeLabel"]]["isSubmenu"] and self.menuSections[self.labels["activeLabel"]]["callback"] == None:
                             self.previousAction = self.menuSections[self.labels["activeLabel"]]["actionID"]
                             self.initNewMenuSignal.emit()
-                        elif  not( self.labels["activeLabel"] is None ) and not( self.menuSections[self.labels["activeLabel"]]["callback"] == None ):
+                        elif  self.labels["activeLabel"] != None and self.menuSections[self.labels["activeLabel"]]["callback"] != None:
                             self.actionsList.Init()
                             self.callback = getattr(self.actionsList, self.menuSections[self.labels["activeLabel"]]["callback"] )
 
