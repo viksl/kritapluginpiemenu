@@ -245,10 +245,10 @@ class PieMenu(QWidget):
                         if self.labels["activeLabel"] != None and self.menuSections[self.labels["activeLabel"]]["isSubmenu"] and self.menuSections[self.labels["activeLabel"]]["callback"] == None:
                             self.previousAction = self.menuSections[self.labels["activeLabel"]]["actionID"]
                             self.initNewMenuSignal.emit()
-                        if not(self.menuSections[self.labels["activeLabel"]]["isSubmenu"]) and self.labels["activeLabel"] != None and self.menuSections[self.labels["activeLabel"]]["callback"] != None:
+                        if self.labels["activeLabel"] != None and not( self.menuSections[self.labels["activeLabel"]]["isSubmenu"] ) and self.menuSections[self.labels["activeLabel"]]["callback"] != None:
                             self.actionsList.Init()
                             self.callback = getattr(self.actionsList, self.menuSections[self.labels["activeLabel"]]["callback"] )
-                        if not(self.menuSections[self.labels["activeLabel"]]["isSubmenu"]) and self.labels["activeLabel"] != None and self.menuSections[self.labels["activeLabel"]]["resetCallback"] != None:
+                        if self.labels["activeLabel"] != None and not( self.menuSections[self.labels["activeLabel"]]["isSubmenu"] ) and self.menuSections[self.labels["activeLabel"]]["resetCallback"] != None:
                             self.resetCallback = getattr(self.actionsList, self.menuSections[self.labels["activeLabel"]]["resetCallback"] )
 
                         break
