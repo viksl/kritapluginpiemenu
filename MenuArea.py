@@ -120,7 +120,6 @@ class PieMenu(QWidget):
         self.distancePassed = False
         self.labelBaseColor = "rgba(47, 47, 47, 200)"
         self.labelActiveColor = "rgba(30, 30, 30, 250)"
-        self.labelHighlightColor = "green"
         self.labelStyleBase = "background-color:" + self.labelBaseColor + "; color: white;"
         self.labelStyleActive = "background-color:" + self.labelActiveColor + "; color: white;"
         self.clearPainter = False
@@ -229,6 +228,9 @@ class PieMenu(QWidget):
 
                 angle = self.vectorAngle(v1, v2)
 
+                self.callback = None
+                self.resetCallback = None
+
                 for i in range(0, self.totalSplitSections):
                     if ((angle + self.splitSectionOffAngle) % (2*math.pi) > i * self.splitSectionAngle and
                         (angle + self.splitSectionOffAngle) % (2*math.pi) <=  (i + 1) * self.splitSectionAngle):
@@ -240,15 +242,14 @@ class PieMenu(QWidget):
                         self.labels["activeLabel"] = i
 
                         # Display submenu
-                        if not(self.labels["activeLabel"] is None) and self.menuSections[self.labels["activeLabel"]]["isSubmenu"] and self.menuSections[self.labels["activeLabel"]]["callback"] == None:
+                        if self.labels["activeLabel"] != None and self.menuSections[self.labels["activeLabel"]]["isSubmenu"] and self.menuSections[self.labels["activeLabel"]]["callback"] == None:
                             self.previousAction = self.menuSections[self.labels["activeLabel"]]["actionID"]
                             self.initNewMenuSignal.emit()
-                        elif  self.labels["activeLabel"] != None and self.menuSections[self.labels["activeLabel"]]["callback"] != None:
+                        if not(self.menuSections[self.labels["activeLabel"]]["isSubmenu"]) and self.labels["activeLabel"] != None and self.menuSections[self.labels["activeLabel"]]["callback"] != None:
                             self.actionsList.Init()
                             self.callback = getattr(self.actionsList, self.menuSections[self.labels["activeLabel"]]["callback"] )
-
-                            if self.menuSections[self.labels["activeLabel"]]["resetCallback"] != None:
-                                self.resetCallback = getattr(self.actionsList, self.menuSections[self.labels["activeLabel"]]["resetCallback"] )
+                        if not(self.menuSections[self.labels["activeLabel"]]["isSubmenu"]) and self.labels["activeLabel"] != None and self.menuSections[self.labels["activeLabel"]]["resetCallback"] != None:
+                            self.resetCallback = getattr(self.actionsList, self.menuSections[self.labels["activeLabel"]]["resetCallback"] )
 
                         break
             else:

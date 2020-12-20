@@ -57,9 +57,18 @@ class ActionsList(QObject):
         {"name": "Layer Visibility", "actionID": "toggle_layer_visibility", "callback": None, "resetCallback": None},
         {"name": "Undo", "actionID": "edit_undo", "callback": None, "resetCallback": None},
         {"name": "Redo", "actionID": "edit_redo", "callback": None, "resetCallback": None},
-        {"name": "Color Selector", "actionID": "show_color_selector", "callback": None, "resetCallback": None},
+        {"name": "Deselect", "actionID": "deselect", "callback": None, "resetCallback": None},
+        {"name": "Select All", "actionID": "select_all", "callback": None, "resetCallback": None},
+        {"name": "Invert Selection", "actionID": "invert_selection", "callback": None, "resetCallback": None},
+        {"name": "Save File", "actionID": "file_save", "callback": None, "resetCallback": None},
+        {"name": "No Brush Smooth", "actionID": "set_no_brush_smoothing", "callback": None, "resetCallback": None},
+        {"name": "Basic Brush Smooth", "actionID": "set_simple_brush_smoothing", "callback": None, "resetCallback": None},
+        {"name": "Weighted Brush Smooth", "actionID": "set_weighted_brush_smoothing", "callback": None, "resetCallback": None},
+        {"name": "Stabilizer Brush Smooth", "actionID": "set_stabilizer_brush_smoothing", "callback": None, "resetCallback": None},
+        {"name": "Fill - F Color", "actionID": "fill_selection_foreground_color", "callback": None, "resetCallback": None},
+        {"name": "Fill - B Color", "actionID": "fill_selection_background_color", "callback": None, "resetCallback": None},
 
-        {"name": "ColSel", "actionID": None, "callback": "ColSelCallback", "resetCallback": "ColSel"},
+        {"name": "Color Selector", "actionID": None, "callback": None, "resetCallback": "ColorSelector"},
         {"name": "Zoom", "actionID": None, "callback": "Zoom", "resetCallback": None},
         {"name": "Rotate Canvas", "actionID": None, "callback": "RotateCanvas", "resetCallback": "RemoveGizmo"},
         {"name": "Brush Size", "actionID": None, "callback": "BrushSize", "resetCallback": "RemoveGizmo"},
@@ -73,6 +82,7 @@ class ActionsList(QObject):
     zoomStep = 1/100
     brushSizeStep = 0.2
     paintingOpacityStep = 0.01
+    paintingFlowStep = 0.01
     layerOpacityStep = 1
     baseVector = QPoint(1, 0)
     baseDPI = 72    # If the setzoomlevel and zoomlevel ever return same values this value might not be needed
@@ -89,10 +99,7 @@ class ActionsList(QObject):
         self.gizmo = None
         self.hidePieMenuSignalEmitted = False
 
-    def ColSelCallback( self ):
-        pass
-
-    def ColSel( self ):
+    def ColorSelector( self ):
         action = Krita.instance().action( "show_color_selector" )
         action.setAutoRepeat(False)
         action.trigger()
@@ -289,7 +296,7 @@ class ActionsList(QObject):
 
         steps = int( abs( self.previousPosition.x() - cursor.x() ) )
 
-        alpha = view.paintingFlow() + self.paintingOpacityStep * steps * direction
+        alpha = view.paintingFlow() + self.paintingFlowStep * steps * direction
 
         if alpha > 1:
             alpha = 1
