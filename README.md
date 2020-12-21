@@ -101,6 +101,7 @@ In settings you can:
 1. Set the number of sections of the base menu
 2. Assign actions to sections
 3. Set any action as a submenu (opens a sub pie menu)
+    -   Action with (c) at the end of its name cannot be used to open a submenu
 
 -   **Use**
 
