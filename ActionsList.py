@@ -105,6 +105,7 @@ class ActionsList(QObject):
         self.initOffsetAngle = None
         self.gizmo = None
         self.hidePieMenuSignalEmitted = False
+        self.distancePassed = False
 
     def ColorSelector( self ):
         action = Krita.instance().action( "show_color_selector" )
@@ -162,8 +163,12 @@ class ActionsList(QObject):
         self.initDistanceTravelled = self.h.twoPointDistance(self.position, QCursor.pos())
 
         if self.initDistanceTravelled != None and self.initDistanceTravelled < gizmoSize:
-            Krita.instance().action('reset_canvas_rotation').trigger()
+            if self.distancePassed:
+                Krita.instance().action('reset_canvas_rotation').trigger()
             return
+
+        if not self.distancePassed:
+            self.distancePassed = True
 
         if self.initOffsetAngle == None:
             v1 = QPoint(self.baseVector.x() - self.position.x(),
