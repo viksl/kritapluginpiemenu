@@ -71,13 +71,13 @@ class ActionsList(QObject):
         {"name": "Select Opaque", "actionID": "selectopaque", "callback": None, "resetCallback": None},
         {"name": "Isolate Layer", "actionID": "isolate_active_layer", "callback": None, "resetCallback": None},
 
-        {"name": "Color Selector", "actionID": None, "callback": None, "resetCallback": "ColorSelector"},
-        {"name": "Zoom", "actionID": None, "callback": "Zoom", "resetCallback": None},
-        {"name": "Rotate Canvas", "actionID": None, "callback": "RotateCanvas", "resetCallback": "RemoveGizmo"},
-        {"name": "Brush Size", "actionID": None, "callback": "BrushSize", "resetCallback": "RemoveGizmo"},
-        {"name": "Brush Opacity", "actionID": None, "callback": "BrushOpacity", "resetCallback": "RemoveGizmo"},
-        {"name": "Brush Flow", "actionID": None, "callback": "BrushFlow", "resetCallback": "RemoveGizmo"},
-        {"name": "Layer Opacity", "actionID": None, "callback": "LayerOpacity", "resetCallback": "RemoveGizmo"},
+        {"name": "Color Selector (c)", "actionID": None, "callback": None, "resetCallback": "ColorSelector"},
+        {"name": "Zoom (c)", "actionID": None, "callback": "Zoom", "resetCallback": None},
+        {"name": "Rotate Canvas (c)", "actionID": None, "callback": "RotateCanvas", "resetCallback": "RemoveGizmo"},
+        {"name": "Brush Size (c)", "actionID": None, "callback": "BrushSize", "resetCallback": "RemoveGizmo"},
+        {"name": "Brush Opacity (c)", "actionID": None, "callback": "BrushOpacity", "resetCallback": "RemoveGizmo"},
+        {"name": "Brush Flow (c)", "actionID": None, "callback": "BrushFlow", "resetCallback": "RemoveGizmo"},
+        {"name": "Layer Opacity (c)", "actionID": None, "callback": "LayerOpacity", "resetCallback": "RemoveGizmo"},
     ]
 
     h = HelperLib()
