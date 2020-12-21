@@ -67,6 +67,9 @@ class ActionsList(QObject):
         {"name": "Stabilizer Brush Smooth", "actionID": "set_stabilizer_brush_smoothing", "callback": None, "resetCallback": None},
         {"name": "Fill - F Color", "actionID": "fill_selection_foreground_color", "callback": None, "resetCallback": None},
         {"name": "Fill - B Color", "actionID": "fill_selection_background_color", "callback": None, "resetCallback": None},
+        {"name": "Fill - Pattern", "actionID": "fill_selection_pattern", "callback": None, "resetCallback": None},
+        {"name": "Select Opaque", "actionID": "selectopaque", "callback": None, "resetCallback": None},
+        {"name": "Isolate Layer", "actionID": "isolate_active_layer", "callback": None, "resetCallback": None},
 
         {"name": "Color Selector", "actionID": None, "callback": None, "resetCallback": "ColorSelector"},
         {"name": "Zoom", "actionID": None, "callback": "Zoom", "resetCallback": None},
