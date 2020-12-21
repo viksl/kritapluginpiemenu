@@ -143,6 +143,7 @@ class ActionsList(QObject):
     def RotateCanvas( self ):
         self.hidePieMenu()
 
+        gizmoSize = 10
         canvas = Krita.instance().activeWindow().activeView().canvas()
 
         if self.position == None:
@@ -152,12 +153,13 @@ class ActionsList(QObject):
              self.angle = canvas.rotation()
 
         if self.gizmo == None:
-            self.gizmo = GizmoIcon(self.position, 10, 10, self.parent())
+            self.gizmo = GizmoIcon(self.position, gizmoSize, gizmoSize, self.parent())
             self.gizmo.showAt(self.position)
 
         self.initDistanceTravelled = self.h.twoPointDistance(self.position, QCursor.pos())
 
-        if self.initDistanceTravelled != None and self.initDistanceTravelled < 10:
+        if self.initDistanceTravelled != None and self.initDistanceTravelled < gizmoSize:
+            Krita.instance().action('reset_canvas_rotation').trigger()
             return
 
         if self.initOffsetAngle == None:
