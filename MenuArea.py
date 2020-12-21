@@ -8,7 +8,6 @@ class MenuArea(QObject):
         super().__init__(parent)
 
         self.menus = menus
-        # self.actionsList = actionsList
 
         self.keyReleased = False
 
@@ -25,7 +24,7 @@ class MenuArea(QObject):
         self.menu.ResetGUI()
         self.menu.hide()
 
-#Handles events mouse move + mouse press and sends it where needed (TODO: key release)
+#Handles events mouse move + mouse press and sends it where needed
 class EventController(QMdiArea):
     def __init__(self, eventObj=None, parent=None, controllerOwner=None):
         super().__init__(parent)
@@ -37,17 +36,39 @@ class EventController(QMdiArea):
         self.mouseButtonPress = False
 
     def eventFilter(self, source, event):
-        if (event.type() == QEvent.KeyRelease
+        """
+            Delete eventFilter when a key (not shortcut key) is pressed - this helps with alt+tab
+            otherwise krita restart is necessary.
+            (Krita's focusOut event could maybe help here but qwindow focusout works only 
+            when you press one of the krita's menu - for example Settings - so for now
+            this is a workaround)
+            It works fine unless an outside application steals key events from Krita,
+            such as Snipaste (F1) this steals the keyEvent and doesn't let it propagate
+            down to Krita so the pie menu gets stuck to mouse press button unfortunately.
+            It should be a rare case hopefully - I'm not sure if this will be a problem
+            with OBS and other video recording/streaming apps if so it will need more
+            investigation (find krita main app, install eventFilter to it with
+            FocusOut event and deleteEventFilter there)
+        """
+        if (event.type() == QEvent.KeyPress
+            and not event.isAutoRepeat()
+            and Krita.instance().action("pieMenu").shortcut().matches(event.key()) == 0
+        ):
+            self.deleteEventFilter(source, event)
+
+        elif (event.type() == QEvent.KeyRelease
             and not event.isAutoRepeat()
             and Krita.instance().action("pieMenu").shortcut().matches(event.key()) > 0
-            and not self.controllerOwner.keyReleased):
+            and not self.controllerOwner.keyReleased
+        ):
 
             self.eventObj.eventHandler(event)
             self.deleteEventFilter(source, event)
 
         elif (event.type() == QEvent.MouseButtonPress
             and event.button() == QtCore.Qt.LeftButton
-            and not self.mouseButtonPress):
+            and not self.mouseButtonPress
+        ):
 
             self.mouseButtonPress = True
             self.controllerOwner.menu.previousAction = None
@@ -61,16 +82,18 @@ class EventController(QMdiArea):
             self.deleteEventFilter(source, event)
             return True
 
-        elif ( event.type() == QEvent.MouseMove
+        elif (event.type() == QEvent.MouseMove
             and not self.controllerOwner.keyReleased
-            and self.mouseButtonPress ):
+            and self.mouseButtonPress
+        ):
             self.eventObj.eventHandler(event)
 
         elif (event.type() == QEvent.TabletMove
             or event.type() == QEvent.TabletPress
             or event.type() == QEvent.KeyPress
             or event.type() == QEvent.MouseButtonPress
-            or event.type() == QEvent.MouseButtonRelease):
+            or event.type() == QEvent.MouseButtonRelease
+        ):
             
             return True
 
@@ -100,26 +123,26 @@ class PieMenu(QWidget):
         self.setWindowFlags(self.windowFlags() | QtCore.Qt.Window | QtCore.Qt.FramelessWindowHint)
         self.setAttribute(QtCore.Qt.WA_TranslucentBackground)
         self.setStyleSheet("background: transparent;")
-        self.setWindowTitle("Quick Access Pie Menu")        
-        self.radius = 300
+        self.setWindowTitle("Quick Access Pie Menu")
+        self.radius = 300                                   # TWEAK
         self.width = int(self.radius * 2)
         self.height = int(self.radius * 2)
         self.halfWidth = int(self.width / 2)
         self.halfHeight = int(self.height / 2)
-        self.wheelIconOuterRadius = 18 *2
-        self.wheelIconInnerRadius = 13 *2
-        self.wheelColor = QColor(47, 47, 47, 200)
-        self.lineColor = QColor(255, 255, 255, 30)
-        self.wheelIconLineThickness = 1
+        self.wheelIconOuterRadius = 18 *2                   # TWEAK
+        self.wheelIconInnerRadius = 13 *2                   # TWEAK
+        self.wheelColor = QColor(47, 47, 47, 200)           # TWEAK
+        self.lineColor = QColor(255, 255, 255, 30)          # TWEAK
+        self.wheelIconLineThickness = 1                     # TWEAK
         
-        self.labelRadius = self.wheelIconInnerRadius + 180
+        self.labelRadius = self.wheelIconInnerRadius + 180  # TWEAK
 
         self.baseVector = [1, 0]
 
         self.labelPaintPoint = False
         self.distancePassed = False
-        self.labelBaseColor = "rgba(47, 47, 47, 200)"
-        self.labelActiveColor = "rgba(30, 30, 30, 250)"
+        self.labelBaseColor = "rgba(47, 47, 47, 200)"       # TWEAK
+        self.labelActiveColor = "rgba(30, 30, 30, 250)"     # TWEAK
         self.labelStyleBase = "background-color:" + self.labelBaseColor + "; color: white;"
         self.labelStyleActive = "background-color:" + self.labelActiveColor + "; color: white;"
         self.clearPainter = False
@@ -155,9 +178,9 @@ class PieMenu(QWidget):
             p = self.circleCoor(self.cursorInitPosition.x(), self.cursorInitPosition.y(), self.labelRadius, i * self.splitSectionAngle + self.splitSectionAngle / 2)
     
             self.labels["children"][i] = QLabel(str(self.menuSections[i]["name"]), self)
-            self.labels["children"][i].setFont(QFont('Times', 12))
+            self.labels["children"][i].setFont(QFont('Times', 12))  # TWEAK
             self.labels["children"][i].adjustSize()
-            self.labels["children"][i].setGeometry(int(p["x"]), int(p["y"]), 170, 60)
+            self.labels["children"][i].setGeometry(int(p["x"]), int(p["y"]), 170, 60)   # TWEAK
             self.labels["children"][i].move(int(self.labels["children"][i].x() - self.labels["children"][i].width() / 2), int(self.labels["children"][i].y() - self.labels["children"][i].height()/ 2))
             self.labels["children"][i].setStyleSheet(self.labelStyleBase)
             self.labels["children"][i].setAlignment(QtCore.Qt.AlignCenter) 
@@ -179,12 +202,7 @@ class PieMenu(QWidget):
         QApplication.processEvents()
 
     def eventHandler(self, event, keyReleased=False):
-        if event.type() == QEvent.KeyRelease:
-            if self.resetCallback != None:
-                #self.resetCallback()
-                return
-
-        elif event.type() == QEvent.MouseButtonRelease:
+        if event.type() == QEvent.MouseButtonRelease:
             if self.resetCallback != None:
                 self.resetCallback()
                 return
@@ -310,12 +328,3 @@ class PieMenu(QWidget):
         screen = QGuiApplication.screenAt(position)
 
         return QPoint(position.x() - screen.geometry().x(), position.y() - screen.geometry().y())
-
-class Dialog(QDialog):
-  def __init__(self, text, parent=None):
-      super(Dialog, self).__init__(parent)
-      self.setLayout(QVBoxLayout())
-      self.label = QLabel(str(text))
-      self.layout().addWidget(self.label)
-      self.resize(200, 50)
-      self.exec_()

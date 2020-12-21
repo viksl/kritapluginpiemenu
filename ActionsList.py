@@ -79,11 +79,15 @@ class ActionsList(QObject):
 
     h = HelperLib()
 
-    zoomStep = 1/100
-    brushSizeStep = 0.2
-    paintingOpacityStep = 0.01
-    paintingFlowStep = 0.01
-    layerOpacityStep = 1
+    zoomStep = 1/100                # TWEAK: ZOOM action's sensitivity
+    brushSizeStep = 0.2             # TWEAK: BRUSH SIZE action's sensitivity
+    paintingOpacityStep = 0.01      # TWEAK: BRUSH OPACITY action's sensitivity
+    paintingFlowStep = 0.01         # TWEAK: BRUSH FLOW action's sensitivity
+    layerOpacityStep = 1            # TWEAK: LAYER OPACITY action's sensitivity
+
+    """
+        Don't touch baseVector and baseDPI
+    """
     baseVector = QPoint(1, 0)
     baseDPI = 72    # If the setzoomlevel and zoomlevel ever return same values this value might not be needed
 
