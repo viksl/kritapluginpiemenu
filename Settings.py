@@ -60,10 +60,10 @@ class Settings(QDialog):
 
     self.defaultMenus = {
       "menu": [
-        {"name": "your action name", "actionID": "qaction id here", "isSubmenu": False, "ref": None, "callback": None, "resetCallback": None},
-        {"name": "your action name", "actionID": "qaction id here", "isSubmenu": False, "ref": None, "callback": None, "resetCallback": None},
-        {"name": "your action name", "actionID": "qaction id here", "isSubmenu": False, "ref": None, "callback": None, "resetCallback": None},
-        {"name": "your action name", "actionID": "qaction id here", "isSubmenu": False, "ref": None, "callback": None, "resetCallback": None}
+        {"name": "Select Opaque", "actionID": "selectopaque", "isSubmenu": False, "ref": None, "callback": None, "resetCallback": None},
+        {"name": "Undo", "actionID": "edit_undo", "isSubmenu": False, "ref": None, "callback": None, "resetCallback": None},
+        {"name": "Previous Preset", "actionID": "previous_preset", "isSubmenu": False, "ref": None, "callback": None, "resetCallback": None},
+        {"name": "Outline Selection Tool", "actionID": "KisToolSelectOutline", "isSubmenu": False, "ref": None, "callback": None, "resetCallback": None}
       ],
       "submenus": {}
     }
