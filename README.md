@@ -19,7 +19,7 @@ Licence:
 
 Copyright: (C) viksl
 
-Release Date: 19.12.2020
+Release Date: 21.12.2020
 
 Version: 0.1
 
