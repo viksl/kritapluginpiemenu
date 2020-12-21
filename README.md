@@ -28,7 +28,7 @@ Default shortcut: ` + (Mouse left/middle button or Pen touch)
 ## 1/ Description:
 
   - Free plugin for Krita (<https://krita.org>)
-  - Youtube video (<>)
+  - Youtube video (<https://www.youtube.com/>)
   - Krita Artists thread (<https://krita-artists.org/>)
 
 Pie Menu plugin allows you to set up your own custom menu for a quick access of various tools and actions in Krita to streamline the whole painting process.
@@ -118,10 +118,13 @@ In settings you can:
 Check the video in section 1/
 
 ## 5/ Known Issues
-None (will be updated when something appears)
+- Some applications which steal keyEvents from Krita might cause the pie menu to get stuck
+in general for single use it shouldn't be a problem but this needs testing with
+recording/streaming apps if they cause problems or not. I tested this with OBS on windows 10
+and there we NO problems.
+(no solution for now other than restarting Krita)
 
 ## 6/ Possible future updates
 - New actions
-    Color Selector
 
-Currently no plans, depends on what is needed through testing, feel free to let me know here:
+(Depends on what is needed through testing, wishes, ..., feel free to let me know through krita-artists.org)
