@@ -122,6 +122,8 @@ and there we NO problems.
 
 ## 6/ Possible future updates
 - New actions
+- New sections
+- Proper Default Menu
 
 (Depends on what is needed through testing, wishes, ..., feel free to let me know through krita-artists.org)
 
