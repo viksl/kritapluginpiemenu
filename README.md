@@ -141,6 +141,8 @@ and there we NO problems.
 
 0.3
 - Added offset to where a submenu appears to make triggering the inital tool (which invoked the submenu) more reliable
+(especially with short quick hand movement)
 - I've updated the video to reflect new categories for actions and simpler installation process.
-- Top post now contains info about written instructions on the plugins website which are noted before the video itself, there's also a note about the length of the video to make sure people know there's a faster method to get started if needed.
+- Top post now contains info about written instructions on the plugins website which are noted before the video itself,
+there's also a note about the length of the video to make sure people know there's a faster method to get started if needed.
 (check the krita-artist thread for the video and discussion about the plugin)
