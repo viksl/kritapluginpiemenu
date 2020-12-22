@@ -134,3 +134,5 @@ and there we NO problems.
 - Update to installation instruction and change to the directory structure of the plugin for simpler installation
 - actionsList now has categories for actions (customizable)
 - Categories are listed in the actions list for better visual clarity
+- Fixed isolate_active_layer action
+- Moved Select Opaque to a different category Misc - > Layer
