@@ -17,7 +17,7 @@ class CustomComboBox (QComboBox):
     super(CustomComboBox, self).__init__(parent)    
     self.setStyleSheet("QComboBox:disabled"
                         "{"
-                        "color: lightgreen;"
+                        "color: white;"
                         "}")
 
   def wheelEvent(self, event):
