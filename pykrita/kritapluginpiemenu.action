@@ -3,7 +3,7 @@
     <Actions category="Scripts">
         <text>Pie Menu</text>
         
-        <Action name="pieMenu">
+        <Action name="kritapluginpiemenu">
         <icon></icon>
         <text>Pie Menu</text>
         <whatsThis></whatsThis>

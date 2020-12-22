@@ -38,7 +38,7 @@ class PieMenuExtension(Extension):
 
     self.menuArea = MenuArea(self.menus, self.actionsList, self.qWin)
     
-    self.pieMenuAction = window.createAction("pieMenu", "Pie Menu", "tools/scripts")
+    self.pieMenuAction = window.createAction("kritapluginpiemenu", "Pie Menu", "tools/scripts")
     self.pieMenuAction.setAutoRepeat(False)
 
     self.pieMenuSettingsAction = window.createAction("pieMenuSettings", "Pie Menu Settings", "tools/scripts")

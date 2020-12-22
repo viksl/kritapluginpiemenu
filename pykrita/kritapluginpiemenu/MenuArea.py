@@ -52,13 +52,13 @@ class EventController(QMdiArea):
         """
         if (event.type() == QEvent.KeyPress
             and not event.isAutoRepeat()
-            and Krita.instance().action("pieMenu").shortcut().matches(event.key()) == 0
+            and Krita.instance().action("kritapluginpiemenu").shortcut().matches(event.key()) == 0
         ):
             self.deleteEventFilter(source, event)
 
         elif (event.type() == QEvent.KeyRelease
             and not event.isAutoRepeat()
-            and Krita.instance().action("pieMenu").shortcut().matches(event.key()) > 0
+            and Krita.instance().action("kritapluginpiemenu").shortcut().matches(event.key()) > 0
             and not self.controllerOwner.keyReleased
         ):
 
