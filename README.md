@@ -61,7 +61,8 @@ Pie Menu plugin allows you to set up your own custom menu for a quick access of 
         https://github.com/viksl/kritapluginpiemenu
         (on the right side there's a green button labeled Code, press it
         then click on Download ZIP)
-    2. Open the zip file and inside kritapluginpiemenu-main locate:
+    2. Open the zip file, go to "kritapluginpiemenu-main/plugin" directory
+        and there locate:
         - Directories "pykrita" and "actions"
     3. Copy both directories "pykrita" and "actions" to the resource directory
         located through: Open Krita, go to:
