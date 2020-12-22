@@ -21,7 +21,7 @@ Copyright: (C) viksl
 
 Release Date: 21.12.2020
 
-Version: 0.2
+Version: 0.3
 
 Default shortcut: ` + (Mouse left/middle button or Pen touch)
 
@@ -140,5 +140,4 @@ and there we NO problems.
 - Moved Select Opaque to a different category Misc - > Layer
 
 0.3
-- Added offset to where a submenu appears to make triggering the inital tool (which invoked the submenu
-more reliable) more reliable
+- Added offset to where a submenu appears to make triggering the inital tool (which invoked the submenu) more reliable
