@@ -62,20 +62,15 @@ Pie Menu plugin allows you to set up your own custom menu for a quick access of 
         https://github.com/viksl/kritapluginpiemenu
         (on the right side there's a green button labeled Code, press it
         then click on Download ZIP)
-    2. Open the zip file and locate file "kritapluginpiemenu.zip" inside
-    3. Locate directory "kritapluginpiemenu", "kritapluginpiemenu.desktop"
-        and "kritapluginpiemenu.action" file inside "kritapluginpiemenu" directory
-    4. Copy the "kritapluginpiemenu.desktop" and the directory to pykrita directory
+    2. Open the zip file and inside kritapluginpiemenu-main locate:
+        - Directories "pykrita" and "actions"
+    3. Copy both directories "pykrita" and "actions" to the resource directory
         located through: Open Krita, go to:
         Settings
             - Manage Resources...
-                - Press the button Open Resource Folder
-                (there you can find the pykrita directory)
-    5. Copy "kritapluginpiemenu.action" to directory: Open Krita, go to:
-        Settings
-            - Manage Resources...
-                - Press the button Open Resource Folder
-                (there you can find the actions directory)
+                - Press the button "Open Resource Folder"
+                (this opens the resource directory)
+    4. If overwrite dialog appears during copying let it overwrite (Yes) them
     6. Restart Krita
     7. Enable the plugin
         Settings
