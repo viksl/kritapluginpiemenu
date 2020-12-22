@@ -43,7 +43,7 @@ class Settings(QDialog):
     self.scrollArea.setWidgetResizable(True)
         
     self.settingsFormLayout = QFormLayout()
-    self.settingsFormLayout.setAlignment(Qt.AlignLeft | Qt.AlignTop)
+    self.settingsFormLayout.setAlignment(QtCore.Qt.AlignLeft | QtCore.Qt.AlignTop)
     self.groupBox = QGroupBox("Pie Menu Settings")
     self.groupBox.setStyleSheet("QGroupBox {font-size: 16px; text-decoration: underline;}")
     self.groupBox.setLayout(self.settingsFormLayout)
@@ -284,7 +284,7 @@ class Settings(QDialog):
     else:            
       subMenu = QGroupBox()
       subMenuLayout = QFormLayout()
-      subMenuLayout.setAlignment(Qt.AlignLeft | Qt.AlignTop)
+      subMenuLayout.setAlignment(QtCore.Qt.AlignLeft | QtCore.Qt.AlignTop)
       
       subMenuLayout.addRow(self.addLabel("Submenu " + str( index )))
       self.baseMenuSectionsCombo = self.addComboRow("Sections:", self.sectionsMaxCount, subMenuLayout)[1]
@@ -330,7 +330,7 @@ class Settings(QDialog):
     comboBox = CustomComboBox()
     
     # to remove wheelEvent so scrolling works on the scrollarea but not on individual buttons
-    comboBox.setFocusPolicy(Qt.StrongFocus)
+    comboBox.setFocusPolicy(QtCore.Qt.StrongFocus)
     actions = []
     categories = {}
 

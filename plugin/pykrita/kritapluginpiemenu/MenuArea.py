@@ -306,7 +306,7 @@ class PieMenu(QWidget):
         self.painter.fillPath(path, self.wheelColor)
         
         # Split lines
-        self.painter.setPen(QPen(self.lineColor, self.wheelIconLineThickness, Qt.SolidLine))
+        self.painter.setPen(QPen(self.lineColor, self.wheelIconLineThickness, QtCore.Qt.SolidLine))
         
         for i in range(self.totalSplitSections):
             p0 = self.circleCoor(self.cursorInitPosition.x(), self.cursorInitPosition.y(), self.wheelIconInnerRadius, i * self.splitSectionAngle)
