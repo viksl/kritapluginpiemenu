@@ -138,3 +138,7 @@ and there we NO problems.
 - Categories are listed in the actions list for better visual clarity
 - Fixed isolate_active_layer action
 - Moved Select Opaque to a different category Misc - > Layer
+
+0.3
+- Added offset to where a submenu appears to make triggering the inital tool (which invoked the submenu
+more reliable) more reliable
