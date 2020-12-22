@@ -340,7 +340,7 @@ class Settings(QDialog):
     else:
       # Form the list of categories
       for action in actionsList:
-        if not hasattr(action, "category"):
+        if "category" not in action:
           action["category"] = "Miscellaneous"
         if (action["category"] not in categories):
           categories[str(action["category"])] = []
