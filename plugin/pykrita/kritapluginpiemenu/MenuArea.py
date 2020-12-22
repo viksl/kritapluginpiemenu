@@ -3,6 +3,15 @@ from PyQt5 import *
 from PyQt5.QtCore import pyqtSignal
 import math
 
+class Dialog(QDialog):
+  def __init__(self, text, parent=None):
+      super(Dialog, self).__init__(parent)
+      self.setLayout(QVBoxLayout())
+      self.label = QLabel(str(text))
+      self.layout().addWidget(self.label)
+      self.resize(200, 50)
+      self.exec_()
+
 class MenuArea(QObject):
     def __init__(self, menus, actionsList, parent=None):
         super().__init__(parent)
@@ -18,7 +27,14 @@ class MenuArea(QObject):
     def initNewMenu(self):
         index = self.menu.labels["activeLabel"]
         submenuRef = self.menus["menu"][index]["ref"]
-        self.menu.initNewMenuAt(self.menus["submenus"][str(submenuRef)] , QCursor.pos() )
+
+        cursor = self.menu.getCurrentPosition()
+
+        v = QPoint( ( cursor.x() - self.menu.cursorInitPosition.x() ) * 0.8, ( cursor.y() - self.menu.cursorInitPosition.y() ) * 0.8 )
+
+        newCenter =  QPoint( QCursor.pos().x() + v.x(), QCursor.pos().y() + v.y() ) 
+
+        self.menu.initNewMenuAt( self.menus["submenus"][str(submenuRef)] , newCenter )
 
     def hidePieMenu(self):
         self.menu.ResetGUI()
@@ -110,7 +126,6 @@ class EventController(QMdiArea):
                 self.controllerOwner.eventController.deleteLater()
             
             self.eventObj.eventHandler(event, self.controllerOwner.keyReleased)
-
 
 class PieMenu(QWidget):
     initNewMenuSignal = pyqtSignal()
@@ -244,14 +259,14 @@ class PieMenu(QWidget):
                 v1 = [self.baseVector[0], self.baseVector[1]]
                 v2 = [cursor.x() - self.cursorInitPosition.x(), cursor.y() - self.cursorInitPosition.y()]
 
-                angle = self.vectorAngle(v1, v2)
+                self.angle = self.vectorAngle(v1, v2)
 
                 self.callback = None
                 self.resetCallback = None
 
                 for i in range(0, self.totalSplitSections):
-                    if ((angle + self.splitSectionOffAngle) % (2*math.pi) > i * self.splitSectionAngle and
-                        (angle + self.splitSectionOffAngle) % (2*math.pi) <=  (i + 1) * self.splitSectionAngle):
+                    if ((self.angle + self.splitSectionOffAngle) % (2*math.pi) > i * self.splitSectionAngle and
+                        (self.angle + self.splitSectionOffAngle) % (2*math.pi) <=  (i + 1) * self.splitSectionAngle):
 
                         if not (self.labels["activeLabel"] is None):
                             self.labels["children"][self.labels["activeLabel"]].setStyleSheet(self.labelStyleBase)
