@@ -70,7 +70,7 @@ Pie Menu plugin allows you to set up your own custom menu for a quick access of 
             - Manage Resources...
                 - Press the button "Open Resource Folder"
                 (this opens the resource directory)
-    4. If overwrite dialog appears during copying let it overwrite (Yes) them
+    4. If overwrite dialog appears during copying let it overwrite (Yes)
     6. Restart Krita
     7. Enable the plugin
         Settings
