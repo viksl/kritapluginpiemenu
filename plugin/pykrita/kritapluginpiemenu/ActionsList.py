@@ -68,9 +68,9 @@ class ActionsList(QObject):
         {"name": "Fill - F Color", "actionID": "fill_selection_foreground_color", "category": "Miscellaneous", "callback": None, "resetCallback": None},
         {"name": "Fill - B Color", "actionID": "fill_selection_background_color", "category": "Miscellaneous", "callback": None, "resetCallback": None},
         {"name": "Fill - Pattern", "actionID": "fill_selection_pattern", "category": "Miscellaneous", "callback": None, "resetCallback": None},
-        {"name": "Select Opaque", "actionID": "selectopaque", "category": "Miscellaneous", "callback": None, "resetCallback": None},
-        {"name": "Isolate Layer", "actionID": "isolate_active_layer", "category": "Layer", "callback": None, "resetCallback": None},
+        {"name": "Select Opaque", "actionID": "selectopaque", "category": "Layer", "callback": None, "resetCallback": None},
 
+        {"name": "Isolate Layer", "actionID": None, "category": "Layer", "callback": None, "resetCallback": "IsolateLayer"},
         {"name": "Color Selector (c)", "actionID": None, "category": "Miscellaneous", "callback": None, "resetCallback": "ColorSelector"},
         {"name": "Zoom (c)", "actionID": None, "category": "Canvas", "callback": "Zoom", "resetCallback": None},
         {"name": "Rotate Canvas (c)", "actionID": None, "category": "Canvas", "callback": "RotateCanvas", "resetCallback": "RemoveGizmo"},
@@ -106,6 +106,11 @@ class ActionsList(QObject):
         self.gizmo = None
         self.hidePieMenuSignalEmitted = False
         self.distancePassed = False
+
+    def IsolateLayer( self ):
+        action = Krita.instance().action( "isolate_active_layer" )
+        action.setAutoRepeat(False)
+        action.trigger()
 
     def ColorSelector( self ):
         action = Krita.instance().action( "show_color_selector" )
