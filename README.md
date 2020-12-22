@@ -21,7 +21,7 @@ Copyright: (C) viksl
 
 Release Date: 21.12.2020
 
-Version: 0.1
+Version: 0.2
 
 Default shortcut: ` + (Mouse left/middle button or Pen touch)
 
@@ -124,3 +124,12 @@ and there we NO problems.
 - New actions
 
 (Depends on what is needed through testing, wishes, ..., feel free to let me know through krita-artists.org)
+
+## 7/ Version Notes
+0.1
+- First Release
+
+0.2
+- MacOS confirmed working
+- actionsList now has categories for actions (customizable)
+- Categories are listed in the actions list for better visual clarity
