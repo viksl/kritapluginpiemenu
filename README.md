@@ -50,11 +50,10 @@ Pie Menu plugin allows you to set up your own custom menu for a quick access of 
         https://github.com/viksl/kritapluginpiemenu
         (on the right side there's a green button labeled Code, press it
         then click on Download ZIP)
-    2. Open the zip file and locate file "kritapluginpiemenu.zip" inside
-    3. Open Krita
-    4. Inside Krita in the top menu: Tools - Scripts - Import Python Plugin...
-    5. In the pop up window open the file "kritapluginpiemenu.zip" from step 2.
-    6. Restart Krita
+    2. Open Krita
+    3. Inside Krita in the top menu: Tools - Scripts - Import Python Plugin...
+    4. In the pop up window open the file "kritapluginpiemenu-main.zip" from step 1.
+    5. Restart Krita
 
 
     Method B
