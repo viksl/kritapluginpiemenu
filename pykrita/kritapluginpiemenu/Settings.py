@@ -15,6 +15,10 @@ class Dialog(QDialog):
 class CustomComboBox (QComboBox):
   def __init__(self, parent=None):
     super(CustomComboBox, self).__init__(parent)    
+    self.setStyleSheet("QComboBox:disabled"
+                        "{"
+                        "color: lightgreen;"
+                        "}")
 
   def wheelEvent(self, event):
     pass
@@ -188,6 +192,7 @@ class Settings(QDialog):
         "actionID": self.GetActionID(actionName, actionsList),
         "isSubmenu": False,
         "ref": None,
+        "category": self.GetCategory(actionName, actionsList),
         "callback": self.GetCallback(actionName, actionsList),
         "resetCallback": self.GetResetCallback(actionName, actionsList)
       })
@@ -210,11 +215,17 @@ class Settings(QDialog):
           "actionID": self.GetActionID(actionName, actionsList),
           "isSubmenu": False,
           "ref": None,
+          "category": self.GetCategory(actionName, actionsList),
           "callback": self.GetCallback(actionName, actionsList),
           "resetCallback": self.GetResetCallback(actionName, actionsList)
         })
 
     return menus
+
+  def GetCategory(self, actionName, actionsList):
+    for action in actionsList:
+      if action["name"] == actionName:
+        return action["category"]
 
   def GetResetCallback(self, actionName, actionsList):
     for action in actionsList:
@@ -321,15 +332,47 @@ class Settings(QDialog):
     # to remove wheelEvent so scrolling works on the scrollarea but not on individual buttons
     comboBox.setFocusPolicy(Qt.StrongFocus)
     actions = []
+    categories = {}
 
     if isinstance(actionsList, int) or isinstance(actionsList, str):
       for i in range(self.sectionsMaxCount):
         actions.append(str(i))
     else:
+      # Form the list of categories
       for action in actionsList:
-        actions.append(action["name"])
-        
+        if (action["category"] not in categories):
+          categories[str(action["category"])] = []
+
+        categories[str(action["category"])].append(action["name"])
+
+      # Alphabetic sort
+      for category in categories:
+        categories[category] = sorted(categories[category])
+
+      for category, actionList in sorted(categories.items()):
+          if category not in actions:
+            actions.append(str(category))
+
+          for action in actionList:
+            actions.append(str(action))
+
     comboBox.addItems(actions)
+
+    if bool(categories):
+      index = 0
+
+      for category, actionList in sorted(categories.items()):
+        comboBox.model().item(index).setEnabled(False)
+
+        font = QFont()
+        font.setBold(True)
+
+        comboBox.model().item(index).setFont(font)
+
+        index += 1 + len(actionList)
+
+      comboBox.setCurrentIndex(1)
+
     return comboBox
 
   def addComboRow(self, txt, actionsList, layout):
