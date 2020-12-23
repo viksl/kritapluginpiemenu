@@ -165,6 +165,7 @@ class PieMenu(QWidget):
         self.previousAction = None
         self.callback = None
         self.resetCallback = None
+        self.distance = None
 
     def initNewMenuAt(self, menuSections, cursorPosition):
         self.clearPainter = False
