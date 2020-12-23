@@ -3,6 +3,64 @@ from PyQt5 import *
 from PyQt5.QtCore import pyqtSignal
 import math
 
+class Win(QWidget):
+    def __init__(self, parent=None):
+        super(QWidget, self).__init__(parent)
+        self.width = 900
+        self.height = 200
+        self.setWindowFlags(self.windowFlags() | QtCore.Qt.Window)
+        self.setWindowTitle("Print")
+        self.setGeometry(0, 0, self.width, self.height)
+        self.label = QLabel("----", self)
+        self.label.setFont(QFont('Times', 12))
+        self.label.setStyleSheet("color: red")
+        self.label.move(10, 10)
+
+        self.label2 = QLabel("----", self)
+        self.label2.setFont(QFont('Times', 12))
+        self.label2.setStyleSheet("color: red")
+        self.label2.move(10, 40)
+
+        self.label3 = QLabel("----", self)
+        self.label3.setFont(QFont('Times', 12))
+        self.label3.setStyleSheet("color: red")
+        self.label3.move(10, 70)
+
+        self.label4 = QLabel("----", self)
+        self.label4.setFont(QFont('Times', 12))
+        self.label4.setStyleSheet("color: red")
+        self.label4.move(10, 100)
+
+        self.label5 = QLabel("----", self)
+        self.label5.setFont(QFont('Times', 12))
+        self.label5.setStyleSheet("color: red")
+        self.label5.move(10, 130)
+        
+        self.show()
+
+    def p(self, txt):
+        self.label.resize(self.width, 20)
+        self.label.setText( format(txt,".2f") )
+        
+    def p2(self, txt):
+        self.label2.resize(self.width, 20)
+        self.label2.setText( str( txt ) )
+        
+    def p3(self, txt):
+        self.label3.resize(self.width, 20)
+        self.label3.setText( str( txt ) )
+
+    def p4(self, txt):
+        self.label4.resize(self.width, 20)
+        self.label4.setText( str( txt ) )
+
+    def p5(self, txt):
+        self.label5.resize(self.width, 20)
+        self.label5.setText( str( txt ) )
+
+win = Win()
+count = 0
+
 class Dialog(QDialog):
   def __init__(self, text, parent=None):
       super(Dialog, self).__init__(parent)
@@ -67,22 +125,36 @@ class EventController(QMdiArea):
             investigation (find krita main app, install eventFilter to it with
             FocusOut event and deleteEventFilter there)
         """
-        if (event.type() == QEvent.KeyPress
+################################################################
+# KEY PRESS EVENT
+        if (
+            event.type() == QEvent.KeyPress
             and not event.isAutoRepeat()
             and Krita.instance().action("kritapluginpiemenu").shortcut().matches(event.key()) == 0
         ):
             self.deleteEventFilter(source, event)
-
-        elif (event.type() == QEvent.KeyRelease
+################################################################
+################################################################
+# KEY RELEASE EVENT
+        elif (
+            event.type() == QEvent.KeyRelease
             and not event.isAutoRepeat()
             and Krita.instance().action("kritapluginpiemenu").shortcut().matches(event.key()) > 0
             and not self.controllerOwner.keyReleased
+            # and not self.buttonReleased
         ):
-
+            self.controllerOwner.keyReleased = True
             self.eventObj.eventHandler(event)
+            global win
+            global count
+            count +=1
+            win.p2("keyrelease " + str(count))
             self.deleteEventFilter(source, event)
-
-        elif (event.type() == QEvent.MouseButtonPress
+################################################################
+################################################################
+# MOUSE BUTTON PRESS EVENT
+        elif (
+            event.type() == QEvent.MouseButtonPress
             and event.button() == QtCore.Qt.LeftButton
             and not self.mouseButtonPress
         ):
@@ -93,22 +165,34 @@ class EventController(QMdiArea):
             self.controllerOwner.menu.show()
             
             return True
-
-        elif (( event.type() == QEvent.MouseButtonRelease or event.type() == QEvent.TabletRelease )
+################################################################
+################################################################
+# MOUSE BUTTON/TABLET RELEASE EVENT
+        elif (
+            ( event.type() == QEvent.MouseButtonRelease or event.type() == QEvent.TabletRelease )
             and self.buttonReleased == False
+            and self.mouseButtonPress
         ):
-            self.buttonReleased = True
             self.mouseButtonPress = False
+            self.buttonReleased = True
             self.deleteEventFilter(source, event)
             return True
-
-        elif (event.type() == QEvent.MouseMove
+################################################################
+################################################################
+# MOUSE MOVE EVENT
+        elif (
+            event.type() == QEvent.MouseMove
             and not self.controllerOwner.keyReleased
+            and not self.buttonReleased
             and self.mouseButtonPress
         ):
             self.eventObj.eventHandler(event)
-
-        elif (event.type() == QEvent.TabletMove
+################################################################
+################################################################
+# CATCH AND DON'T LET PROPAGATE WHILE PIE MENU IS ACTIVE
+# otherwise some tools get activated in krita
+        elif (
+            event.type() == QEvent.TabletMove
             or event.type() == QEvent.TabletPress
             or event.type() == QEvent.KeyPress
             or event.type() == QEvent.MouseButtonPress
@@ -125,14 +209,17 @@ class EventController(QMdiArea):
             self.eventObj.ResetGUI()
             self.eventObj.hide()
 
-            if (event.type() != QEvent.MouseButtonRelease
+            if (
+                event.type() != QEvent.MouseButtonRelease
                 and event.type() != QEvent.TabletRelease
             ):
                 self.controllerOwner.keyReleased = True
                 self.removeEventFilter(self)
                 self.controllerOwner.eventController.deleteLater()
-            
+
+
             self.eventObj.eventHandler(event, self.controllerOwner.keyReleased)
+            # QApplication.processEvents()
 
 class PieMenu(QWidget):
     initNewMenuSignal = pyqtSignal()
@@ -174,6 +261,8 @@ class PieMenu(QWidget):
         self.resetCallback = None
 
     def initNewMenuAt(self, menuSections, cursorPosition):
+        global win
+        global count
         self.clearPainter = False
         self.distance = None
         self.callback = None
@@ -187,6 +276,8 @@ class PieMenu(QWidget):
         self.splitSectionOffAngle = -(math.pi / 2) - self.splitSectionAngle/2 
 
         if hasattr(self, "labels") and len(self.labels["children"]) > 0:
+            count += 1
+            win.p2("Labels1 " + str(count))
             for label in self.labels["children"]:
                 label.hide()
                 label.deleteLater()
@@ -212,9 +303,13 @@ class PieMenu(QWidget):
         self.update()
 
     def ResetGUI( self ):
+        global count
+        global win
         self.clearPainter = True
 
         if hasattr(self, "labels") and len(self.labels["children"]) > 0:
+            count += 1
+            win.p3("Labels2 " + str(count))
             for label in self.labels["children"]:
                 label.hide()
                 label.deleteLater()
@@ -224,6 +319,8 @@ class PieMenu(QWidget):
         QApplication.processEvents()
 
     def eventHandler(self, event, keyReleased=False):
+        global count
+        global win
         if event.type() == QEvent.MouseButtonRelease or event.type() == QEvent.TabletRelease:
             if self.resetCallback != None:
                 self.resetCallback()
@@ -270,6 +367,9 @@ class PieMenu(QWidget):
 
                 self.callback = None
                 self.resetCallback = None
+
+                count += 1
+                win.p4("Labels3 " + str(count))
 
                 for i in range(0, self.totalSplitSections):
                     if ((self.angle + self.splitSectionOffAngle) % (2*math.pi) > i * self.splitSectionAngle and
