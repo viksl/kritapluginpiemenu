@@ -98,6 +98,7 @@ class MenuArea(QObject):
         self.menu.ResetGUI()
         self.menu.hide()
 
+
 #Handles events mouse move + mouse press and sends it where needed
 class EventController(QMdiArea):
     def __init__(self, eventObj=None, parent=None, controllerOwner=None):
