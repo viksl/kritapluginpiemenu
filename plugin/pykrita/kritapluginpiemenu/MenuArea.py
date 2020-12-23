@@ -349,4 +349,7 @@ class PieMenu(QWidget):
         position = QCursor.pos() if aPosition == None else aPosition
         screen = QGuiApplication.screenAt(position)
 
-        return QPoint(position.x() - screen.geometry().x(), position.y() - screen.geometry().y())
+        if screen != None:
+            return QPoint(position.x() - screen.geometry().x(), position.y() - screen.geometry().y())
+        
+        return position
