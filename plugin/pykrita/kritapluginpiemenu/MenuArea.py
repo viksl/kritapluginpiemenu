@@ -50,7 +50,6 @@ class EventController(QMdiArea):
         self.eventObj = eventObj
         self.controllerOwner = controllerOwner
         self.mouseButtonPress = False
-        self.buttonReleased = False
 
     def eventFilter(self, source, event):
         """
@@ -94,10 +93,7 @@ class EventController(QMdiArea):
             
             return True
 
-        elif (( event.type() == QEvent.MouseButtonRelease or event.type() == QEvent.TabletRelease )
-            and self.buttonReleased == False
-        ):
-            self.buttonReleased = True
+        elif event.type() == QEvent.MouseButtonRelease:
             self.mouseButtonPress = False
             self.deleteEventFilter(source, event)
             return True
@@ -113,7 +109,6 @@ class EventController(QMdiArea):
             or event.type() == QEvent.KeyPress
             or event.type() == QEvent.MouseButtonPress
             or event.type() == QEvent.MouseButtonRelease
-            or event.type() == QEvent.TabletRelease
         ):
             
             return True
@@ -125,9 +120,7 @@ class EventController(QMdiArea):
             self.eventObj.ResetGUI()
             self.eventObj.hide()
 
-            if (event.type() != QEvent.MouseButtonRelease
-                and event.type() != QEvent.TabletRelease
-            ):
+            if event.type() != QEvent.MouseButtonRelease:
                 self.controllerOwner.keyReleased = True
                 self.removeEventFilter(self)
                 self.controllerOwner.eventController.deleteLater()
@@ -224,7 +217,7 @@ class PieMenu(QWidget):
         QApplication.processEvents()
 
     def eventHandler(self, event, keyReleased=False):
-        if event.type() == QEvent.MouseButtonRelease or event.type() == QEvent.TabletRelease:
+        if event.type() == QEvent.MouseButtonRelease:
             if self.resetCallback != None:
                 self.resetCallback()
                 return
@@ -349,7 +342,4 @@ class PieMenu(QWidget):
         position = QCursor.pos() if aPosition == None else aPosition
         screen = QGuiApplication.screenAt(position)
 
-        if screen != None:
-            return QPoint(position.x() - screen.geometry().x(), position.y() - screen.geometry().y())
-        
-        return position
+        return QPoint(position.x() - screen.geometry().x(), position.y() - screen.geometry().y())
