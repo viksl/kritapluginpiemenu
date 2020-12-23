@@ -93,7 +93,9 @@ class EventController(QMdiArea):
             
             return True
 
-        elif event.type() == QEvent.MouseButtonRelease:
+        elif (event.type() == QEvent.MouseButtonRelease
+            or event.type() == QEvent.TabletRelease
+        ):
             self.mouseButtonPress = False
             self.deleteEventFilter(source, event)
             return True
@@ -109,6 +111,7 @@ class EventController(QMdiArea):
             or event.type() == QEvent.KeyPress
             or event.type() == QEvent.MouseButtonPress
             or event.type() == QEvent.MouseButtonRelease
+            or event.type() == QEvent.TabletRelease
         ):
             
             return True
@@ -120,7 +123,9 @@ class EventController(QMdiArea):
             self.eventObj.ResetGUI()
             self.eventObj.hide()
 
-            if event.type() != QEvent.MouseButtonRelease:
+            if (event.type() != QEvent.MouseButtonRelease
+                and event.type() != QEvent.TabletRelease
+            ):
                 self.controllerOwner.keyReleased = True
                 self.removeEventFilter(self)
                 self.controllerOwner.eventController.deleteLater()
@@ -218,7 +223,7 @@ class PieMenu(QWidget):
         QApplication.processEvents()
 
     def eventHandler(self, event, keyReleased=False):
-        if event.type() == QEvent.MouseButtonRelease or event.type() == QEvent.KeyRelease:
+        if event.type() == QEvent.MouseButtonRelease or event.type() == QEvent.TabletRelease or event.type() == QEvent.KeyRelease:
             if self.resetCallback != None:
                 self.resetCallback()
                 return
