@@ -217,7 +217,7 @@ class PieMenu(QWidget):
         QApplication.processEvents()
 
     def eventHandler(self, event, keyReleased=False):
-        if event.type() == QEvent.MouseButtonRelease:
+        if event.type() == QEvent.MouseButtonRelease or event.type() == QEvent.KeyRelease:
             if self.resetCallback != None:
                 self.resetCallback()
                 return
