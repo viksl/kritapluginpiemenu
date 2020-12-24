@@ -87,7 +87,7 @@ class EventController(QMdiArea):
             and Krita.instance().action("kritapluginpiemenu").shortcut().matches(event.key()) > 0
             and not self.controllerOwner.keyReleased
         ):
-
+            self.controllerOwner.keyReleased = True
             self.eventObj.eventHandler(event)
             self.deleteEventFilter(source, event)
 ###################################################################################################
@@ -152,7 +152,6 @@ class EventController(QMdiArea):
                 event.type() != QEvent.MouseButtonRelease
                 and event.type() != QEvent.TabletRelease
             ):
-                self.controllerOwner.keyReleased = True
                 self.removeEventFilter(self)
                 self.controllerOwner.eventController.deleteLater()
             
