@@ -51,7 +51,13 @@ class EventController(QMdiArea):
         self.controllerOwner = controllerOwner
         self.mouseButtonPress = False
 
+###################################################################################################
+# START EVENT FILTER
+###################################################################################################
     def eventFilter(self, source, event):
+###################################################################################################
+# KEY PRESS
+###################################################################################################
         """
             Delete eventFilter when a key (not shortcut key) is pressed - this helps with alt+tab
             otherwise krita restart is necessary.
@@ -66,13 +72,17 @@ class EventController(QMdiArea):
             investigation (find krita main app, install eventFilter to it with
             FocusOut event and deleteEventFilter there)
         """
-        if (event.type() == QEvent.KeyPress
+        if (
+            event.type() == QEvent.KeyPress
             and not event.isAutoRepeat()
             and Krita.instance().action("kritapluginpiemenu").shortcut().matches(event.key()) == 0
         ):
             self.deleteEventFilter(source, event)
-
-        elif (event.type() == QEvent.KeyRelease
+###################################################################################################
+# KEY RELEASE
+###################################################################################################
+        elif (
+            event.type() == QEvent.KeyRelease
             and not event.isAutoRepeat()
             and Krita.instance().action("kritapluginpiemenu").shortcut().matches(event.key()) > 0
             and not self.controllerOwner.keyReleased
@@ -80,8 +90,11 @@ class EventController(QMdiArea):
 
             self.eventObj.eventHandler(event)
             self.deleteEventFilter(source, event)
-
-        elif (event.type() == QEvent.MouseButtonPress
+###################################################################################################
+# MOUSE BUTTON PRESS
+###################################################################################################
+        elif (
+            event.type() == QEvent.MouseButtonPress
             and event.button() == QtCore.Qt.LeftButton
             and not self.mouseButtonPress
         ):
@@ -92,21 +105,30 @@ class EventController(QMdiArea):
             self.controllerOwner.menu.show()
             
             return True
-
-        elif (event.type() == QEvent.MouseButtonRelease
+###################################################################################################
+# MOUSE BUTTON/TABLET RELEASE
+###################################################################################################
+        elif (
+            event.type() == QEvent.MouseButtonRelease
             or event.type() == QEvent.TabletRelease
         ):
             self.mouseButtonPress = False
             self.deleteEventFilter(source, event)
             return True
-
-        elif (event.type() == QEvent.MouseMove
+###################################################################################################
+# MOUSE MOVE
+###################################################################################################
+        elif (
+            event.type() == QEvent.MouseMove
             and not self.controllerOwner.keyReleased
             and self.mouseButtonPress
         ):
             self.eventObj.eventHandler(event)
-
-        elif (event.type() == QEvent.TabletMove
+###################################################################################################
+# CATCH PROBLEM EVENTS WHILE THE MENU IS ACTIVE
+###################################################################################################
+        elif (
+            event.type() == QEvent.TabletMove
             or event.type() == QEvent.TabletPress
             or event.type() == QEvent.KeyPress
             or event.type() == QEvent.MouseButtonPress
@@ -115,15 +137,19 @@ class EventController(QMdiArea):
         ):
             
             return True
-
+###################################################################################################
         return super(EventController, self).eventFilter(source, event)
+###################################################################################################
+# END EVENT FILTER
+###################################################################################################
 
     def deleteEventFilter(self, source, event):
         if hasattr( self.controllerOwner, "eventController" ):
             self.eventObj.ResetGUI()
             self.eventObj.hide()
 
-            if (event.type() != QEvent.MouseButtonRelease
+            if (
+                event.type() != QEvent.MouseButtonRelease
                 and event.type() != QEvent.TabletRelease
             ):
                 self.controllerOwner.keyReleased = True
