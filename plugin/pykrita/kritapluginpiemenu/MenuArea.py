@@ -50,6 +50,7 @@ class EventController(QMdiArea):
         self.eventObj = eventObj
         self.controllerOwner = controllerOwner
         self.mouseButtonPress = False
+        self.buttonReleased = False
 
 ###################################################################################################
 # START EVENT FILTER
@@ -109,10 +110,11 @@ class EventController(QMdiArea):
 # MOUSE BUTTON/TABLET RELEASE
 ###################################################################################################
         elif (
-            event.type() == QEvent.MouseButtonRelease
-            or event.type() == QEvent.TabletRelease
+            (event.type() == QEvent.MouseButtonRelease
+            or event.type() == QEvent.TabletRelease)
+            and not self.buttonReleased
         ):
-            self.mouseButtonPress = False
+            self.buttonReleased = True
             self.deleteEventFilter(source, event)
             return True
 ###################################################################################################
@@ -122,6 +124,7 @@ class EventController(QMdiArea):
             event.type() == QEvent.MouseMove
             and not self.controllerOwner.keyReleased
             and self.mouseButtonPress
+            and not self.buttonReleased
         ):
             self.eventObj.eventHandler(event)
 ###################################################################################################
@@ -152,10 +155,12 @@ class EventController(QMdiArea):
                 event.type() != QEvent.MouseButtonRelease
                 and event.type() != QEvent.TabletRelease
             ):
+                self.eventObj.eventHandler(event, self.controllerOwner.keyReleased)
                 self.removeEventFilter(self)
                 self.controllerOwner.eventController.deleteLater()
-            
-            self.eventObj.eventHandler(event, self.controllerOwner.keyReleased)
+                self.controllerOwner.eventController = None
+            else:
+                self.eventObj.eventHandler(event, self.controllerOwner.keyReleased)
 
 class PieMenu(QWidget):
     initNewMenuSignal = pyqtSignal()

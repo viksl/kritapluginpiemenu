@@ -17,7 +17,10 @@ class PieMenuExtension(Extension):
     self.menuArea.menus = self.menus
 
   def openPieMenu(self):
-    if (not self.qWin.underMouse()):
+    if (
+        not self.qWin.underMouse()
+        or QGuiApplication.mouseButtons() != QtCore.Qt.NoButton
+    ):
       return
 
     self.menuArea.keyReleased = False
