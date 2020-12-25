@@ -48,8 +48,9 @@ class EventController(QMdiArea):
         self.setMouseTracking(True)
         self.eventObj = eventObj
         self.controllerOwner = controllerOwner
-        self.mouseButtonPress = False
+        self.mouseButtonPressed = False
         self.buttonReleased = False
+        self.blockEvent = False
 
 ###################################################################################################
 # START EVENT FILTER
@@ -60,6 +61,7 @@ class EventController(QMdiArea):
 
         if (self.controllerOwner == None
             or self.buttonReleased
+            or self.blockEvent
         ):
             return True
 ###################################################################################################
@@ -85,12 +87,15 @@ class EventController(QMdiArea):
             and Krita.instance().action("kritapluginpiemenu").shortcut().matches(event.key()) == 0
         ):
             self.deleteEventFilter(source, event)
+            return True
         elif (
             event.type() == QEvent.KeyRelease
-            and self.mouseButtonPress == False
+            and self.mouseButtonPressed == False
         ):
             if self.controllerOwner.eventController != None:
                 self.deleteEventFilter(source, event)
+
+            self.blockEvent = True
             return True
 ###################################################################################################
 # MOUSE BUTTON PRESS
@@ -98,10 +103,10 @@ class EventController(QMdiArea):
         if (
             event.type() == QEvent.MouseButtonPress
             and event.button() == QtCore.Qt.LeftButton
-            and not self.mouseButtonPress
+            and not self.mouseButtonPressed
         ):
 
-            self.mouseButtonPress = True
+            self.mouseButtonPressed = True
             self.controllerOwner.menu.previousAction = None
             self.controllerOwner.menu.initNewMenuAt(self.controllerOwner.menus["menu"], QCursor.pos())
             self.controllerOwner.menu.show()
@@ -113,18 +118,19 @@ class EventController(QMdiArea):
         elif (
             (event.type() == QEvent.MouseButtonRelease
             or event.type() == QEvent.TabletRelease)
+            and self.mouseButtonPressed
             and not self.buttonReleased
         ):
             self.buttonReleased = True
-            self.deleteEventFilter(source, event)
             self.eventObj.eventHandler(event)
+            self.deleteEventFilter(source, event)
             return True
 ###################################################################################################
 # MOUSE MOVE
 ###################################################################################################
         elif (
             event.type() == QEvent.MouseMove
-            and self.mouseButtonPress
+            and self.mouseButtonPressed
             and not self.buttonReleased
         ):
             self.eventObj.eventHandler(event)
