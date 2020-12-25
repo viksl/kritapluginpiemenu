@@ -95,7 +95,7 @@ class EventController(QMdiArea):
 ###################################################################################################
 # MOUSE BUTTON PRESS
 ###################################################################################################
-        elif (
+        if (
             event.type() == QEvent.MouseButtonPress
             and event.button() == QtCore.Qt.LeftButton
             and not self.mouseButtonPress
