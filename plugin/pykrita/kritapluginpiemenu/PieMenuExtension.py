@@ -22,8 +22,7 @@ class PieMenuExtension(Extension):
         or QGuiApplication.mouseButtons() != QtCore.Qt.NoButton
     ):
       return
-
-    self.menuArea.keyReleased = False
+    
     self.menuArea.eventController = EventController(self.menuArea.menu, self.menuArea.menu.parent(), self.menuArea)
 
   def openSettings(self):

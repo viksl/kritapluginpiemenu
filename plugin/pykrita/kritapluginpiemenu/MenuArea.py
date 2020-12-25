@@ -16,11 +16,10 @@ class MenuArea(QObject):
     def __init__(self, menus, actionsList, parent=None):
         super().__init__(parent)
 
+        self.eventController = None
         self.menus = menus
-
-        self.keyReleased = False
-
         self.menu = PieMenu(actionsList, parent)
+        
         self.menu.initNewMenuSignal.connect(self.initNewMenu)
         actionsList.hidePieMenuSignal.connect(self.hidePieMenu)
 
@@ -56,6 +55,13 @@ class EventController(QMdiArea):
 # START EVENT FILTER
 ###################################################################################################
     def eventFilter(self, source, event):
+        if not hasattr(self, "controllerOwner") or ( hasattr(self, "controllerOwner") and self.controllerOwner == None ):
+            return super(EventController, self).eventFilter(source, event)
+
+        if (self.controllerOwner == None
+            or self.buttonReleased
+        ):
+            return True
 ###################################################################################################
 # KEY PRESS
 ###################################################################################################
@@ -79,18 +85,13 @@ class EventController(QMdiArea):
             and Krita.instance().action("kritapluginpiemenu").shortcut().matches(event.key()) == 0
         ):
             self.deleteEventFilter(source, event)
-###################################################################################################
-# KEY RELEASE
-###################################################################################################
         elif (
             event.type() == QEvent.KeyRelease
-            and not event.isAutoRepeat()
-            and Krita.instance().action("kritapluginpiemenu").shortcut().matches(event.key()) > 0
-            and not self.controllerOwner.keyReleased
+            and self.mouseButtonPress == False
         ):
-            self.controllerOwner.keyReleased = True
-            self.eventObj.eventHandler(event)
-            self.deleteEventFilter(source, event)
+            if self.controllerOwner.eventController != None:
+                self.deleteEventFilter(source, event)
+            return True
 ###################################################################################################
 # MOUSE BUTTON PRESS
 ###################################################################################################
@@ -116,13 +117,13 @@ class EventController(QMdiArea):
         ):
             self.buttonReleased = True
             self.deleteEventFilter(source, event)
+            self.eventObj.eventHandler(event)
             return True
 ###################################################################################################
 # MOUSE MOVE
 ###################################################################################################
         elif (
             event.type() == QEvent.MouseMove
-            and not self.controllerOwner.keyReleased
             and self.mouseButtonPress
             and not self.buttonReleased
         ):
@@ -134,11 +135,12 @@ class EventController(QMdiArea):
             event.type() == QEvent.TabletMove
             or event.type() == QEvent.TabletPress
             or event.type() == QEvent.KeyPress
+            or event.type() == QEvent.KeyRelease
             or event.type() == QEvent.MouseButtonPress
             or event.type() == QEvent.MouseButtonRelease
             or event.type() == QEvent.TabletRelease
         ):
-            
+     
             return True
 ###################################################################################################
         return super(EventController, self).eventFilter(source, event)
@@ -147,20 +149,12 @@ class EventController(QMdiArea):
 ###################################################################################################
 
     def deleteEventFilter(self, source, event):
-        if hasattr( self.controllerOwner, "eventController" ):
-            self.eventObj.ResetGUI()
-            self.eventObj.hide()
+        # if hasattr( self.controllerOwner, "eventController" ):
+        self.eventObj.ResetGUI()
+        self.eventObj.hide()
 
-            if (
-                event.type() != QEvent.MouseButtonRelease
-                and event.type() != QEvent.TabletRelease
-            ):
-                self.eventObj.eventHandler(event, self.controllerOwner.keyReleased)
-                self.removeEventFilter(self)
-                self.controllerOwner.eventController.deleteLater()
-                self.controllerOwner.eventController = None
-            else:
-                self.eventObj.eventHandler(event, self.controllerOwner.keyReleased)
+        self.controllerOwner.eventController.deleteLater()
+        self.controllerOwner.eventController = None
 
 class PieMenu(QWidget):
     initNewMenuSignal = pyqtSignal()
@@ -252,8 +246,8 @@ class PieMenu(QWidget):
         self.update()
         QApplication.processEvents()
 
-    def eventHandler(self, event, keyReleased=False):
-        if event.type() == QEvent.MouseButtonRelease or event.type() == QEvent.TabletRelease or event.type() == QEvent.KeyRelease:
+    def eventHandler(self, event):
+        if event.type() == QEvent.MouseButtonRelease or event.type() == QEvent.TabletRelease:
             if self.resetCallback != None:
                 self.resetCallback()
                 return
