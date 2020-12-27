@@ -114,6 +114,15 @@ In settings you can:
 Check the video in section 1/
 
 ## 5/ Known Issues
+- There are currently some issues (especially on Linux) which users reported through the
+krita-artists.org, all these are related to have the plugin sometimes returns an error
+message when yo utry to invoke the plugin in rapid succession, if you release mouse/key
+at similar time. This is currently being worked on (though new year is a busy period ;))
+- Triggering an aciton which opens a dialog (for example filter mask) results in
+transparent dialog window, completely stucked Krita (which needs restart) or it can
+possibly block mouse/pen (this is already fixed and the update will be released soon
+with full or partiall fix for the above mentioned issue this udpate should stabilize
+the plugin for majority of uses on all systems)
 - Some applications which steal keyEvents from Krita might cause the pie menu to get stuck
 in general for single use it shouldn't be a problem but this needs testing with
 recording/streaming apps if they cause problems or not. I tested this with OBS on windows 10
