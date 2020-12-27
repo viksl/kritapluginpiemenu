@@ -22,7 +22,16 @@ class PieMenuExtension(Extension):
         or QGuiApplication.mouseButtons() != QtCore.Qt.NoButton
     ):
       return
-    
+
+    if self.menuArea.eventController != None:
+      self.menuArea.eventController.deleteEventFilter()
+      return
+    # TODO: Init pie menu here to avoid dealing with some troublesome parts of eventFilter
+    #       Then only mouseMove and mousePress (+ tablet events) will be needed
+    #       Eventually maybe a reset for a keyRelease but for not only mouse as base
+    self.menuArea.menu.previousAction = None
+    self.menuArea.menu.initNewMenuAt(self.menuArea.menus["menu"], QCursor.pos())
+    self.menuArea.menu.show()
     self.menuArea.eventController = EventController(self.menuArea.menu, self.menuArea.menu.parent(), self.menuArea)
 
   def openSettings(self):
