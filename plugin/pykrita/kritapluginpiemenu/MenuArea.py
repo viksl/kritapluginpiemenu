@@ -281,6 +281,7 @@ class PieMenu(QWidget):
                 QTimer.singleShot(10, lambda: action.trigger())
                 # action.trigger()
 
+
     def eventHandler(self, event):
         if event.type() == QEvent.MouseButtonRelease or event.type() == QEvent.TabletRelease:
             if self.resetCallback != None:
