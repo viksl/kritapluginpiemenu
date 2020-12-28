@@ -291,7 +291,7 @@ class PieMenu(QWidget):
             if self.distance == None:
                 return
 
-            elif not (self.previousAction is None) and self.distance < self.wheelIconOuterRadius:
+            elif self.previousAction is not None and self.distance < self.wheelIconOuterRadius:
                 action = Krita.instance().action( self.previousAction )
 
                 self.invokeAction(action)
@@ -338,7 +338,7 @@ class PieMenu(QWidget):
                     if ((self.angle + self.splitSectionOffAngle) % (2*math.pi) > i * self.splitSectionAngle and
                         (self.angle + self.splitSectionOffAngle) % (2*math.pi) <=  (i + 1) * self.splitSectionAngle):
 
-                        if not (self.labels["activeLabel"] is None):
+                        if self.labels["activeLabel"] is not None:
                             self.labels["children"][self.labels["activeLabel"]].setStyleSheet(self.labelStyleBase)
                         
                         self.labels["children"][i].setStyleSheet(self.labelStyleActive)
@@ -358,6 +358,7 @@ class PieMenu(QWidget):
             else:
                 for label in self.labels["children"]:
                     label.setStyleSheet(self.labelStyleBase)
+                self.labels["activeLabel"] = None
 
     def getLabelPositionAt(self, index):
         return self.circleCoor(self.cursorInitPosition.x(), self.cursorInitPosition.y(), self.labelRadius, index * self.splitSectionAngle + self.splitSectionAngle / 2)
