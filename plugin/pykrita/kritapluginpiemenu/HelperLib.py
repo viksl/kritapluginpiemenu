@@ -17,8 +17,8 @@ class HelperLib():
 
 class GizmoIcon(QWidget):
   def __init__(self, position, width, height, parent=None):
-    # super(GizmoIcon, self).__init__(parent)
-    QWidget.__init__(self, parent)
+    super(GizmoIcon, self).__init__(parent)
+    # QWidget.__init__(self, parent)
 
     self.position = position
     self.width = int(width)
@@ -28,6 +28,7 @@ class GizmoIcon(QWidget):
     self.setAttribute(QtCore.Qt.WA_TranslucentBackground)
     self.setStyleSheet("background: transparent;")
     self.setWindowTitle("icon")
+    self.setFocusPolicy(QtCore.Qt.NoFocus)
     self.alpha = 255
 
   def showAt(self, position):

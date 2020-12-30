@@ -20,11 +20,17 @@ class PieMenuExtension(Extension):
     if (
         not self.qWin.underMouse()
         or QGuiApplication.mouseButtons() != QtCore.Qt.NoButton
+        or (self.menuArea.eventController != None and not self.menuArea.eventController.buttonReleased)
     ):
       return
 
     if self.menuArea.eventController != None:
+      if self.menuArea.menu.resetCallback != None:
+        self.menuArea.menu.InvokeAction(self.menuArea.menu.resetCallback, True)
+        # print("press again invoke action")
       self.menuArea.eventController.deleteEventFilter()
+      self.menuArea.eventController = None
+      # print("press again delete event filter")
       return
     # TODO: Init pie menu here to avoid dealing with some troublesome parts of eventFilter
     #       Then only mouseMove and mousePress (+ tablet events) will be needed
@@ -48,13 +54,16 @@ class PieMenuExtension(Extension):
     self.menus = self.settings.menus
 
     self.menuArea = MenuArea(self.menus, self.actionsList, self.qWin)
-    
+
+    # self.actionsList.setParent(window)
+
     self.pieMenuAction = window.createAction("kritapluginpiemenu", "Pie Menu", "tools/scripts")
     self.pieMenuAction.setAutoRepeat(False)
 
     self.pieMenuSettingsAction = window.createAction("pieMenuSettings", "Pie Menu Settings", "tools/scripts")
     self.pieMenuSettingsAction.setAutoRepeat(False)
 
-    self.pieMenuAction.triggered.connect(self.openPieMenu)
+    # self.pieMenuAction.triggered.connect(self.openPieMenu)
+    self.pieMenuAction.triggered.connect(lambda: QTimer.singleShot(0, self.openPieMenu))
 
     self.pieMenuSettingsAction.triggered.connect(self.openSettings)

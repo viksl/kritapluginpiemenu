@@ -162,6 +162,7 @@ class ActionsList(QObject):
              self.angle = canvas.rotation()
 
         if self.gizmo == None:
+            # print("parent: " + str(self))
             self.gizmo = GizmoIcon(self.position, gizmoSize, gizmoSize, self.parent())
             self.gizmo.showAt(self.position)
 
@@ -380,6 +381,7 @@ class ActionsList(QObject):
         self.previousPosition = cursor
 
     def RemoveGizmo( self ):
+        # print("Remove gizmo, isNone: ", self.gizmo)
         if self.gizmo != None:
             self.gizmo.deleteLater()
             self.gizmo = None
@@ -388,12 +390,3 @@ class ActionsList(QObject):
         if not self.hidePieMenuSignalEmitted:
             self.hidePieMenuSignalEmitted = True
             self.hidePieMenuSignal.emit()
-
-class Dialog(QDialog):
-  def __init__(self, text, parent=None):
-      super(Dialog, self).__init__(parent)
-      self.setLayout(QVBoxLayout())
-      self.label = QLabel(str(text))
-      self.layout().addWidget(self.label)
-      self.resize(200, 50)
-      self.exec_()
