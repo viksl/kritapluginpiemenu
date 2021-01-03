@@ -237,12 +237,12 @@ class ActionsList(QObject):
     def IsolateLayer( self ):
         action = Krita.instance().action( "isolate_active_layer" )
         action.setAutoRepeat(False)
-        QTimer.singleShot(10, lambda: action.trigger())
+        action.trigger()
 
     def ColorSelector( self ):
         action = Krita.instance().action( "show_color_selector" )
         action.setAutoRepeat(False)
-        QTimer.singleShot(10, lambda: action.trigger())
+        action.trigger()
         
     def Zoom( self ):
         cursor = QCursor.pos()

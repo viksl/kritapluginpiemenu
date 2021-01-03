@@ -252,8 +252,7 @@ class PieMenu(QWidget):
             if isCallback:
                 QTimer.singleShot(self.timerTime, lambda: action())
                 return
-                
-            if action.isCheckable():
+            elif action.isCheckable():
                 QTimer.singleShot(self.timerTime, lambda: action.toggle())
             else:
                 QTimer.singleShot(self.timerTime, lambda: action.trigger())
