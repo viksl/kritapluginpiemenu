@@ -1,6 +1,6 @@
 from krita import *
 from PyQt5 import *
-from PyQt5.QtCore import QTimer, QTimerEvent, pyqtSignal
+from PyQt5.QtCore import QTimer, pyqtSignal
 from .HelperLib import Gizmo
 import math
 
@@ -40,7 +40,7 @@ class EventController(QMdiArea):
         self.controllerOwner = controllerOwner
         self.mouseButtonPressed = False
         self.buttonReleased = False
-        self.blockEvent = False
+        self.resetKeyPressed = False
 
 ###################################################################################################
 # START EVENT FILTER
@@ -63,12 +63,38 @@ class EventController(QMdiArea):
             investigation (find krita main app, install eventFilter to it with
             FocusOut event and deleteEventFilter there)
         """
+###################################################################################################
+# KEY PRESS EVENT RESET
+###################################################################################################
+        if (
+            hasattr(self, "controllerOwner")
+            and hasattr(self.controllerOwner, "eventController")
+            and self.controllerOwner.eventController != None
+            and self.resetKeyPressed
+        ):
+            return super(EventController, self).eventFilter(source, event)
+###################################################################################################
+# KEY PRESS
+###################################################################################################
+        if (
+            event.type() == QEvent.KeyPress
+            and not event.isAutoRepeat()
+            and Krita.instance().action("kritapluginpiemenu").shortcut().matches(event.key())
+            and hasattr(self, "controllerOwner")
+            and hasattr(self.controllerOwner, "eventController")
+            and self.controllerOwner.eventController != None
+            and not self.resetKeyPressed
+            and not self.buttonReleased
+        ):
+            self.deleteEventFilter()
+            self.resetKeyPressed = True
 
-
+            event.accept()
+            return True
 ###################################################################################################
 # MOUSE BUTTON PRESS
 ###################################################################################################
-        if (
+        elif (
             ((event.type() == QEvent.MouseButtonPress
             and event.button() == QtCore.Qt.LeftButton)
             or event.type() == QEvent.TabletPress)
@@ -76,6 +102,7 @@ class EventController(QMdiArea):
             and hasattr(self.controllerOwner, "eventController")
             and self.controllerOwner.eventController != None
             and not self.mouseButtonPressed
+            and not self.resetKeyPressed
         ):
             self.mouseButtonPressed = True
 
@@ -92,6 +119,7 @@ class EventController(QMdiArea):
             and self.controllerOwner.eventController != None
             and self.mouseButtonPressed
             and not self.buttonReleased
+            and not self.resetKeyPressed
         ):
             self.eventObj.eventHandler(event)
             self.deleteEventFilter()
@@ -109,6 +137,7 @@ class EventController(QMdiArea):
             and self.controllerOwner.eventController != None
             and self.mouseButtonPressed
             and not self.buttonReleased
+            and not self.resetKeyPressed
         ):
             self.eventObj.eventHandler(event)
 
@@ -122,6 +151,8 @@ class EventController(QMdiArea):
             or event.type() == QEvent.MouseMove
             or event.type() == QEvent.TabletPress
             or event.type() == QEvent.MouseButtonPress
+            or event.type() == QEvent.MouseButtonRelease
+            or event.type() == QEvent.TabletRelease
         ):
             event.accept()
             return True

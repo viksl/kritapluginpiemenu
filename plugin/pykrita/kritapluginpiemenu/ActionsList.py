@@ -112,6 +112,16 @@ class ActionsList(QObject):
         if gizmo is not None:
             self.gizmo = gizmo
 
+    def IsolateLayer( self ):
+        action = Krita.instance().action( "isolate_active_layer" )
+        action.setAutoRepeat(False)
+        action.trigger()
+
+    def ColorSelector( self ):
+        action = Krita.instance().action( "show_color_selector" )
+        action.setAutoRepeat(False)
+        QTimer.singleShot(100, action.trigger)
+
     def InitZoom(self, gizmo):
         self.Init()
         self.hidePieMenu()
@@ -233,16 +243,6 @@ class ActionsList(QObject):
 
         if self.gizmo.enabled == False:
             self.gizmo.setProperties({"radius": view.brushSize() * zoom, "position": self.position, "alpha": view.paintingFlow() * 255})
-
-    def IsolateLayer( self ):
-        action = Krita.instance().action( "isolate_active_layer" )
-        action.setAutoRepeat(False)
-        action.trigger()
-
-    def ColorSelector( self ):
-        action = Krita.instance().action( "show_color_selector" )
-        action.setAutoRepeat(False)
-        action.trigger()
         
     def Zoom( self ):
         cursor = QCursor.pos()

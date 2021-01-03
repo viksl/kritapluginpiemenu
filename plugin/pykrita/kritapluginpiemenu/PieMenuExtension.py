@@ -25,17 +25,8 @@ class PieMenuExtension(Extension):
       return
 
     if self.menuArea.eventController != None:
-      if self.menuArea.menu.resetCallback != None:
-        self.menuArea.menu.InvokeAction(self.menuArea.menu.resetCallback, True)
-        # print("press again invoke action")
-      self.menuArea.eventController.deleteEventFilter()
-      self.menuArea.eventController = None
-      # print("press again delete event filter")
-      print("openPieMenu delete")
       return
-    # TODO: Init pie menu here to avoid dealing with some troublesome parts of eventFilter
-    #       Then only mouseMove and mousePress (+ tablet events) will be needed
-    #       Eventually maybe a reset for a keyRelease but for not only mouse as base
+
     self.menuArea.menu.previousAction = None
     self.menuArea.menu.initNewMenuAt(self.menuArea.menus["menu"], QCursor.pos())
     self.menuArea.menu.show()
