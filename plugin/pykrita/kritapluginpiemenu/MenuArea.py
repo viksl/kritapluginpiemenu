@@ -1,6 +1,7 @@
 from krita import *
 from PyQt5 import *
 from PyQt5.QtCore import QTimer, QTimerEvent, pyqtSignal
+from .HelperLib import Gizmo
 import math
 
 class MenuArea(QObject):
@@ -28,7 +29,6 @@ class MenuArea(QObject):
 
     def hidePieMenu(self):
         self.menu.ResetGUI()
-        self.menu.hide()
 
 #Handles events mouse move + mouse press and sends it where needed
 class EventController(QMdiArea):
@@ -41,23 +41,11 @@ class EventController(QMdiArea):
         self.mouseButtonPressed = False
         self.buttonReleased = False
         self.blockEvent = False
-        # self.screen = QGuiApplication.screenAt(QCursor.pos())
-        # self.setGeometry(self.screen.geometry())
-        # self.installEventFilter(self)
 
 ###################################################################################################
 # START EVENT FILTER
 ###################################################################################################
     def eventFilter(self, source, event):
-        # global count
-        # if not hasattr(self, "controllerOwner") or ( hasattr(self, "controllerOwner") and self.controllerOwner == None ):
-        #     return super(EventController, self).eventFilter(source, event)
-
-        # if (self.controllerOwner == None
-        #     or self.buttonReleased
-        #     or self.blockEvent
-        # ):
-        #     return True
 ###################################################################################################
 # KEY PRESS
 ###################################################################################################
@@ -75,54 +63,8 @@ class EventController(QMdiArea):
             investigation (find krita main app, install eventFilter to it with
             FocusOut event and deleteEventFilter there)
         """
-        # if (
-        #     event.type() == QEvent.KeyPress
-        #     and not event.isAutoRepeat()
-        #     and Krita.instance().action("kritapluginpiemenu").shortcut().matches(event.key()) == 0
-        # ):
-        #     self.deleteEventFilter(source, event)
-        #     return True
-        # elif (
-        #     event.type() == QEvent.KeyRelease
-        #     and self.mouseButtonPressed == False
-        # ):
-        #     if self.controllerOwner.eventController != None:
-        #         self.deleteEventFilter(source, event)
 
-        #     self.blockEvent = True
-        #     return True
-        # if (
-        #     hasattr(self, "blockEvent")
-        #     and self.blockEvent
-        # ):
-        #     print("block event")
-        #     return super(EventController, self).eventFilter(source, event)
 
-        # if (
-        #     event.type() == QEvent.KeyPress
-        #     and not event.isAutoRepeat()
-        #     and hasattr(self, "controllerOwner")
-        #     and hasattr(self.controllerOwner, "eventController")
-        #     and self.controllerOwner.eventController != None
-        # ):
-        #     print("key press")
-        #     self.blockEvent = True
-        #     self.deleteEventFilter()
-        # if  event.type() != QEvent.Timer and event.type() != QEvent.WindowUnblocked:
-        # if event.type() != QEvent.Timer:
-        #     count += 1
-        #     print("move ", count)
-        #     print("######### ", event.type(), source)
-        # if  event.type() == QEvent.MouseMove:
-        # # if  event.type() == QEvent.Leave:
-        #     if self.mouseButtonPressed:
-        #         print("######### type: ", type(source))
-        #         print("######### instance: ", isinstance(source, QWindow))
-        #         print(event, event.type(), source)
-        # if event.type() == QEvent.Leave:
-        #     print("######### LEAVE EVENT ", source)
-        # if event.type() == QEvent.FocusOut:
-        #     print("######### FOCUSOUT EVENT ", source)
 ###################################################################################################
 # MOUSE BUTTON PRESS
 ###################################################################################################
@@ -136,9 +78,7 @@ class EventController(QMdiArea):
             and not self.mouseButtonPressed
         ):
             self.mouseButtonPressed = True
-            # self.controllerOwner.menu.previousAction = None
-            # self.controllerOwner.menu.initNewMenuAt(self.controllerOwner.menus["menu"], QCursor.pos())
-            # self.controllerOwner.menu.show()
+
             event.accept()
             return True
 ###################################################################################################
@@ -153,13 +93,12 @@ class EventController(QMdiArea):
             and self.mouseButtonPressed
             and not self.buttonReleased
         ):
-            # print("button release", event.type(), QEvent.MouseButtonRelease, QEvent.TabletRelease)
-
             self.eventObj.eventHandler(event)
             self.deleteEventFilter()
             self.buttonReleased = True
+
             event.accept()
-            # return True
+            return True
 ###################################################################################################
 # MOUSE MOVE
 ###################################################################################################
@@ -172,28 +111,20 @@ class EventController(QMdiArea):
             and not self.buttonReleased
         ):
             self.eventObj.eventHandler(event)
+
             event.accept()
             return True
 ###################################################################################################
 # CATCH PROBLEM EVENTS WHILE THE MENU IS ACTIVE
 ###################################################################################################
-        # elif (
-        #     event.type() == QEvent.TabletMove
-        #     or event.type() == QEvent.TabletPress
-        #     or event.type() == QEvent.KeyPress
-        #     or event.type() == QEvent.KeyRelease
-        #     or event.type() == QEvent.MouseButtonPress
-        #     or event.type() == QEvent.MouseButtonRelease
-        #     or event.type() == QEvent.TabletRelease
-        # ):
-     
-        #     return True
         elif (
             event.type() == QEvent.KeyPress
-            or event.type() == QEvent.Paint
+            or event.type() == QEvent.MouseMove
+            or event.type() == QEvent.TabletPress
+            or event.type() == QEvent.MouseButtonPress
         ):
             event.accept()
-            # return True
+            return True
 ###################################################################################################
         return super(EventController, self).eventFilter(source, event)
 ###################################################################################################
@@ -201,12 +132,12 @@ class EventController(QMdiArea):
 ###################################################################################################
 
     def deleteEventFilter(self):
-        # if hasattr( self.controllerOwner, "eventController" ):
-        self.eventObj.ResetGUI()
-        self.eventObj.hide()
+        if hasattr( self.controllerOwner, "eventController" ):
+            self.eventObj.ResetGUI()
+            self.eventObj.hide()
 
-        if hasattr(self.controllerOwner, "eventController") and self.controllerOwner.eventController != None:
-            self.controllerOwner.eventController.deleteLater()
+            if self.controllerOwner.eventController != None:
+                self.controllerOwner.eventController.deleteLater()
 
         self.controllerOwner.eventController = None
 
@@ -222,7 +153,6 @@ class PieMenu(QWidget):
         self.setAttribute(QtCore.Qt.WA_TranslucentBackground)
         self.setStyleSheet("background: transparent;")
         self.setWindowTitle("Quick Access Pie Menu")
-        self.setWindowModality(QtCore.Qt.ApplicationModal)
         self.radius = 300                                   # TWEAK
         self.width = int(self.radius * 2)
         self.height = int(self.radius * 2)
@@ -238,21 +168,36 @@ class PieMenu(QWidget):
 
         self.baseVector = [1, 0]
 
-        self.labelPaintPoint = False
-        self.distancePassed = False
         self.labelBaseColor = "rgba(47, 47, 47, 200)"       # TWEAK
         self.labelActiveColor = "rgba(30, 30, 30, 250)"     # TWEAK
         self.labelStyleBase = "background-color:" + self.labelBaseColor + "; color: white;"
         self.labelStyleActive = "background-color:" + self.labelActiveColor + "; color: white;"
-        self.clearPainter = False
+
+        self.gizmo = Gizmo()
+
         self.timerTime = 0
+        self.labelPaintPoint = False
+        self.distancePassed = False
+        self.clearPainter = False
         self.previousAction = None
         self.callback = None
         self.resetCallback = None
         self.distance = None
+        self.renderGizmo = False
+        self.renderWheel = False
+
+        self.gizmo.gizmoUpdatedSignal.connect(self.OnGizmoUpdatedSignal)
+
+    def OnGizmoUpdatedSignal (self):
+        self.gizmo.position = self.getCurrentPosition(self.gizmo.position)
+        self.renderGizmo = True
+        self.update()
 
     def initNewMenuAt(self, menuSections, cursorPosition):
         self.clearPainter = False
+        self.renderGizmo = False
+        self.gizmo.enabled = False
+        self.renderWheel = True
         self.distance = None
         self.callback = None
         self.resetCallback = None
@@ -283,7 +228,7 @@ class PieMenu(QWidget):
             self.labels["children"][i].setGeometry(int(p["x"]), int(p["y"]), 170, 60)   # TWEAK
             self.labels["children"][i].move(int(self.labels["children"][i].x() - self.labels["children"][i].width() / 2), int(self.labels["children"][i].y() - self.labels["children"][i].height()/ 2))
             self.labels["children"][i].setStyleSheet(self.labelStyleBase)
-            self.labels["children"][i].setAlignment(QtCore.Qt.AlignCenter) 
+            self.labels["children"][i].setAlignment(QtCore.Qt.AlignCenter)
             self.labels["children"][i].setWordWrap(True)
             self.labels["children"][i].show()
         
@@ -291,6 +236,7 @@ class PieMenu(QWidget):
 
     def ResetGUI( self ):
         self.clearPainter = True
+        self.renderWheel = False
 
         if hasattr(self, "labels") and len(self.labels["children"]) > 0:
             for label in self.labels["children"]:
@@ -309,16 +255,13 @@ class PieMenu(QWidget):
                 
             if action.isCheckable():
                 QTimer.singleShot(self.timerTime, lambda: action.toggle())
-                # action.toggle()
             else:
                 QTimer.singleShot(self.timerTime, lambda: action.trigger())
-                # action.trigger()
 
     def eventHandler(self, event):
         if event.type() == QEvent.MouseButtonRelease or event.type() == QEvent.TabletRelease:
             if self.resetCallback != None:
                 self.InvokeAction(self.resetCallback , True)
-                # self.resetCallback()
                 return
                 
             if self.distance == None:
@@ -328,22 +271,11 @@ class PieMenu(QWidget):
                 action = Krita.instance().action( self.previousAction )
 
                 self.InvokeAction(action)
-                # if action != None:
-                #     if action.isCheckable():
-                #         action.toggle()
-                #     else:
-                #         action.trigger()
 
             elif not(self.labels["activeLabel"] is None):
                 action = Krita.instance().action( self.menuSections[self.labels["activeLabel"]]["actionID"] )
                 
                 self.InvokeAction(action)
-                
-                # if action != None:
-                #     if action.isCheckable():
-                #         action.toggle()
-                #     else:
-                #         action.trigger()
 
         elif event.type() == QtCore.QEvent.MouseMove:
             if (not self.cursorInitPosition):
@@ -351,7 +283,6 @@ class PieMenu(QWidget):
 
             if self.callback != None:
                 self.InvokeAction(self.callback , True)
-                # self.callback()
                 return
 
             self.distance = self.twoPointDistance(self.cursorInitPosition, self.getCurrentPosition())
@@ -381,11 +312,16 @@ class PieMenu(QWidget):
                         if self.labels["activeLabel"] != None and self.menuSections[self.labels["activeLabel"]]["isSubmenu"] and self.menuSections[self.labels["activeLabel"]]["callback"] == None:
                             self.previousAction = self.menuSections[self.labels["activeLabel"]]["actionID"]
                             self.initNewMenuSignal.emit()
-                        if self.labels["activeLabel"] != None and not( self.menuSections[self.labels["activeLabel"]]["isSubmenu"] ) and self.menuSections[self.labels["activeLabel"]]["callback"] != None:
-                            self.actionsList.Init()
-                            self.callback = getattr(self.actionsList, self.menuSections[self.labels["activeLabel"]]["callback"] )
-                        if self.labels["activeLabel"] != None and not( self.menuSections[self.labels["activeLabel"]]["isSubmenu"] ) and self.menuSections[self.labels["activeLabel"]]["resetCallback"] != None:
-                            self.resetCallback = getattr(self.actionsList, self.menuSections[self.labels["activeLabel"]]["resetCallback"] )
+
+                        # Get callback, reserCallback and Init the action    
+                        if self.labels["activeLabel"] != None and not( self.menuSections[self.labels["activeLabel"]]["isSubmenu"] ):
+                            if self.menuSections[self.labels["activeLabel"]]["callback"] != None:
+                                self.callback = getattr(self.actionsList, self.menuSections[self.labels["activeLabel"]]["callback"] )
+                            if self.menuSections[self.labels["activeLabel"]]["resetCallback"] != None:
+                                self.resetCallback = getattr(self.actionsList, self.menuSections[self.labels["activeLabel"]]["resetCallback"] )
+                            if self.menuSections[self.labels["activeLabel"]]["init"] != None:
+                                init = getattr(self.actionsList, self.menuSections[self.labels["activeLabel"]]["init"] )
+                                init(self.gizmo)
 
                         break
             else:
@@ -417,7 +353,7 @@ class PieMenu(QWidget):
             "y": y0 + r * math.sin(angle - self.splitSectionOffAngle)
         }
 
-    def drawWheel(self):
+    def paintWheel(self):
         # Wheel ring
         path = QPainterPath()
         path.addEllipse(self.cursorInitPosition.x() - self.wheelIconOuterRadius, self.cursorInitPosition.y() - self.wheelIconOuterRadius, self.wheelIconOuterRadius * 2, self.wheelIconOuterRadius * 2)
@@ -432,13 +368,21 @@ class PieMenu(QWidget):
             p1 = self.circleCoor(self.cursorInitPosition.x(), self.cursorInitPosition.y(), self.wheelIconOuterRadius, i * self.splitSectionAngle)            
             self.painter.drawLine(p0["x"], p0["y"], p1["x"], p1["y"])
 
+    def paintGizmo( self, gizmo ):
+        self.painter.setPen( QPen(QColor(255, 255, 255, gizmo.alpha), 2) )
+        self.painter.setBrush( QColor(224, 5, 5, gizmo.alpha) )
+        self.painter.drawEllipse(gizmo.position.x() - gizmo.width / 2, gizmo.position.y() - gizmo.height / 2, gizmo.width, gizmo.height)
+
     def paintEvent(self, event):
         self.painter = QPainter(self)
         self.painter.eraseRect(event.rect())
         self.painter.setRenderHints( QPainter.HighQualityAntialiasing )
 
-        if not self.clearPainter:
-            self.drawWheel()
+        if self.renderWheel:
+            self.paintWheel()
+
+        if self.renderGizmo and self.gizmo.enabled:
+            self.paintGizmo(self.gizmo)
 
         self.painter.end()
 

@@ -31,6 +31,7 @@ class PieMenuExtension(Extension):
       self.menuArea.eventController.deleteEventFilter()
       self.menuArea.eventController = None
       # print("press again delete event filter")
+      print("openPieMenu delete")
       return
     # TODO: Init pie menu here to avoid dealing with some troublesome parts of eventFilter
     #       Then only mouseMove and mousePress (+ tablet events) will be needed
@@ -54,8 +55,6 @@ class PieMenuExtension(Extension):
     self.menus = self.settings.menus
 
     self.menuArea = MenuArea(self.menus, self.actionsList, self.qWin)
-
-    # self.actionsList.setParent(window)
 
     self.pieMenuAction = window.createAction("kritapluginpiemenu", "Pie Menu", "tools/scripts")
     self.pieMenuAction.setAutoRepeat(False)
