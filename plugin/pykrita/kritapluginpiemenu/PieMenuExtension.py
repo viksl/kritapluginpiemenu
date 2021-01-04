@@ -53,7 +53,6 @@ class PieMenuExtension(Extension):
     self.pieMenuSettingsAction = window.createAction("pieMenuSettings", "Pie Menu Settings", "tools/scripts")
     self.pieMenuSettingsAction.setAutoRepeat(False)
 
-    # self.pieMenuAction.triggered.connect(self.openPieMenu)
     self.pieMenuAction.triggered.connect(lambda: QTimer.singleShot(0, self.openPieMenu))
 
     self.pieMenuSettingsAction.triggered.connect(self.openSettings)

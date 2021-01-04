@@ -47,23 +47,6 @@ class EventController(QMdiArea):
 ###################################################################################################
     def eventFilter(self, source, event):
 ###################################################################################################
-# KEY PRESS
-###################################################################################################
-        """
-            Delete eventFilter when a key (not shortcut key) is pressed - this helps with alt+tab
-            otherwise krita restart is necessary.
-            (Krita's focusOut event could maybe help here but qwindow focusout works only 
-            when you press one of the krita's menu - for example Settings - so for now
-            this is a workaround)
-            It works fine unless an outside application steals key events from Krita,
-            such as Snipaste (F1) this steals the keyEvent and doesn't let it propagate
-            down to Krita so the pie menu gets stuck to mouse press button unfortunately.
-            It should be a rare case hopefully - I'm not sure if this will be a problem
-            with OBS and other video recording/streaming apps if so it will need more
-            investigation (find krita main app, install eventFilter to it with
-            FocusOut event and deleteEventFilter there)
-        """
-###################################################################################################
 # KEY PRESS EVENT RESET
 ###################################################################################################
         if (
@@ -77,7 +60,11 @@ class EventController(QMdiArea):
 # KEY PRESS
 ###################################################################################################
         if (
-            event.type() == QEvent.KeyPress
+            (
+                event.type() == QEvent.KeyPress
+                or (event.type() == QEvent.KeyRelease
+                    and self.mouseButtonPressed)
+            )
             and not event.isAutoRepeat()
             and Krita.instance().action("kritapluginpiemenu").shortcut().matches(event.key())
             and hasattr(self, "controllerOwner")
