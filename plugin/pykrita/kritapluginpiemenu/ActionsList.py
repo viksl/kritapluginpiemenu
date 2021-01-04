@@ -149,7 +149,7 @@ class ActionsList(QObject):
              self.angle = canvas.rotation()
 
         if self.gizmo.enabled == False:
-            self.gizmo.setProperties({"radius": self.gizmoSizeDefault, "position": self.position, "alpha": 255})
+            self.gizmo.setProperties({"radius": self.gizmoSizeDefault *2, "position": self.position, "alpha": 255})
 
     def InitBrushSize(self, gizmo):
         self.gizmo = gizmo
