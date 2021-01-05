@@ -71,7 +71,10 @@ class ActionsList(QObject):
         {"name": "Select Opaque", "actionID": "selectopaque", "category": "Layer", "init": None, "callback": None, "resetCallback": None},
 
         {"name": "Isolate Layer", "actionID": None, "category": "Layer", "init": None, "callback": None, "resetCallback": "IsolateLayer"},
-        {"name": "Color Selector (c)", "actionID": None, "category": "Miscellaneous", "init": None, "callback": None, "resetCallback": "ColorSelector"},
+        {"name": "Color Selector", "actionID": None, "category": "Miscellaneous", "init": None, "callback": None, "resetCallback": "ColorSelector"},
+        {"name": "Confirm Transform", "actionID": None, "category": "Miscellaneous", "init": None, "callback": None, "resetCallback": "ConfirmTransform"},
+        {"name": "Reset Transform", "actionID": None, "category": "Miscellaneous", "init": None, "callback": None, "resetCallback": "ResetTransform"},
+        {"name": "Reset Transform (Deselect)", "actionID": None, "category": "Miscellaneous", "init": None, "callback": None, "resetCallback": "ResetTransformWithDeselect"},
         {"name": "Zoom (c)", "actionID": None, "category": "Canvas", "init": "InitZoom", "callback": "Zoom", "resetCallback": None},
         {"name": "Rotate Canvas (c)", "actionID": None, "category": "Canvas", "init": "InitCanvasRotation", "callback": "RotateCanvas", "resetCallback": None},
         {"name": "Brush Size (c)", "actionID": None, "category": "Brush", "init": "InitBrushSize", "callback": "BrushSize", "resetCallback": None},
@@ -111,6 +114,115 @@ class ActionsList(QObject):
 
         if gizmo is not None:
             self.gizmo = gizmo
+
+    def ConfirmTransform( self ):
+
+        # Get ToolBox
+        for docker in Krita.instance().dockers():
+            if docker.objectName() == "ToolBox":
+                break
+
+        tools = docker.findChildren(QToolButton)
+
+        # Get the active tool
+        for tool in tools:
+            if tool.isChecked():
+                break
+
+        if tool.objectName() != "KisToolTransform":
+            return
+
+        ############################################################
+        # Get the transform tool options accept and cancel buttons
+        ############################################################
+        buttons = {"apply": None, "reset": None}
+
+        # Get Tool Options
+        for docker in Krita.instance().dockers():
+            if docker.objectName() == "sharedtooldocker":
+                break
+                
+        # Get apply and reset
+        for button in docker.findChildren(QPushButton):
+            if button.text() == "Apply":
+                buttons["apply"] = button
+            elif button.text() == "Reset":
+                buttons["reset"] = button
+
+        buttons["apply"].click()
+
+    def ResetTransform( self ):
+
+        # Get ToolBox
+        for docker in Krita.instance().dockers():
+            if docker.objectName() == "ToolBox":
+                break
+
+        tools = docker.findChildren(QToolButton)
+
+        # Get the active tool
+        for tool in tools:
+            if tool.isChecked():
+                break
+
+        if tool.objectName() != "KisToolTransform":
+            return
+
+        ############################################################
+        # Get the transform tool options accept and cancel buttons
+        ############################################################
+        buttons = {"apply": None, "reset": None}
+
+        # Get Tool Options
+        for docker in Krita.instance().dockers():
+            if docker.objectName() == "sharedtooldocker":
+                break
+                
+        # Get apply and reset
+        for button in docker.findChildren(QPushButton):
+            if button.text() == "Apply":
+                buttons["apply"] = button
+            elif button.text() == "Reset":
+                buttons["reset"] = button
+
+        buttons["reset"].click()
+
+    def ResetTransformWithDeselect( self ):
+
+        # Get ToolBox
+        for docker in Krita.instance().dockers():
+            if docker.objectName() == "ToolBox":
+                break
+
+        tools = docker.findChildren(QToolButton)
+
+        # Get the active tool
+        for tool in tools:
+            if tool.isChecked():
+                break
+
+        if tool.objectName() != "KisToolTransform":
+            return
+
+        ############################################################
+        # Get the transform tool options accept and cancel buttons
+        ############################################################
+        buttons = {"apply": None, "reset": None}
+
+        # Get Tool Options
+        for docker in Krita.instance().dockers():
+            if docker.objectName() == "sharedtooldocker":
+                break
+                
+        # Get apply and reset
+        for button in docker.findChildren(QPushButton):
+            if button.text() == "Apply":
+                buttons["apply"] = button
+            elif button.text() == "Reset":
+                buttons["reset"] = button
+
+        buttons["reset"].click()
+        action = Krita.instance().action("deselect").trigger()
 
     def IsolateLayer( self ):
         action = Krita.instance().action( "isolate_active_layer" )

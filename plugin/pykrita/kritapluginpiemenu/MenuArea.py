@@ -59,6 +59,8 @@ class EventController(QMdiArea):
 ###################################################################################################
 # KEY PRESS
 ###################################################################################################
+# KeyPress + KeyRelease is needed because on windows the events are not triggered the same
+# as on Linux
         if (
             (
                 event.type() == QEvent.KeyPress
