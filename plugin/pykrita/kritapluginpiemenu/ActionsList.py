@@ -180,9 +180,9 @@ class ActionsList(QObject):
                 
         # Get apply and reset
         for button in docker.findChildren(QPushButton):
-            if button.text() == "Apply":
+            if button.text() == "Apply" or button.text() == "&Apply":
                 buttons["apply"] = button
-            elif button.text() == "Reset":
+            elif button.text() == "Reset" or button.text() == "&Reset":
                 buttons["reset"] = button
 
         buttons["reset"].click()
@@ -216,13 +216,14 @@ class ActionsList(QObject):
                 
         # Get apply and reset
         for button in docker.findChildren(QPushButton):
-            if button.text() == "Apply":
+            if button.text() == "Apply" or button.text() == "&Apply":
                 buttons["apply"] = button
-            elif button.text() == "Reset":
+            elif button.text() == "Reset" or button.text() == "&Reset":
                 buttons["reset"] = button
 
         buttons["reset"].click()
-        action = Krita.instance().action("deselect").trigger()
+        
+        Krita.instance().action("deselect").trigger()
 
     def IsolateLayer( self ):
         action = Krita.instance().action( "isolate_active_layer" )
