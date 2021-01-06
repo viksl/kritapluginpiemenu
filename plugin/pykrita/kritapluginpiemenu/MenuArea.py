@@ -160,6 +160,8 @@ class EventController(QMdiArea):
                 self.controllerOwner.eventController.deleteLater()
 
         self.controllerOwner.eventController = None
+        
+        QApplication.restoreOverrideCursor()
 
 class PieMenu(QWidget):
     initNewMenuSignal = pyqtSignal()
