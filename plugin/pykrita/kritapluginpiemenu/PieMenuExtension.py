@@ -32,6 +32,7 @@ class PieMenuExtension(Extension):
     self.menuArea.menu.show()
     self.menuArea.eventController = EventController(self.menuArea.menu, self.menuArea.menu.parent(), self.menuArea)
     QApplication.setOverrideCursor(Qt.ArrowCursor)
+    
   def openSettings(self):
     self.settings.move(QCursor.pos())
     self.settings.show()
