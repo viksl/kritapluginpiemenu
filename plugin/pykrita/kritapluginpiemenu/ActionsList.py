@@ -142,12 +142,21 @@ class ActionsList(QObject):
             if docker.objectName() == "sharedtooldocker":
                 break
                 
-        # Get apply and reset
+        # Get apply or reset (or any other button I assume)
+        # still no info which is which here
+        # This part could be omitted, only one of the children is needed
+        # to get the parent later, I'm keeping this as a 2 way
+        # check since apply and reset seem to be the only ones with
+        # empty objectName
         for button in docker.findChildren(QPushButton):
-            if button.text() == "Apply" or button.text() == "&Apply":
+            if button.objectName() == "":
+                break
+
+        # Get apply and/or reset button - this way you avoid translation problems with button.text()
+        for button in button.parent().buttons():
+            if button.parent().buttonRole(button) == QDialogButtonBox.ApplyRole:
                 buttons["apply"] = button
-            elif button.text() == "Reset" or button.text() == "&Reset":
-                buttons["reset"] = button
+                break
 
         buttons["apply"].click()
 
@@ -178,12 +187,17 @@ class ActionsList(QObject):
             if docker.objectName() == "sharedtooldocker":
                 break
                 
-        # Get apply and reset
+        # Get apply or reset (or any other button I assume)
+        # still no info which is which here
         for button in docker.findChildren(QPushButton):
-            if button.text() == "Apply" or button.text() == "&Apply":
-                buttons["apply"] = button
-            elif button.text() == "Reset" or button.text() == "&Reset":
+            if button.objectName() == "":
+                break
+
+        # Get apply and/or reset button - this way you avoid translation problems with button.text()
+        for button in button.parent().buttons():
+            if button.parent().buttonRole(button) == QDialogButtonBox.ResetRole:
                 buttons["reset"] = button
+                break
 
         buttons["reset"].click()
 
@@ -214,12 +228,17 @@ class ActionsList(QObject):
             if docker.objectName() == "sharedtooldocker":
                 break
                 
-        # Get apply and reset
+        # Get apply or reset (or any other button I assume)
+        # still no info which is which here
         for button in docker.findChildren(QPushButton):
-            if button.text() == "Apply" or button.text() == "&Apply":
-                buttons["apply"] = button
-            elif button.text() == "Reset" or button.text() == "&Reset":
+            if button.objectName() == "":
+                break
+
+        # Get apply and/or reset button - this way you avoid translation problems with button.text()
+        for button in button.parent().buttons():
+            if button.parent().buttonRole(button) == QDialogButtonBox.ResetRole:
                 buttons["reset"] = button
+                break
 
         buttons["reset"].click()
         
