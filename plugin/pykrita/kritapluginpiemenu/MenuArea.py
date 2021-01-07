@@ -21,7 +21,8 @@ class MenuArea(QObject):
 
         cursor = self.menu.getCurrentPosition()
 
-        v = QPoint( ( cursor.x() - self.menu.cursorInitPosition.x() ) * 0.6, ( cursor.y() - self.menu.cursorInitPosition.y() ) * 0.6 )
+        # v = QPoint( ( cursor.x() - self.menu.cursorInitPosition.x() ) * 0.6, ( cursor.y() - self.menu.cursorInitPosition.y() ) * 0.6 )
+        v = QPoint( ( cursor.x() - self.menu.cursorInitPosition.x() ) * 0, ( cursor.y() - self.menu.cursorInitPosition.y() ) * 0 )
 
         newCenter =  QPoint( QCursor.pos().x() + v.x(), QCursor.pos().y() + v.y() ) 
 
@@ -267,7 +268,7 @@ class PieMenu(QWidget):
             self.labels["children"] = []
 
         self.update()
-        QApplication.processEvents()
+        # QApplication.processEvents()
 
     def InvokeAction(self, action, isCallback=False):
         if action != None:
