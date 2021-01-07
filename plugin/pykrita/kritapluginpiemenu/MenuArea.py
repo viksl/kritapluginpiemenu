@@ -260,7 +260,8 @@ class PieMenu(QWidget):
     def ResetGUI( self ):
         self.clearPainter = True
         self.renderWheel = False
-
+        self.renderGizmo = False
+        
         if hasattr(self, "labels") and len(self.labels["children"]) > 0:
             for label in self.labels["children"]:
                 label.hide()
