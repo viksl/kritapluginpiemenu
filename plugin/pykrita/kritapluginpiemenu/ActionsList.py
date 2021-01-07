@@ -80,7 +80,7 @@ class ActionsList(QObject):
         {"name": "Play / Stop", "actionID": "toggle_playback", "category": "Animation", "init": None, "callback": None, "resetCallback": None},
         {"name": "Mirror Frames", "actionID": "mirror_frames", "category": "Animation", "init": None, "callback": None, "resetCallback": None},
         {"name": "Copy to Clipboard", "actionID": "copy_frames_to_clipboard", "category": "Animation", "init": None, "callback": None, "resetCallback": None},
-        {"name": "Paste from Clipboard", "actionID": "paste_frames_from_clipboard", "category": "Animation", "init": None, "callback": None, "resetCallback": None},
+        {"name": "Paste frame from Clipboard", "actionID": "paste_frames_from_clipboard", "category": "Animation", "init": None, "callback": None, "resetCallback": None},
         {"name": "Toggle onion skin", "actionID": "toggle_onion_skin", "category": "Animation", "init": None, "callback": None, "resetCallback": None},
         {"name": "Canvas mode", "actionID": "view_show_canvas_only", "category": "Canvas", "init": None, "callback": None, "resetCallback": None},
 

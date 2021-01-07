@@ -267,7 +267,7 @@ class PieMenu(QWidget):
             self.labels["children"] = []
 
         self.update()
-        # QApplication.processEvents()
+        QApplication.processEvents()
 
     def InvokeAction(self, action, isCallback=False):
         if action != None:
