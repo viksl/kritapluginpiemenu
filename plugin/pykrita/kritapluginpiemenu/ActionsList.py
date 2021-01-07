@@ -82,6 +82,7 @@ class ActionsList(QObject):
         {"name": "Copy to Clipboard", "actionID": "copy_frames_to_clipboard", "category": "Animation", "init": None, "callback": None, "resetCallback": None},
         {"name": "Paste from Clipboard", "actionID": "paste_frames_from_clipboard", "category": "Animation", "init": None, "callback": None, "resetCallback": None},
         {"name": "Toggle onion skin", "actionID": "toggle_onion_skin", "category": "Animation", "init": None, "callback": None, "resetCallback": None},
+        {"name": "Canvas mode", "actionID": "view_show_canvas_only", "category": "Canvas", "init": None, "callback": None, "resetCallback": None},
 
         {"name": "Isolate Layer", "actionID": None, "category": "Layer", "init": None, "callback": None, "resetCallback": "IsolateLayer"},
         {"name": "Color Selector", "actionID": None, "category": "Miscellaneous", "init": None, "callback": None, "resetCallback": "ColorSelector"},
