@@ -181,8 +181,8 @@ class PieMenu(QWidget):
         self.height = int(self.radius * 2)
         self.halfWidth = int(self.width / 2)
         self.halfHeight = int(self.height / 2)
-        self.wheelIconOuterRadius = 18 *2                   # TWEAK
-        self.wheelIconInnerRadius = 13 *2                   # TWEAK
+        self.wheelIconOuterRadius = 11 *2                   # TWEAK
+        self.wheelIconInnerRadius = 8 *2                   # TWEAK
         self.wheelColor = QColor(47, 47, 47, 200)           # TWEAK
         self.lineColor = QColor(255, 255, 255, 30)          # TWEAK
         self.wheelIconLineThickness = 1                     # TWEAK
