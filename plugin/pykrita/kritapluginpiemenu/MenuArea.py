@@ -155,7 +155,7 @@ class EventController(QMdiArea):
     def deleteEventFilter(self):
         if hasattr( self.controllerOwner, "eventController" ):
             self.eventObj.ResetGUI()
-            self.eventObj.hide()
+            QTimer.singleShot(10, self.eventObj.hide)
 
             if self.controllerOwner.eventController != None:
                 self.controllerOwner.eventController.deleteLater()
