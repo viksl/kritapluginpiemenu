@@ -3,15 +3,6 @@ from PyQt5 import *
 import os
 import json
 
-class Dialog(QDialog):
-  def __init__(self, text, parent=None):
-      super(Dialog, self).__init__(parent)
-      self.setLayout(QVBoxLayout())
-      self.label = QLabel(str(text))
-      self.layout().addWidget(self.label)
-      self.resize(200, 50)
-      self.exec_()
-
 class CustomComboBox (QComboBox):
   def __init__(self, parent=None):
     super(CustomComboBox, self).__init__(parent)    
@@ -64,10 +55,10 @@ class Settings(QDialog):
 
     self.defaultMenus = {
       "menu": [
-        {"name": "Select Opaque", "actionID": "selectopaque", "isSubmenu": False, "ref": None, "callback": None, "resetCallback": None},
-        {"name": "Undo", "actionID": "edit_undo", "isSubmenu": False, "ref": None, "callback": None, "resetCallback": None},
-        {"name": "Previous Preset", "actionID": "previous_preset", "isSubmenu": False, "ref": None, "callback": None, "resetCallback": None},
-        {"name": "Outline Selection Tool", "actionID": "KisToolSelectOutline", "isSubmenu": False, "ref": None, "callback": None, "resetCallback": None}
+        {"name": "Select Opaque", "actionID": "selectopaque", "isSubmenu": False, "ref": None, "init": None, "callback": None, "resetCallback": None},
+        {"name": "Undo", "actionID": "edit_undo", "isSubmenu": False, "ref": None, "init": None, "callback": None, "resetCallback": None},
+        {"name": "Previous Preset", "actionID": "previous_preset", "isSubmenu": False, "ref": None, "init": None, "callback": None, "resetCallback": None},
+        {"name": "Outline Selection Tool", "actionID": "KisToolSelectOutline", "isSubmenu": False, "ref": None, "init": None, "callback": None, "resetCallback": None}
       ],
       "submenus": {}
     }
@@ -193,6 +184,7 @@ class Settings(QDialog):
         "isSubmenu": False,
         "ref": None,
         "category": self.GetCategory(actionName, actionsList),
+        "init": self.GetInit(actionName, actionsList),
         "callback": self.GetCallback(actionName, actionsList),
         "resetCallback": self.GetResetCallback(actionName, actionsList)
       })
@@ -216,6 +208,7 @@ class Settings(QDialog):
           "isSubmenu": False,
           "ref": None,
           "category": self.GetCategory(actionName, actionsList),
+          "init": self.GetInit(actionName, actionsList),
           "callback": self.GetCallback(actionName, actionsList),
           "resetCallback": self.GetResetCallback(actionName, actionsList)
         })
@@ -226,6 +219,11 @@ class Settings(QDialog):
     for action in actionsList:
       if action["name"] == actionName:
         return action["category"]
+
+  def GetInit(self, actionName, actionsList):
+    for action in actionsList:
+      if action["name"] == actionName:
+        return action["init"]
 
   def GetResetCallback(self, actionName, actionsList):
     for action in actionsList:

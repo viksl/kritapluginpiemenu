@@ -15,40 +15,28 @@ class HelperLib():
   def twoPointDistance(self, v1, v2):
     return math.sqrt( math.pow(( v2.x() - v1.x() ), 2) + math.pow(( v2.y() - v1.y() ), 2)  )
 
-class GizmoIcon(QWidget):
-  def __init__(self, position, width, height, parent=None):
-    # super(GizmoIcon, self).__init__(parent)
-    QWidget.__init__(self, parent)
+class Gizmo(QObject):
+  gizmoUpdatedSignal = pyqtSignal()
+
+  def __init__(self, position=None, width=None, height=None, alpha=255, parent=None):
+    super().__init__(parent)
 
     self.position = position
-    self.width = int(width)
-    self.height = int(height)
-    self.setGeometry(int(position.x() - self.width / 2), int(position.y() - self.height / 2), self.width, self.height)
-    self.setWindowFlags(self.windowFlags() | QtCore.Qt.Window | QtCore.Qt.FramelessWindowHint)
-    self.setAttribute(QtCore.Qt.WA_TranslucentBackground)
-    self.setStyleSheet("background: transparent;")
-    self.setWindowTitle("icon")
-    self.alpha = 255
+    self.radius = None
+    self.width = int(width) if width != None else width
+    self.height = int(height) if height != None else height
+    self.alpha = alpha
+    self.enabled = False
 
-  def showAt(self, position):
-    self.move(position.x() - self.width / 2, position.y() - self.height / 2)
-    self.show()
+  def setProperties(self, settings):
+    for key, value in settings.items():
+      if hasattr(self, key):
+        if key == "radius":
+          setattr(self, "width", value)
+          setattr(self, "height", value)
+        else:
+          setattr(self, key, value)
 
-  def changeSize(self, radius):
-    self.width = radius
-    self.height = radius
-    self.setGeometry(int(self.position.x() - self.width / 2), int(self.position.y() - self.height / 2), self.width, self.height)
-    self.update()
+    self.enabled = True
 
-  def changeOpacity(self, val):
-    self.alpha = val
-    self.update()
-
-  def paintEvent(self, event):
-    self.painter = QPainter(self)
-    self.painter.eraseRect(event.rect())
-    self.painter.setRenderHints( QPainter.HighQualityAntialiasing )
-    self.painter.setPen( QPen(QColor(255, 255, 255, 150), 2) )
-    self.painter.setBrush( QColor(224, 5, 5, self.alpha) )
-    self.painter.drawEllipse(0, 0, self.width, self.height)
-    self.painter.end()
+    self.gizmoUpdatedSignal.emit()
