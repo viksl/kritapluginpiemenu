@@ -21,7 +21,7 @@ Copyright: (C) viksl
 
 Release Date: 21.12.2020
 
-Version: 0.3
+Version: 0.4
 
 Default shortcut: ` + (Mouse left/middle button or Pen touch)
 
@@ -108,37 +108,66 @@ In settings you can:
     c. Gets triggered by releasing left mouse button or lifting the pen
 4. If the action requires it you might need to move the pen around, for example:
     If the action is Brush Size then moving pen left and right changes the size of the brush
+5. Quit pie menu without triggering any action:
+    a/ Press the shortcut again
+    b/ If you already pressed left mouse button/pen then before releasing the shortcut key then just release the shortcut key
 
 ## 4/ Adjustments you can make if needed:
 
 Check the video in section 1/
 
 ## 5/ Known Issues
-- There are currently some issues (especially on Linux) which users reported through the
-krita-artists.org, all these are related to have the plugin sometimes returns an error
-message when yo utry to invoke the plugin in rapid succession, if you release mouse/key
-at similar time. This is currently being worked on (though new year is a busy period ;))
-- Triggering an aciton which opens a dialog (for example filter mask) results in
-transparent dialog window, completely stucked Krita (which needs restart) or it can
-possibly block mouse/pen (this is already fixed and the update will be released soon
-with full or partiall fix for the above mentioned issue this udpate should stabilize
-the plugin for majority of uses on all systems)
+- Possible issues with Steam version (since steam has overlays and deals with shortcuts)
+More investigation needed
 - Some applications which steal keyEvents from Krita might cause the pie menu to get stuck
 in general for single use it shouldn't be a problem but this needs testing with
 recording/streaming apps if they cause problems or not. I tested this with OBS on windows 10
-and there we NO problems.
+and there were NO problems.
 (no solution for now other than restarting Krita)
 
 ## 6/ Possible future updates
 - New actions
 - New sections
 - Proper Default Menu
-
+- Pie menu settings
+I’ll be cleaning the code everywhere now when the plugin seems to be pretty stable which includes unifying settings properties/variables to a single entitty which will hopefulyl allow me to create a new settings section (separate) for the visuals of the pie menu - distances, size, colors, … to be changed real time in Krita
 (Depends on what is needed through testing, wishes, ..., feel free to let me know through krita-artists.org)
 
+
 ## 7/ Version Notes
-0.1
-- First Release
+0.4
+- Fixing several major bugs
+*(error: NoneType list, NoneType eventController, menu getting stucked, ...)*
+- Reworked gizmo
+*Now part of PieMenu paint method, access to gizmo through custom actions as a mandatory argument*
+- Added QTimer.singleShot(...) for all events and menu init to queue the menu at the end of the event queue
+- Added QTimer.singleShot(10, ...) for ColorSelector else it breaks down with shortcuts
+- Reworked how initialization of the pieMenu works with the shortcut
+- Quitting menu now possible (2 ways):
+*a/ Before pressing down mouse left button/pen -> press the shortcut again*
+*b/ If mouse left button/pen pressed while shortcut held down -> release the shortcut*
+- Added init method call to custom actions
+*There are now three methods for every custom action instead of having 1 general purpose init method:*
+*1st method called once (at the beginning): init method*
+*2nd method repeated calls: callback*
+*3rd method called once (at the end): resetCallback*
+- QTimer.singleShot(...) for any action invocation (init, callback, resetCallback, krita's default actions)
+- Simplified the EventController, it's also more sturdy (needs a code clean up though ;))
+- Added new action category: ANIMATION
+- Added 13 new actions to Animation category
+- Added 3 new custom actions:
+*Confirm Transform, Reset Transform, Reset Transform (deselect)*
+*(ctrl + T / Transform has been in the action list since the beginning)*
+*Reset transform (deselect) - resets transform (esc key) and deselects at the end*
+- Added cursor to pieMenu (cursorOverride)
+
+0.3
+- Added offset to where a submenu appears to make triggering the inital tool (which invoked the submenu) more reliable
+(especially with short quick hand movement)
+- I've updated the video to reflect new categories for actions and simpler installation process.
+- Top post now contains info about written instructions on the plugins website which are noted before the video itself,
+there's also a note about the length of the video to make sure people know there's a faster method to get started if needed.
+(check the krita-artist thread for the video and discussion about the plugin)
 
 0.2
 - MacOS confirmed working
@@ -148,10 +177,5 @@ and there we NO problems.
 - Fixed isolate_active_layer action
 - Moved Select Opaque to a different category Misc - > Layer
 
-0.3
-- Added offset to where a submenu appears to make triggering the inital tool (which invoked the submenu) more reliable
-(especially with short quick hand movement)
-- I've updated the video to reflect new categories for actions and simpler installation process.
-- Top post now contains info about written instructions on the plugins website which are noted before the video itself,
-there's also a note about the length of the video to make sure people know there's a faster method to get started if needed.
-(check the krita-artist thread for the video and discussion about the plugin)
+0.1
+- First Release
