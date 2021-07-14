@@ -49,17 +49,57 @@ class GUISettings(QDialog):
     self.base.addWidget(self.scrollArea)
 
     self.setLayout(self.base)
-
-    self.options = None
+    
     self.logger = Logger()
+    
+    self.options = None
+    
     self.loadSettings( self.settingsFormLayout )
+    self.displayOptions( self.settingsFormLayout )
 
-    self.addSpinBoxRow("TestName", "test text int", 0, 255, 1, self.settingsFormLayout)
-    self.logger.print("Test init GUI")
     self.openPieMenu.emit()
 
+  def displayOptions( self, layout ):
+    self.addSpinBoxRow("gizmoSizeDefault", "Gizmo Size Default", self.options["gizmoSizeDefault"], 0, 10000, 1, layout)
+    layout.addRow( self.addLine() )
 
-  def settingsPaths (self ):
+    self.addSpinBoxRow("submenuPositionOffset", "Submenu Position Offset", self.options["submenuPositionOffset"], 0, 10000, 1, layout)
+    layout.addRow( self.addLine() )
+
+    self.addSpinBoxRow("wheelInnerRadius", "Wheel Inner Radius", self.options["wheelInnerRadius"], 0, 10000, 1, layout)
+    layout.addRow( self.addLine() )
+
+    self.addSpinBoxRow("wheelOuterRadius", "Wheel Outer Radius", self.options["wheelOuterRadius"], 0, 10000, 1, layout)
+    layout.addRow( self.addLine() )
+
+    self.addSpinBoxRow("wheelLineThickness", "Wheel Line Thickness", self.options["wheelLineThickness"], 0, 10000, 1, layout)
+    layout.addRow( self.addLine() )
+
+    self.addSpinBoxRow("labelRadius", "Label Radius", self.options["labelRadius"], 0, 10000, 1, layout)
+    layout.addRow( self.addLine() )
+
+    self.addSpinBoxRow("fontSize", "Font Size", self.options["fontSize"], 0, 10000, 1, layout)
+    layout.addRow( self.addLine() )
+
+    self.addSpinBoxRow("labelWidth", "Label Width", self.options["labelWidth"], 0, 10000, 1, layout)
+    layout.addRow( self.addLine() )
+
+    self.addSpinBoxRow("labelHeight", "Label Height", self.options["labelHeight"], 0, 10000, 1, layout)
+    layout.addRow( self.addLine() )
+
+    self.addRGBARow("wheelColor", "Wheel Color", self.options["wheelColor"].red(), self.options["wheelColor"].green(), self.options["wheelColor"].blue(), self.options["wheelColor"].alpha(), 0, 255, 1, layout)
+    layout.addRow( self.addLine() )
+
+    self.addRGBARow("wheelLineColor", "Wheel Line Color", self.options["wheelLineColor"].red(), self.options["wheelLineColor"].green(), self.options["wheelLineColor"].blue(), self.options["wheelLineColor"].alpha(), 0, 255, 1, layout)
+    layout.addRow( self.addLine() )
+
+    self.addRGBARow("labelBaseColor", "Label Base Color", self.options["labelBaseColor"][0], self.options["labelBaseColor"][1], self.options["labelBaseColor"][2], self.options["labelBaseColor"][3], 0, 255, 1, layout)
+    layout.addRow( self.addLine() )
+
+    self.addRGBARow("labelActiveColor", "Label Active Color", self.options["labelActiveColor"][0], self.options["labelActiveColor"][1], self.options["labelActiveColor"][2], self.options["labelActiveColor"][3], 0, 255, 1, layout)
+    layout.addRow( self.addLine() )
+
+  def settingsPaths ( self ):
     paths = {"dirpath": "", "filepath": ""}
     
     dirName = "KritaPMPlugin"
@@ -128,8 +168,43 @@ class GUISettings(QDialog):
     self.openPieMenu.emit()
     self.optionsChanged.emit()
 
+  def setOptionsFromSettings( self ):
+    parent = self.groupBox
+    spinBoxes = parent.findChildren(QSpinBox)
+    suffixes = ["_R", "_G", "_B", "_A"]
+
+    for spinBox in spinBoxes:
+
+      # Check if current spinBox is a value of RGBA
+      for suffix in suffixes:
+        suffixIndex = -1
+
+        if suffix in spinBox.objectName():
+          suffixIndex = suffixes.index(suffix)
+          break
+
+      # if RGBA
+      if suffixIndex > -1:
+        # RGBA as a QColor
+        if "wheelColor" in spinBox.objectName() or "wheelLineColor" in spinBox.objectName():
+          if suffixIndex == 0:
+            self.options[spinBox.objectName()[:-2]].setRed( int(spinBox.value()) )
+          if suffixIndex == 1:
+            self.options[spinBox.objectName()[:-2]].setGreen( int(spinBox.value()) )
+          if suffixIndex == 2:
+            self.options[spinBox.objectName()[:-2]].setBlue( int(spinBox.value()) )
+          if suffixIndex == 3:
+            self.options[spinBox.objectName()[:-2]].setAlpha( int(spinBox.value()) )
+        # RGBA as a python list
+        else:
+          self.options[spinBox.objectName()[:-2]][suffixIndex] = int(spinBox.value())
+      else:
+        # Other options values
+        self.options[spinBox.objectName()] = int(spinBox.value())
+      
   def onOptionsChanged( self, val ):
-    self.logger.print("Options Changed " + str(val))
+    self.setOptionsFromSettings()
+    self.logger.print("Options Changed " + str(self))
 
   def addLabel(self, label):
     label = QLabel( str(label) )
@@ -142,12 +217,19 @@ class GUISettings(QDialog):
     input.textChanged.connect(self.onOptionsChanged)
     return input
 
-  def addSpinBox(self, objectName, min, max, step):
+  def addSpinBox(self, objectName, value=0, min=False, max=False, step=False):
     spinBox = QSpinBox()
     spinBox.valueChanged.connect(self.onOptionsChanged)
     spinBox.setObjectName(objectName)
-    spinBox.setRange(min, max)
-    spinBox.setSingleStep(step)
+
+    if min != False or max != False:
+      spinBox.setRange(min, max)
+    
+    if step != False:
+      spinBox.setSingleStep(step)
+
+    spinBox.setValue(int(value))
+
     return spinBox
 
   def addLine( self ):
@@ -158,14 +240,22 @@ class GUISettings(QDialog):
     line.setStyleSheet("QFrame {background-color: rgb(112,112,112)}")
     return line
 
-  def addSpinBoxRow(self, objectName, txt, min, max, step, layout):
-    spinBox = self.addSpinBox(objectName, min, max, step)
+  def addRGBARow(self, objectName, txt, r=0, g=0, b=0, a=0, min=0, max=False, step=1, layout=False):
+    layout.addRow( self.addLabel(txt) )
+    layout.addRow(  self.addLabel("R"), self.addSpinBox(objectName + "_R", r, min, max, step) )
+    layout.addRow(  self.addLabel("G"), self.addSpinBox(objectName + "_G", g, min, max, step) )
+    layout.addRow(  self.addLabel("B"), self.addSpinBox(objectName + "_B", b, min, max, step) )
+    layout.addRow(  self.addLabel("A"), self.addSpinBox(objectName + "_A", a, min, max, step) )
+
+  def addSpinBoxRow(self, objectName, txt, value=0, min=False, max=False, step=False, layout=False):
+    spinBox = self.addSpinBox(objectName, value, min, max, step)
 
     elms = [ self.addLabel(txt), spinBox ]
     layout.addRow( elms[0], elms[1] )
     return elms
 
   def addEditableRow(self, objectName, txt, layout):
+    # This method can be deleted
     lineEdit = self.addLineEdit(objectName)
 
     elms = [ self.addLabel(txt), lineEdit ]

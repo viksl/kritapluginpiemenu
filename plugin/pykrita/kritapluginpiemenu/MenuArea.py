@@ -190,8 +190,10 @@ class PieMenu(QWidget):
 
         self.labelBaseColor = self.options["labelBaseColor"]       # TWEAK
         self.labelActiveColor = self.options["labelActiveColor"]     # TWEAK
-        self.labelStyleBase = "background-color:" + self.labelBaseColor + "; color: white;"
-        self.labelStyleActive = "background-color:" + self.labelActiveColor + "; color: white;"
+        # self.labelStyleBase = "background-color:" + self.labelBaseColor + "; color: white;"
+        # self.labelStyleActive = "background-color:" + self.labelActiveColor + "; color: white;"
+        self.labelStyleBase = "background-color:rgba(" + str(self.options["labelBaseColor"][0]) + "," + str(self.options["labelBaseColor"][1]) + "," +str(self.options["labelBaseColor"][2]) + "," +str(self.options["labelBaseColor"][3]) +"); color: white;"
+        self.labelStyleActive = "background-color:rgba(" + str(self.options["labelActiveColor"][0]) + "," + str(self.options["labelActiveColor"][1]) + "," +str(self.options["labelActiveColor"][2]) + "," +str(self.options["labelActiveColor"][3]) + "); color: white;"
 
         self.gizmo = Gizmo()
 
