@@ -89,6 +89,10 @@ class GUISettings(QDialog):
     with open(paths["filepath"] , "w") as file:
       file.write(json.dumps(self.options))
 
+    # Convert back to QColor for use in Krita
+    self.options["wheelColor"] = QColor(self.options["wheelColor"][0], self.options["wheelColor"][1], self.options["wheelColor"][2], self.options["wheelColor"][3])
+    self.options["wheelLineColor"] = QColor(self.options["wheelLineColor"][0], self.options["wheelLineColor"][1], self.options["wheelLineColor"][2], self.options["wheelLineColor"][3])
+
   def readSettingsFile( self ):
     paths = self.settingsPaths()
 
@@ -144,7 +148,6 @@ class GUISettings(QDialog):
     spinBox.setObjectName(objectName)
     spinBox.setRange(min, max)
     spinBox.setSingleStep(step)
-    self.logger.print("Inside")
     return spinBox
 
   def addLine( self ):
