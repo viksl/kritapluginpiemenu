@@ -3,14 +3,16 @@ from PyQt5 import *
 from PyQt5.QtCore import QTimer, pyqtSignal
 from .HelperLib import Gizmo
 import math
+from .Debug import Logger
 
 class MenuArea(QObject):
-    def __init__(self, menus, actionsList, parent=None):
+    def __init__(self, menus, actionsList, options, parent=None):
         super().__init__(parent)
 
         self.eventController = None
+        self.options = options
         self.menus = menus
-        self.menu = PieMenu(actionsList, parent)
+        self.menu = PieMenu(actionsList, self.options, parent)
         
         self.menu.initNewMenuSignal.connect(self.initNewMenu)
         actionsList.hidePieMenuSignal.connect(self.hidePieMenu)
@@ -22,7 +24,7 @@ class MenuArea(QObject):
         cursor = self.menu.getCurrentPosition()
 
         # v = QPoint( ( cursor.x() - self.menu.cursorInitPosition.x() ) * 0.6, ( cursor.y() - self.menu.cursorInitPosition.y() ) * 0.6 )
-        v = QPoint( ( cursor.x() - self.menu.cursorInitPosition.x() ) * 0, ( cursor.y() - self.menu.cursorInitPosition.y() ) * 0 )
+        v = QPoint( ( cursor.x() - self.menu.cursorInitPosition.x() ) * self.options["submenuPositionOffset"], ( cursor.y() - self.menu.cursorInitPosition.y() ) * self.options["submenuPositionOffset"] )
 
         newCenter =  QPoint( QCursor.pos().x() + v.x(), QCursor.pos().y() + v.y() ) 
 
@@ -167,32 +169,27 @@ class EventController(QMdiArea):
 class PieMenu(QWidget):
     initNewMenuSignal = pyqtSignal()
 
-    def __init__(self, actionsList, parent=None):
+    def __init__(self, actionsList, options, parent=None):
         QWidget.__init__(self, parent)
 
         self.actionsList = actionsList
-
+        self.options = options
         self.setWindowFlags(self.windowFlags() | QtCore.Qt.Window | QtCore.Qt.FramelessWindowHint)
         self.setAttribute(QtCore.Qt.WA_TranslucentBackground)
         self.setStyleSheet("background: transparent;")
         self.setWindowTitle("Quick Access Pie Menu")
-        self.radius = 300                                   # TWEAK
-        self.width = int(self.radius * 2)
-        self.height = int(self.radius * 2)
-        self.halfWidth = int(self.width / 2)
-        self.halfHeight = int(self.height / 2)
-        self.wheelIconOuterRadius = 11 *2                   # TWEAK
-        self.wheelIconInnerRadius = 8 *2                   # TWEAK
-        self.wheelColor = QColor(47, 47, 47, 200)           # TWEAK
-        self.lineColor = QColor(255, 255, 255, 30)          # TWEAK
-        self.wheelIconLineThickness = 1                     # TWEAK
+        self.wheelIconOuterRadius = self.options["wheelInnerRadius"] *2                   # TWEAK
+        self.wheelIconInnerRadius = self.options["wheelOuterRadius"] *2                   # TWEAK
+        self.wheelColor = self.options["wheelColor"]           # TWEAK
+        self.lineColor = self.options["wheelLineColor"]          # TWEAK
+        self.wheelIconLineThickness = self.options["wheelLineThickness"]                     # TWEAK
         
-        self.labelRadius = self.wheelIconInnerRadius + 180  # TWEAK
+        self.labelRadius = self.wheelIconInnerRadius + self.options["labelRadius"]  # TWEAK
 
         self.baseVector = [1, 0]
 
-        self.labelBaseColor = "rgba(47, 47, 47, 200)"       # TWEAK
-        self.labelActiveColor = "rgba(30, 30, 30, 250)"     # TWEAK
+        self.labelBaseColor = self.options["labelBaseColor"]       # TWEAK
+        self.labelActiveColor = self.options["labelActiveColor"]     # TWEAK
         self.labelStyleBase = "background-color:" + self.labelBaseColor + "; color: white;"
         self.labelStyleActive = "background-color:" + self.labelActiveColor + "; color: white;"
 
@@ -246,9 +243,9 @@ class PieMenu(QWidget):
             p = self.circleCoor(self.cursorInitPosition.x(), self.cursorInitPosition.y(), self.labelRadius, i * self.splitSectionAngle + self.splitSectionAngle / 2)
     
             self.labels["children"][i] = QLabel(str(self.menuSections[i]["name"]), self)
-            self.labels["children"][i].setFont(QFont('Times', 12))  # TWEAK
+            self.labels["children"][i].setFont(QFont('Times', self.options["fontSize"]))  # TWEAK
             self.labels["children"][i].adjustSize()
-            self.labels["children"][i].setGeometry(int(p["x"]), int(p["y"]), 170, 60)   # TWEAK
+            self.labels["children"][i].setGeometry(int(p["x"]), int(p["y"]), self.options["labelWidth"], self.options["labelHeight"])   # TWEAK
             self.labels["children"][i].move(int(self.labels["children"][i].x() - self.labels["children"][i].width() / 2), int(self.labels["children"][i].y() - self.labels["children"][i].height()/ 2))
             self.labels["children"][i].setStyleSheet(self.labelStyleBase)
             self.labels["children"][i].setAlignment(QtCore.Qt.AlignCenter)

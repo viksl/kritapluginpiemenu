@@ -1,9 +1,12 @@
 from krita import *
 from PyQt5 import *
 from .HelperLib import *
+from .Options import *
 
 class ActionsList(QObject):
     hidePieMenuSignal = pyqtSignal()
+    
+    options = Options().options
 
     actionsList = [
         {"name": "Ellipse Tool", "actionID": "KritaShape/KisToolEllipse", "category": "Tools", "init": None, "callback": None, "resetCallback": None},
@@ -114,7 +117,7 @@ class ActionsList(QObject):
     def __init__(self, parent=None):
         super(ActionsList, self).__init__(parent)
 
-        self.gizmoSizeDefault = 10
+        self.gizmoSizeDefault = self.options["gizmoSizeDefault"]
         self.maxBrushSize = int(Application.readSetting("", "maximumBrushSize", ""))
 
     def Init( self, gizmo=None ):

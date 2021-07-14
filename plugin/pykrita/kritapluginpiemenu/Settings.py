@@ -2,6 +2,7 @@ from krita import *
 from PyQt5 import *
 import os
 import json
+from .Debug import Logger
 
 class CustomComboBox (QComboBox):
   def __init__(self, parent=None):
@@ -42,11 +43,12 @@ class Settings(QDialog):
     self.sectionsMaxCount = 10
 
     self.baseMenuSectionsCombo = self.addComboRow("Sections:", self.sectionsMaxCount, self.settingsFormLayout)[1]
-    self.baseMenuSectionsCombo.currentIndexChanged.connect( lambda: self.menuAddSections(self.settingsFormLayout, False) )
 
     self.settingsFormLayout.addRow( self.addLine() )
     
     self.actionsList = actionsList.actionsList
+
+    self.baseMenuSectionsCombo.currentIndexChanged.connect( lambda: self.menuAddSections(self.settingsFormLayout, False, self.actionsList) )
     
     self.menus = {
       "menu": [],
@@ -85,7 +87,7 @@ class Settings(QDialog):
 
     paths["dirpath"] = nicepath
     
-    filepath = os.path.expanduser("~/" + dirName + "/" + fileName + ".txt")
+    filepath = os.path.expanduser("~/" + dirName + "/" + fileName + ".json")
     nicepath = os.path.abspath(filepath)        
 
     paths["filepath"] = nicepath
@@ -286,26 +288,29 @@ class Settings(QDialog):
       
       subMenuLayout.addRow(self.addLabel("Submenu " + str( index )))
       self.baseMenuSectionsCombo = self.addComboRow("Sections:", self.sectionsMaxCount, subMenuLayout)[1]
-      self.baseMenuSectionsCombo.currentIndexChanged.connect( lambda: self.menuAddSections(subMenuLayout, True) )
+      self.baseMenuSectionsCombo.currentIndexChanged.connect( lambda: self.menuAddSections(subMenuLayout, True, self.actionsList) )
 
       subMenuLayout.addRow( self.addLine() )            
       subMenu.setLayout( subMenuLayout )
     
       self.settingsFormLayout.insertRow(pos[0] + 1, subMenu)
 
-  def menuAddSections( self, layout, isSubMenu=False ):
+  def menuAddSections( self, layout, isSubMenu=False, actionsList=False ):
     row = 1 if isSubMenu else 0
     
     sectionsCountTxt = layout.itemAt(row, QFormLayout.FieldRole).widget().currentText()
 
     sectionsCount = int( sectionsCountTxt )
 
+    settings = self.getSettings( layout )
+    menus = self.generateMenuStructure( settings, actionsList )
+
     if layout.rowCount() > 3:
       for i in range( layout.rowCount() - 1, 2, -1 ):
         layout.removeRow(i)
 
     for i in range( sectionsCount ):
-      comboRow = self.addComboRow( "Action " + str( i ) + ":", self.actionsList, layout )
+      comboRow = self.addComboRow( "Action " + str( i ) + ":", actionsList, layout )
 
       if not isSubMenu:
         checkBoxRow = self.addCheckBoxRow( "Sub Menu:", layout )
@@ -313,6 +318,19 @@ class Settings(QDialog):
         checkBoxRow[1].sectionIndex = i
 
         layout.addRow( self.addLine() )
+    
+    if len(menus["menu"]) == 0:
+      menus = self.defaultMenus
+
+    if len(menus["menu"]) < sectionsCount:
+      for i in range( sectionsCount - len(menus["menu"]) ):
+        menus["menu"].append({
+          "name": actionsList[0]["name"],
+          "isSubmenu": False,
+          "ref": None,
+        })
+
+    self.setMenuItems(menus, layout)
 
   def addCheckBoxRow(self, txt, layout):
     elms = [ self.addLabel(txt), QCheckBox() ]

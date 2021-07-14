@@ -2,6 +2,8 @@ from krita import *
 from .ActionsList import ActionsList
 from .Settings import Settings
 from .MenuArea import MenuArea, EventController
+from .GUISettings import GUISettings
+from .Debug import Logger
 
 class PieMenuExtension(Extension):
   def __init__(self,parent):
@@ -13,7 +15,7 @@ class PieMenuExtension(Extension):
   def updateMenus(self):
     self.menuArea.deleteLater()
     self.menus = self.settings.menus
-    self.menuArea = MenuArea(self.menus, self.actionsList, self.qWin)
+    self.menuArea = MenuArea(self.menus, self.actionsList, self.guiSettings.options, self.qWin)
     self.menuArea.menus = self.menus
 
   def openPieMenu(self):
@@ -36,17 +38,22 @@ class PieMenuExtension(Extension):
   def openSettings(self):
     self.settings.move(QCursor.pos())
     self.settings.show()
+    self.guiSettings.move(QCursor.pos())
+    self.guiSettings.show()
 
   def createActions(self, window):
     self.qWin = window.qwindow()
-    
+
     self.actionsList = ActionsList(self.qWin)
 
     self.settings = Settings(self.actionsList, self.qWin)
     self.settings.menusChanged.connect(self.updateMenus)
     self.menus = self.settings.menus
 
-    self.menuArea = MenuArea(self.menus, self.actionsList, self.qWin)
+    self.guiSettings = GUISettings(self.actionsList, self.qWin)
+    # self.guiSettings.optionsChanged.connect(self.updateMenus)
+
+    self.menuArea = MenuArea(self.menus, self.actionsList, self.guiSettings.options, self.qWin)
 
     self.pieMenuAction = window.createAction("kritapluginpiemenu", "Pie Menu", "tools/scripts")
     self.pieMenuAction.setAutoRepeat(False)
