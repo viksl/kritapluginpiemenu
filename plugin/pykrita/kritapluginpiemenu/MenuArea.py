@@ -14,7 +14,6 @@ class MenuArea(QObject):
         self.options = options
         self.menus = menus
         self.menu = PieMenu(actionsList, self.options, parent)
-        self.logger = Logger()
 
         self.menu.initNewMenuSignal.connect(self.initNewMenu)
         actionsList.hidePieMenuSignal.connect(self.hidePieMenu)

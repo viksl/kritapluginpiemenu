@@ -51,8 +51,6 @@ class GUISettings(QDialog):
 
     self.setLayout(self.base)
     
-    self.logger = Logger()
-    
     self.options = None
     
     self.loadSettings( self.settingsFormLayout )
