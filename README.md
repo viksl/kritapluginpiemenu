@@ -6,7 +6,7 @@ Github: https://github.com/viksl
 
 Github for this project: https://github.com/viksl/kritapluginpiemenu
 
-Krita version: 4.4.1
+Krita version: 4.4.1 or Newer
 
 Licence:
 - See file LICENSE
@@ -112,9 +112,9 @@ In settings you can:
     a/ Press the shortcut again
     b/ If you already pressed left mouse button/pen then before releasing the shortcut key then just release the shortcut key
 
-## 4/ Adjustments you can make if needed:
-
-Check the video in section 1/
+## 4/ Customization:
+- Open GUISettings (Tools - Scripts - GUISettings) to get a dialog of all the settings for easy adjustments
+- If you want to see the pie menu while you are making the adjustments click to canvas and open the Pie Menu with your shortcut, now you can see changes happening on-the-fly
 
 ## 5/ Known Issues
 - Possible issues with Steam version (since steam has overlays and deals with shortcuts)
@@ -129,12 +129,15 @@ and there were NO problems.
 - New actions
 - New sections
 - Proper Default Menu
-- Pie menu settings
 I’ll be cleaning the code everywhere now when the plugin seems to be pretty stable which includes unifying settings properties/variables to a single entitty which will hopefulyl allow me to create a new settings section (separate) for the visuals of the pie menu - distances, size, colors, … to be changed real time in Krita
 (Depends on what is needed through testing, wishes, ..., feel free to let me know through krita-artists.org)
 
 
 ## 7/ Version Notes
+0.5
+- GUI Settings added - on-the-fly customization of the pie menu, no need for changes in code any more!
+- GUI Settings stored in a file
+- Fixed a memory leak (PyQt does not for some reason delete an object when it's parent is deleted although it should)
 0.4
 - Fixing several major bugs
 *(error: NoneType list, NoneType eventController, menu getting stucked, ...)*
