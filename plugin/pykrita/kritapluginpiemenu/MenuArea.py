@@ -230,15 +230,16 @@ class PieMenu(QWidget):
         self.labelStyleActive = "background-color:rgba(" + str(self.labelActiveColor[0]) + "," + str(self.labelActiveColor[1]) + "," +str(self.labelActiveColor[2]) + "," +str(self.labelActiveColor[3]) + "); color: white;"
         self.labelRadius = self.wheelIconInnerRadius + self.options["labelRadius"]  # TWEAK
         
-        self.SetLabels(True)
+        if hasattr(self, "labels") and len(self.labels["children"]) > 0:
+            self.SetLabels(True)
 
-        if len(self.labels["children"]) > 1:
-            self.labels["activeLabel"] = 0
-            self.labels["children"][self.labels["activeLabel"]].setStyleSheet(self.labelStyleActive)
-        else:
-            self.labels["activeLabel"] = None
+            if len(self.labels["children"]) > 1:
+                self.labels["activeLabel"] = 0
+                self.labels["children"][self.labels["activeLabel"]].setStyleSheet(self.labelStyleActive)
+            else:
+                self.labels["activeLabel"] = None
 
-        self.renderWheel = True
+            self.renderWheel = True
 
         self.update()
 

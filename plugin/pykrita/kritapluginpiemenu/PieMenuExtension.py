@@ -14,8 +14,11 @@ class PieMenuExtension(Extension):
 
   def updateMenus(self, sectionsUpdate=False):
     if self.guiSettings.GUISettingsActive == True or sectionsUpdate == True:
-      if sectionsUpdate == True and self.menuArea.menu.initCursorPosition != None:
-        QTimer.singleShot(0, lambda: self.menuArea.menu.initNewMenuAt(self.settings.GetMenus()["menu"], self.menuArea.menu.initCursorPosition))
+      if self.menuArea.menu.initCursorPosition != None:
+        if sectionsUpdate == True:
+          self.menuArea.menus["menu"] = self.settings.GetMenus()["menu"]
+          QTimer.singleShot(0, lambda: self.menuArea.menu.initNewMenuAt(self.menuArea.menus["menu"], self.menuArea.menu.initCursorPosition))
+
         self.OnNewOptionsReady()
       return
 
@@ -57,6 +60,7 @@ class PieMenuExtension(Extension):
 
     self.guiSettings.move(guiPosition)
     self.guiSettings.show()
+
     self.guiSettings.GUISettingsActive = True
 
     self.updateMenus()
