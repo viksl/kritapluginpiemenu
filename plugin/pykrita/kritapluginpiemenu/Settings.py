@@ -1,3 +1,4 @@
+from PyQt5.QtCore import pyqtSignal
 from krita import *
 from PyQt5 import *
 import os
@@ -17,6 +18,7 @@ class CustomComboBox (QComboBox):
 
 class Settings(QDialog):
   menusChanged = pyqtSignal()
+  settingsChanged = pyqtSignal()
 
   def __init__(self, actionsList, parent=None):
     super(Settings, self).__init__(parent)
@@ -157,9 +159,15 @@ class Settings(QDialog):
         i += 1
       elif  isinstance(widget2, QGroupBox):
         self.setMenuItems( menu, widget2.layout(), True, ref )
+        self.settingsChanged.emit()
         
       row += 1
       
+  def GetMenus( self ):
+    settings = self.getSettings( self.settingsFormLayout )
+    menus = self.generateMenuStructure( settings, self.actionsList )
+    return menus
+
   def saveSettings( self, layout, actionsList ):
     settings = self.getSettings( layout )
     self.menus = self.generateMenuStructure( settings, actionsList )
@@ -331,6 +339,7 @@ class Settings(QDialog):
         })
 
     self.setMenuItems(menus, layout)
+    self.settingsChanged.emit()
 
   def addCheckBoxRow(self, txt, layout):
     elms = [ self.addLabel(txt), QCheckBox() ]

@@ -135,9 +135,10 @@ I’ll be cleaning the code everywhere now when the plugin seems to be pretty st
 
 ## 7/ Version Notes
 0.5
-- GUI Settings added - on-the-fly customization of the pie menu, no need for changes in code any more!
+- GUI Settings added - Pie Menu's preview is now available during its customization
 - GUI Settings stored in a file
 - Pie Menu Settings now don't reset when you change sections count, your previous changes are kept so setting up your custom pie menu is now more straight forward
+- Pie Menu Settings - Pie Menu's preview is now available during its customization as long as GUI Settings are also open
 - Fixed a memory leak (PyQt does not for some reason delete an object when it's parent is deleted although it should)
 0.4
 - Fixing several major bugs
