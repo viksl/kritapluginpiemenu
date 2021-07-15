@@ -120,6 +120,10 @@ class ActionsList(QObject):
         self.gizmoSizeDefault = self.options["gizmoSizeDefault"]
         self.maxBrushSize = int(Application.readSetting("", "maximumBrushSize", ""))
 
+    def SetOptions(self, options):
+        self.options = options
+        self.gizmoSizeDefault = self.options["gizmoSizeDefault"]
+
     def Init( self, gizmo=None ):
         self.position = None
         self.previousPosition = None

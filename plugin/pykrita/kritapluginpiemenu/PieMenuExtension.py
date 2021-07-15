@@ -16,6 +16,7 @@ class PieMenuExtension(Extension):
     if self.guiSettings.GUISettingsActive == True or sectionsUpdate == True:
       if sectionsUpdate == True and self.menuArea.menu.initCursorPosition != None:
         QTimer.singleShot(0, lambda: self.menuArea.menu.initNewMenuAt(self.settings.GetMenus()["menu"], self.menuArea.menu.initCursorPosition))
+        self.OnNewOptionsReady()
       return
 
     self.menuArea.menu.deleteLater()
@@ -59,7 +60,10 @@ class PieMenuExtension(Extension):
     self.guiSettings.GUISettingsActive = True
 
     self.updateMenus()
-    QTimer.singleShot(0, lambda: self.settings.loadSettings( self.settings.settingsFormLayout ))
+    QTimer.singleShot(0, self.OnOpenSettingsLoadSettings)
+
+  def OnOpenSettingsLoadSettings(self):
+    self.settings.loadSettings( self.settings.settingsFormLayout )
 
   def OnNewOptionsReady(self):
     QTimer.singleShot(0, self.menuArea.menu.OnGUISettingsUpdate)
@@ -81,7 +85,9 @@ class PieMenuExtension(Extension):
     self.guiSettings = GUISettings(self.actionsList, self.qWin)
     self.guiSettings.newOptionsReady.connect(self.OnNewOptionsReady)
     self.guiSettings.GUISettingsClosed.connect(self.OnGUISettingsClosed)
-
+    
+    self.actionsList.SetOptions(self.guiSettings.options)
+    
     self.menuArea = MenuArea(self.menus, self.actionsList, self.guiSettings.options, self.qWin)
 
     self.pieMenuAction = window.createAction("kritapluginpiemenu", "Pie Menu", "tools/scripts")
