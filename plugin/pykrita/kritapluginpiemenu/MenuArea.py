@@ -6,6 +6,7 @@ import math
 from .Debug import Logger
 
 class MenuArea(QObject):
+# class MenuArea(QMdiArea):
     def __init__(self, menus, actionsList, options, parent=None):
         super().__init__(parent)
 
@@ -13,7 +14,8 @@ class MenuArea(QObject):
         self.options = options
         self.menus = menus
         self.menu = PieMenu(actionsList, self.options, parent)
-        
+        self.logger = Logger()
+
         self.menu.initNewMenuSignal.connect(self.initNewMenu)
         actionsList.hidePieMenuSignal.connect(self.hidePieMenu)
 
@@ -45,13 +47,13 @@ class EventController(QMdiArea):
         self.buttonReleased = False
         self.resetKeyPressed = False
 
-###################################################################################################
-# START EVENT FILTER
-###################################################################################################
+    ###################################################################################################
+    # START EVENT FILTER
+    ###################################################################################################
     def eventFilter(self, source, event):
-###################################################################################################
-# KEY PRESS EVENT RESET
-###################################################################################################
+        ###################################################################################################
+        # KEY PRESS EVENT RESET
+        ###################################################################################################
         if (
             hasattr(self, "controllerOwner")
             and hasattr(self.controllerOwner, "eventController")
@@ -59,11 +61,11 @@ class EventController(QMdiArea):
             and self.resetKeyPressed
         ):
             return super(EventController, self).eventFilter(source, event)
-###################################################################################################
-# KEY PRESS
-###################################################################################################
-# KeyPress + KeyRelease is needed because on windows the events are not triggered the same
-# as on Linux
+        ###################################################################################################
+        # KEY PRESS
+        ###################################################################################################
+        # KeyPress + KeyRelease is needed because on windows the events are not triggered the same
+        # as on Linux
         if (
             (
                 event.type() == QEvent.KeyPress
@@ -83,9 +85,9 @@ class EventController(QMdiArea):
 
             event.accept()
             return True
-###################################################################################################
-# MOUSE BUTTON PRESS
-###################################################################################################
+        ###################################################################################################
+        # MOUSE BUTTON PRESS
+        ###################################################################################################
         elif (
             ((event.type() == QEvent.MouseButtonPress
             and event.button() == QtCore.Qt.LeftButton)
@@ -100,9 +102,9 @@ class EventController(QMdiArea):
 
             event.accept()
             return True
-###################################################################################################
-# MOUSE BUTTON/TABLET RELEASE
-###################################################################################################
+        ###################################################################################################
+        # MOUSE BUTTON/TABLET RELEASE
+        ###################################################################################################
         elif (
             (event.type() == QEvent.MouseButtonRelease
             or event.type() == QEvent.TabletRelease)
@@ -119,9 +121,9 @@ class EventController(QMdiArea):
 
             event.accept()
             return True
-###################################################################################################
-# MOUSE MOVE
-###################################################################################################
+        ###################################################################################################
+        # MOUSE MOVE
+        ###################################################################################################
         elif (
             event.type() == QEvent.MouseMove
             and hasattr(self, "controllerOwner")
@@ -135,9 +137,9 @@ class EventController(QMdiArea):
 
             event.accept()
             return True
-###################################################################################################
-# CATCH PROBLEM EVENTS WHILE THE MENU IS ACTIVE
-###################################################################################################
+        ###################################################################################################
+        # CATCH PROBLEM EVENTS WHILE THE MENU IS ACTIVE
+        ###################################################################################################
         elif (
             event.type() == QEvent.KeyPress
             or event.type() == QEvent.MouseMove
@@ -148,11 +150,11 @@ class EventController(QMdiArea):
         ):
             event.accept()
             return True
-###################################################################################################
+        ###################################################################################################
         return super(EventController, self).eventFilter(source, event)
-###################################################################################################
-# END EVENT FILTER
-###################################################################################################
+    ###################################################################################################
+    # END EVENT FILTER
+    ###################################################################################################
 
     def deleteEventFilter(self):
         if hasattr( self.controllerOwner, "eventController" ):
@@ -171,7 +173,7 @@ class PieMenu(QWidget):
 
     def __init__(self, actionsList, options, parent=None):
         QWidget.__init__(self, parent)
-
+        self.setParent(parent)
         self.actionsList = actionsList
         self.options = options
         self.setWindowFlags(self.windowFlags() | QtCore.Qt.Window | QtCore.Qt.FramelessWindowHint)
@@ -190,10 +192,12 @@ class PieMenu(QWidget):
 
         self.labelBaseColor = self.options["labelBaseColor"]       # TWEAK
         self.labelActiveColor = self.options["labelActiveColor"]     # TWEAK
-        # self.labelStyleBase = "background-color:" + self.labelBaseColor + "; color: white;"
-        # self.labelStyleActive = "background-color:" + self.labelActiveColor + "; color: white;"
-        self.labelStyleBase = "background-color:rgba(" + str(self.options["labelBaseColor"][0]) + "," + str(self.options["labelBaseColor"][1]) + "," +str(self.options["labelBaseColor"][2]) + "," +str(self.options["labelBaseColor"][3]) +"); color: white;"
-        self.labelStyleActive = "background-color:rgba(" + str(self.options["labelActiveColor"][0]) + "," + str(self.options["labelActiveColor"][1]) + "," +str(self.options["labelActiveColor"][2]) + "," +str(self.options["labelActiveColor"][3]) + "); color: white;"
+        # self.labelStyleBase = "background-color:" + self.labelBaseColor + "; color: white;"  # eventually delete this not needed any more
+        # self.labelStyleActive = "background-color:" + self.labelActiveColor + "; color: white;" # eventually delete this not needed any more
+        # self.labelStyleBase = "background-color:rgba(" + str(self.options["labelBaseColor"][0]) + "," + str(self.options["labelBaseColor"][1]) + "," +str(self.options["labelBaseColor"][2]) + "," +str(self.options["labelBaseColor"][3]) +"); color: white;"
+        # self.labelStyleActive = "background-color:rgba(" + str(self.options["labelActiveColor"][0]) + "," + str(self.options["labelActiveColor"][1]) + "," +str(self.options["labelActiveColor"][2]) + "," +str(self.options["labelActiveColor"][3]) + "); color: white;"
+        self.labelStyleBase = "background-color:rgba(" + str(self.labelBaseColor[0]) + "," + str(self.labelBaseColor[1]) + "," +str(self.labelBaseColor[2]) + "," +str(self.labelBaseColor[3]) +"); color: white;"
+        self.labelStyleActive = "background-color:rgba(" + str(self.labelActiveColor[0]) + "," + str(self.labelActiveColor[1]) + "," +str(self.labelActiveColor[2]) + "," +str(self.labelActiveColor[3]) + "); color: white;"
 
         self.gizmo = Gizmo()
 
@@ -207,6 +211,7 @@ class PieMenu(QWidget):
         self.distance = None
         self.renderGizmo = False
         self.renderWheel = False
+        self.initCursorPosition = None
 
         self.gizmo.gizmoUpdatedSignal.connect(self.OnGizmoUpdatedSignal)
 
@@ -215,7 +220,31 @@ class PieMenu(QWidget):
         self.renderGizmo = True
         self.update()
 
+    def OnGUISettingsUpdate( self ):
+        self.wheelIconOuterRadius = self.options["wheelInnerRadius"] *2                   # TWEAK
+        self.wheelIconInnerRadius = self.options["wheelOuterRadius"] *2                   # TWEAK
+        self.wheelIconLineThickness = self.options["wheelLineThickness"]                     # TWEAK
+
+        self.labelBaseColor = self.options["labelBaseColor"]       # TWEAK
+        self.labelActiveColor = self.options["labelActiveColor"]     # TWEAK
+        self.labelStyleBase = "background-color:rgba(" + str(self.labelBaseColor[0]) + "," + str(self.labelBaseColor[1]) + "," +str(self.labelBaseColor[2]) + "," +str(self.labelBaseColor[3]) +"); color: white;"
+        self.labelStyleActive = "background-color:rgba(" + str(self.labelActiveColor[0]) + "," + str(self.labelActiveColor[1]) + "," +str(self.labelActiveColor[2]) + "," +str(self.labelActiveColor[3]) + "); color: white;"
+        self.labelRadius = self.wheelIconInnerRadius + self.options["labelRadius"]  # TWEAK
+        
+        self.SetLabels(True)
+
+        if len(self.labels["children"]) > 1:
+            self.labels["activeLabel"] = 0
+            self.labels["children"][self.labels["activeLabel"]].setStyleSheet(self.labelStyleActive)
+        else:
+            self.labels["activeLabel"] = None
+
+        self.renderWheel = True
+
+        self.update()
+
     def initNewMenuAt(self, menuSections, cursorPosition):
+        self.initCursorPosition = cursorPosition
         self.clearPainter = False
         self.renderGizmo = False
         self.gizmo.enabled = False
@@ -230,21 +259,29 @@ class PieMenu(QWidget):
         self.totalSplitSections = len(self.menuSections)
         self.splitSectionAngle = 2 * math.pi / self.totalSplitSections
         self.splitSectionOffAngle = -(math.pi / 2) - self.splitSectionAngle/2 
+        
+        self.SetLabels()
 
-        if hasattr(self, "labels") and len(self.labels["children"]) > 0:
+        self.update()
+
+    def SetLabels( self, resetLabels=False ):
+        if hasattr(self, "labels") and len(self.labels["children"]) > 0 and resetLabels == False:
             for label in self.labels["children"]:
                 label.hide()
                 label.deleteLater()
-
-        self.labels = {
-            "children": [None] * self.totalSplitSections,
-            "activeLabel": None
-        }
-
+        
+        if resetLabels == False:
+            self.labels = {
+                "children": [None] * self.totalSplitSections,
+                "activeLabel": None
+            }
+        
         for i in range(len(self.labels["children"])):
             p = self.circleCoor(self.cursorInitPosition.x(), self.cursorInitPosition.y(), self.labelRadius, i * self.splitSectionAngle + self.splitSectionAngle / 2)
     
-            self.labels["children"][i] = QLabel(str(self.menuSections[i]["name"]), self)
+            if resetLabels == False:
+                self.labels["children"][i] = QLabel(str(self.menuSections[i]["name"]), self)
+
             self.labels["children"][i].setFont(QFont('Times', self.options["fontSize"]))  # TWEAK
             self.labels["children"][i].adjustSize()
             self.labels["children"][i].setGeometry(int(p["x"]), int(p["y"]), self.options["labelWidth"], self.options["labelHeight"])   # TWEAK
@@ -253,8 +290,6 @@ class PieMenu(QWidget):
             self.labels["children"][i].setAlignment(QtCore.Qt.AlignCenter)
             self.labels["children"][i].setWordWrap(True)
             self.labels["children"][i].show()
-        
-        self.update()
 
     def ResetGUI( self ):
         self.clearPainter = True

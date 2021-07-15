@@ -10,8 +10,6 @@ class Options():
         "wheelLineColor": [255, 255, 255, 30],
         "wheelLineThickness": 1,
         "labelRadius": 180,
-        # "labelBaseColor": "rgba(47, 47, 47, 200)",
-        # "labelActiveColor": "rgba(30, 30, 30, 250)",
         "labelBaseColor": [47, 47, 47, 200],
         "labelActiveColor": [30, 30, 30, 250],
         "fontSize": 12,

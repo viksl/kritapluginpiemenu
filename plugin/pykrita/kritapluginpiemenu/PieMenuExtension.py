@@ -13,6 +13,10 @@ class PieMenuExtension(Extension):
     pass
 
   def updateMenus(self):
+    if self.guiSettings.GUISettingsActive == True:
+      return
+
+    self.menuArea.menu.deleteLater()
     self.menuArea.deleteLater()
     self.menus = self.settings.menus
     self.menuArea = MenuArea(self.menus, self.actionsList, self.guiSettings.options, self.qWin)
@@ -32,14 +36,28 @@ class PieMenuExtension(Extension):
     self.menuArea.menu.previousAction = None
     self.menuArea.menu.initNewMenuAt(self.menuArea.menus["menu"], QCursor.pos())
     self.menuArea.menu.show()
-    self.menuArea.eventController = EventController(self.menuArea.menu, self.menuArea.menu.parent(), self.menuArea)
-    QApplication.setOverrideCursor(Qt.ArrowCursor)
+
+    if self.guiSettings.GUISettingsActive == False:
+      self.menuArea.eventController = EventController(self.menuArea.menu, self.menuArea.menu.parent(), self.menuArea)
+      QApplication.setOverrideCursor(Qt.ArrowCursor)
+
+    if self.guiSettings.GUISettingsActive == True:
+      QTimer.singleShot(0, self.menuArea.menu.OnGUISettingsUpdate)
     
   def openSettings(self):
     self.settings.move(QCursor.pos())
     self.settings.show()
     self.guiSettings.move(QCursor.pos())
     self.guiSettings.show()
+    self.guiSettings.GUISettingsActive = True
+    self.updateMenus()
+
+  def OnNewOptionsReady(self):
+    QTimer.singleShot(0, self.menuArea.menu.OnGUISettingsUpdate)
+
+  def OnGUISettingsClosed(self):
+    self.guiSettings.GUISettingsActive = False
+    self.updateMenus()
 
   def createActions(self, window):
     self.qWin = window.qwindow()
@@ -51,7 +69,8 @@ class PieMenuExtension(Extension):
     self.menus = self.settings.menus
 
     self.guiSettings = GUISettings(self.actionsList, self.qWin)
-    # self.guiSettings.optionsChanged.connect(self.updateMenus)
+    self.guiSettings.newOptionsReady.connect(self.OnNewOptionsReady)
+    self.guiSettings.GUISettingsClosed.connect(self.OnGUISettingsClosed)
 
     self.menuArea = MenuArea(self.menus, self.actionsList, self.guiSettings.options, self.qWin)
 

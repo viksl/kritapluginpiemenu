@@ -9,14 +9,15 @@ import json
 from .Debug import Logger
 
 class GUISettings(QDialog):
-  optionsChanged = pyqtSignal()
-  openPieMenu = pyqtSignal()
-  closePieMenu = pyqtSignal()
+  newOptionsReady = pyqtSignal()
+  GUISettingsClosed = pyqtSignal()
 
   def __init__(self, sectionsCnt=None, parent=None):
     # super(GUISettings, self).__init__(parent)
     super().__init__(parent)
 
+    self.GUISettingsActive = False
+    
     self.setGeometry(0, 0, 300, 500)
     self.setMinimumSize(400, 500)
     self.setWindowTitle("Pie Menu GUI Settings")
@@ -57,8 +58,6 @@ class GUISettings(QDialog):
     self.loadSettings( self.settingsFormLayout )
     self.displayOptions( self.settingsFormLayout )
 
-    self.openPieMenu.emit()
-
   def displayOptions( self, layout ):
     self.addSpinBoxRow("gizmoSizeDefault", "Gizmo Size Default", self.options["gizmoSizeDefault"], 0, 10000, 1, layout)
     layout.addRow( self.addLine() )
@@ -72,7 +71,7 @@ class GUISettings(QDialog):
     self.addSpinBoxRow("wheelOuterRadius", "Wheel Outer Radius", self.options["wheelOuterRadius"], 0, 10000, 1, layout)
     layout.addRow( self.addLine() )
 
-    self.addSpinBoxRow("wheelLineThickness", "Wheel Line Thickness", self.options["wheelLineThickness"], 0, 10000, 1, layout)
+    self.addSpinBoxRow("wheelLineThickness", "Wheel Line Thickness", self.options["wheelLineThickness"], 1, 10000, 1, layout)
     layout.addRow( self.addLine() )
 
     self.addSpinBoxRow("labelRadius", "Label Radius", self.options["labelRadius"], 0, 10000, 1, layout)
@@ -165,9 +164,6 @@ class GUISettings(QDialog):
     # write to file
     self.writeSettingsFile()
 
-    self.openPieMenu.emit()
-    self.optionsChanged.emit()
-
   def setOptionsFromSettings( self ):
     parent = self.groupBox
     spinBoxes = parent.findChildren(QSpinBox)
@@ -202,9 +198,10 @@ class GUISettings(QDialog):
         # Other options values
         self.options[spinBox.objectName()] = int(spinBox.value())
       
+    self.newOptionsReady.emit()
+
   def onOptionsChanged( self, val ):
     self.setOptionsFromSettings()
-    self.logger.print("Options Changed " + str(self))
 
   def addLabel(self, label):
     label = QLabel( str(label) )
@@ -263,9 +260,9 @@ class GUISettings(QDialog):
     return elms
 
   def accept(self):
-    self.closePieMenu.emit()
+    self.GUISettingsClosed.emit()
     super(GUISettings, self).accept()
 
   def reject(self):
-    self.closePieMenu.emit()
+    self.GUISettingsClosed.emit()
     super(GUISettings, self).reject()
