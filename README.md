@@ -113,7 +113,7 @@ In settings you can:
     b/ If you already pressed left mouse button/pen then before releasing the shortcut key then just release the shortcut key
 
 ## 4/ Customization:
-- Open GUISettings (Tools - Scripts - GUISettings) to get a dialog of all the settings for easy adjustments
+- Open Pie Menu's GUI Settings (Tools - Scripts - Pie Menu Settings) to get a dialog of all the settings for easy adjustments
 - If you want to see the pie menu while you are making the adjustments click to canvas and open the Pie Menu with your shortcut, now you can see changes happening on-the-fly
 
 ## 5/ Known Issues
@@ -137,6 +137,7 @@ I’ll be cleaning the code everywhere now when the plugin seems to be pretty st
 0.5
 - GUI Settings added - on-the-fly customization of the pie menu, no need for changes in code any more!
 - GUI Settings stored in a file
+- Pie Menu Settings now don't reset when you change sections count, your previous changes are kept so setting up your custom pie menu is now more straight forward
 - Fixed a memory leak (PyQt does not for some reason delete an object when it's parent is deleted although it should)
 0.4
 - Fixing several major bugs

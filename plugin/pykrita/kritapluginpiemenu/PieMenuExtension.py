@@ -45,11 +45,17 @@ class PieMenuExtension(Extension):
       QTimer.singleShot(0, self.menuArea.menu.OnGUISettingsUpdate)
     
   def openSettings(self):
-    self.settings.move(QCursor.pos())
+    cursor = QCursor.pos()
+    self.settings.move(cursor)
     self.settings.show()
-    self.guiSettings.move(QCursor.pos())
+
+    guiPosition = cursor
+    guiPosition.setX(guiPosition.x() - self.guiSettings.width())
+
+    self.guiSettings.move(guiPosition)
     self.guiSettings.show()
     self.guiSettings.GUISettingsActive = True
+
     self.updateMenus()
 
   def OnNewOptionsReady(self):

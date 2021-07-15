@@ -1,8 +1,6 @@
 from PyQt5.QtCore import pyqtSignal
-from PyQt5.QtGui import QIntValidator
 from krita import *
 from PyQt5 import *
-from .Settings import CustomComboBox
 from .Options import *
 import os
 import json
