@@ -21,7 +21,7 @@ Copyright: (C) viksl
 
 Release Date: 21.12.2020
 
-Version: 0.4
+Version: 0.5
 
 Default shortcut: ` + (Mouse left/middle button or Pen touch)
 
@@ -134,7 +134,7 @@ I’ll be cleaning the code everywhere now when the plugin seems to be pretty st
 
 
 ## 7/ Version Notes
-0.5
+0.5 (15.07.2021)
 - GUI Settings added - Pie Menu's preview is now available during its customization
 - GUI Settings stored in a file
 - Pie Menu Settings now don't reset when you change sections count, your previous changes are kept so setting up your custom pie menu is now more straight forward
