@@ -1,4 +1,5 @@
 from krita import *
+from PyQt5 import *
 from .ActionsList import ActionsList
 from .Settings import Settings
 from .MenuArea import MenuArea, EventController
@@ -8,6 +9,7 @@ from .Debug import Logger
 class PieMenuExtension(Extension):
   def __init__(self,parent):
     super(PieMenuExtension, self).__init__(parent)
+    self.l = Logger()
 
   def setup(self):
     pass
@@ -38,6 +40,43 @@ class PieMenuExtension(Extension):
 
     if self.menuArea.eventController != None:
       return
+
+    # l.print(self.menuArea.menu.parent() is QMainWindow)
+    self.l.print(type(self.menuArea.parent()) is QMainWindow)
+    # CHECK FOR ACTIVE WID MDIAREA TO COMPARE
+    # qw = krita.instance().activeWindow().qwindow()
+    # self.l.print( len( qw.findChildren(QMdiArea)[0].findChildren(QMdiSubWindow) ) > 0 )
+    # for o in parent.findChildren(QMdiArea)[0].findChildren(QMdiSubWindow):
+    #     self.l.print("o object name:")
+
+    self.menuArea.menu.setParent(Krita.instance().activeWindow().qwindow())
+
+    if type(self.menuArea.parent()) is QMainWindow:
+      # parent = self.menuArea.parent()
+      parent = Krita.instance().activeWindow().qwindow()
+      QMArea = parent.findChildren(QMdiArea)[0]
+      subWindows = QMArea.findChildren(QMdiSubWindow)
+      # QMArea.addSubWindow(self.menuArea.menu)
+
+
+
+
+      # if len( subWindows ) > 0:
+      #     for o in subWindows[0].children():
+      #       if type(o) is QVBoxLayout:
+      #         o.addWidget(self.menuArea.menu)
+      #       self.l.print("o object:")
+      #       self.l.print(type(o))
+      #       self.l.print("o object name:")
+      #       self.l.print(o.objectName())
+
+      #       self.l.print("Widget:")
+      #       if hasattr(o, "addWidget"):
+      #         self.l.print("addWidget")
+      #       if hasattr(o, "setWidget"):
+      #         self.l.print("setWidget")
+      #         # if (o.objectName() == "view_0"):
+      #             # o.setWidget(self.menuArea.menu)
 
     self.menuArea.menu.previousAction = None
     self.menuArea.menu.initNewMenuAt(self.menuArea.menus["menu"], QCursor.pos())
