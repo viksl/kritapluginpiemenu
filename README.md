@@ -139,6 +139,7 @@ I’ll be cleaning the code everywhere now when the plugin seems to be pretty st
 - GUI Settings stored in a file
 - Pie Menu Settings now don't reset when you change sections count, your previous changes are kept so setting up your custom pie menu is now more straight forward
 - Pie Menu Settings - Pie Menu's preview is now available during its customization as long as GUI Settings are also open
+- Pie Menu on some systems (Linux) showed as an extra window (functionality wasn't a problem but it wasn't pleasant), now it should be part of Krita without the extra window
 - Fixed a memory leak (PyQt does not for some reason delete an object when it's parent is deleted although it should)
 0.4
 - Fixing several major bugs
