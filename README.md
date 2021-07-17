@@ -115,6 +115,7 @@ In settings you can:
 ## 4/ Customization:
 - Open Pie Menu's GUI Settings (Tools - Scripts - Pie Menu Settings) to get a dialog of all the settings for easy adjustments
 - If you want to see the pie menu while you are making the adjustments click to canvas and open the Pie Menu with your shortcut, now you can see changes happening on-the-fly
+- Save settings - there are 2 Settings dialogs with its own save button, if you make changes in both settings you need to press both buttons to save both settings
 
 ## 5/ Known Issues
 - Possible issues with Steam version (since steam has overlays and deals with shortcuts)
