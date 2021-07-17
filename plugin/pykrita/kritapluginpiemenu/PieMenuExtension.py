@@ -9,13 +9,18 @@ from .Debug import Logger
 class PieMenuExtension(Extension):
   def __init__(self,parent):
     super(PieMenuExtension, self).__init__(parent)
-    self.l = Logger()
+    # self.l = Logger()
 
   def setup(self):
     pass
 
   def updateMenus(self, sectionsUpdate=False):
+    print("Update")
     if self.guiSettings.GUISettingsActive == True or sectionsUpdate == True:
+
+      if self.guiSettings.GUISettingsActive == True:
+        self.menuArea.PieMenuCatch = True
+
       if self.menuArea.menu.initCursorPosition != None:
         if sectionsUpdate == True:
           self.menuArea.menus["menu"] = self.settings.GetMenus()["menu"]
@@ -42,23 +47,22 @@ class PieMenuExtension(Extension):
       return
 
     # l.print(self.menuArea.menu.parent() is QMainWindow)
-    self.l.print(type(self.menuArea.parent()) is QMainWindow)
+    # self.l.print(type(self.menuArea.parent()) is QMainWindow)
     # CHECK FOR ACTIVE WID MDIAREA TO COMPARE
     # qw = krita.instance().activeWindow().qwindow()
     # self.l.print( len( qw.findChildren(QMdiArea)[0].findChildren(QMdiSubWindow) ) > 0 )
     # for o in parent.findChildren(QMdiArea)[0].findChildren(QMdiSubWindow):
     #     self.l.print("o object name:")
 
-    self.menuArea.menu.setParent(Krita.instance().activeWindow().qwindow())
+    parent = Krita.instance().activeWindow().qwindow()
+    QMArea = parent.findChildren(QMdiArea)[0]
+    subWindows = QMArea.findChildren(QMdiSubWindow)
+    # self.menuArea.menu.setParent(QMArea)
 
-    if type(self.menuArea.parent()) is QMainWindow:
+    # if type(self.menuArea.parent()) is QMainWindow:
       # parent = self.menuArea.parent()
-      parent = Krita.instance().activeWindow().qwindow()
-      QMArea = parent.findChildren(QMdiArea)[0]
-      subWindows = QMArea.findChildren(QMdiSubWindow)
+
       # QMArea.addSubWindow(self.menuArea.menu)
-
-
 
 
       # if len( subWindows ) > 0:
@@ -79,11 +83,18 @@ class PieMenuExtension(Extension):
       #             # o.setWidget(self.menuArea.menu)
 
     self.menuArea.menu.previousAction = None
+    self.menuArea.menu.setParent(Krita.instance().activeWindow().qwindow())
     self.menuArea.menu.initNewMenuAt(self.menuArea.menus["menu"], QCursor.pos())
+
     self.menuArea.menu.show()
 
+    print("Parent")
+    print(self.menuArea.menu.parent())
+
+    self.menuArea.eventController = EventController(self.menuArea.menu, self.menuArea.menu.parent(), self.menuArea)
+
     if self.guiSettings.GUISettingsActive == False:
-      self.menuArea.eventController = EventController(self.menuArea.menu, self.menuArea.menu.parent(), self.menuArea)
+      
       QApplication.setOverrideCursor(Qt.ArrowCursor)
 
     if self.guiSettings.GUISettingsActive == True:

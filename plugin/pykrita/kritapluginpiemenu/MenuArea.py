@@ -1,17 +1,20 @@
 from krita import *
 from PyQt5 import *
-from PyQt5.QtCore import QTimer, pyqtSignal
+from PyQt5.QtCore import QPoint, QTimer, pyqtSignal
 from .HelperLib import Gizmo
 import math
 from .Debug import Logger
 
 class MenuArea(QObject):
 # class MenuArea(QMdiArea):
-    def __init__(self, menus, actionsList, options, parent=None):
-        super().__init__(parent)
+    def __init__(self, menus, actionsList, options, GUISettingsActive=False, PieMenuCatch=False, parent=None):
+        super(MenuArea, self).__init__(parent)
 
         self.eventController = None
         self.options = options
+        self.GUISettingsActive = GUISettingsActive
+        self.PieMenuCatch = PieMenuCatch
+
         self.menus = menus
         self.menu = PieMenu(actionsList, self.options, parent)
 
@@ -37,7 +40,7 @@ class MenuArea(QObject):
 #Handles events mouse move + mouse press and sends it where needed
 class EventController(QMdiArea):
     def __init__(self, eventObj=None, parent=None, controllerOwner=None):
-        super().__init__(parent)
+        super(QMdiArea, self).__init__(parent)
 
         self.setMouseTracking(True)
         self.eventObj = eventObj
@@ -45,11 +48,26 @@ class EventController(QMdiArea):
         self.mouseButtonPressed = False
         self.buttonReleased = False
         self.resetKeyPressed = False
+        self.cnt = 0
 
+        print("Event parent")
+        print(self.parent())
     ###################################################################################################
     # START EVENT FILTER
     ###################################################################################################
     def eventFilter(self, source, event):
+        # Keep the pie menu on the screen when gui settings are open (after invoking the pie menu through its shortcut)
+        if (
+            hasattr(self, "controllerOwner")
+            and hasattr(self.controllerOwner, "PieMenuCatch")
+            and self.controllerOwner.PieMenuCatch == True
+        ):
+            print("test1")
+            print(self.cnt)
+            self.cnt += 1
+            # event.ignore()
+            return super(EventController, self).eventFilter(source, event)
+            # return False
         ###################################################################################################
         # KEY PRESS EVENT RESET
         ###################################################################################################
@@ -59,6 +77,7 @@ class EventController(QMdiArea):
             and self.controllerOwner.eventController != None
             and self.resetKeyPressed
         ):
+            print("test2")
             return super(EventController, self).eventFilter(source, event)
         ###################################################################################################
         # KEY PRESS
@@ -79,6 +98,7 @@ class EventController(QMdiArea):
             and not self.resetKeyPressed
             and not self.buttonReleased
         ):
+            print("test3")
             self.deleteEventFilter()
             self.resetKeyPressed = True
 
@@ -97,6 +117,7 @@ class EventController(QMdiArea):
             and not self.mouseButtonPressed
             and not self.resetKeyPressed
         ):
+            print("test4")
             self.mouseButtonPressed = True
 
             event.accept()
@@ -114,6 +135,7 @@ class EventController(QMdiArea):
             and not self.buttonReleased
             and not self.resetKeyPressed
         ):
+            print("test5")
             self.eventObj.eventHandler(event)
             self.deleteEventFilter()
             self.buttonReleased = True
@@ -132,6 +154,7 @@ class EventController(QMdiArea):
             and not self.buttonReleased
             and not self.resetKeyPressed
         ):
+            print("test6")
             self.eventObj.eventHandler(event)
 
             event.accept()
@@ -147,6 +170,7 @@ class EventController(QMdiArea):
             or event.type() == QEvent.MouseButtonRelease
             or event.type() == QEvent.TabletRelease
         ):
+            print("test7")
             event.accept()
             return True
         ###################################################################################################
@@ -171,12 +195,14 @@ class PieMenu(QWidget):
     initNewMenuSignal = pyqtSignal()
 
     def __init__(self, actionsList, options, parent=None):
-        QWidget.__init__(self, parent)
-        self.setParent(parent)
+        super().__init__()
+        # self.setParent(parent)
         self.actionsList = actionsList
         self.options = options
-        self.setWindowFlags(self.windowFlags() | QtCore.Qt.Window | QtCore.Qt.FramelessWindowHint)
-        self.setAttribute(QtCore.Qt.WA_TranslucentBackground)
+        # self.setWindowFlags(self.windowFlags() | QtCore.Qt.Tool | QtCore.Qt.Window | QtCore.Qt.FramelessWindowHint)
+        # self.setWindowFlags(self.windowFlags() | QtCore.Qt.Tool)
+        # self.setAttribute(QtCore.Qt.WA_TranslucentBackground)
+        self.setWindowFlags(self.windowFlags() | QtCore.Qt.Dialog)
         self.setStyleSheet("background: transparent;")
         self.setWindowTitle("Quick Access Pie Menu")
         self.wheelIconOuterRadius = self.options["wheelInnerRadius"] *2                   # TWEAK
@@ -184,7 +210,7 @@ class PieMenu(QWidget):
         self.wheelColor = self.options["wheelColor"]           # TWEAK
         self.lineColor = self.options["wheelLineColor"]          # TWEAK
         self.wheelIconLineThickness = self.options["wheelLineThickness"]                     # TWEAK
-        
+
         self.labelRadius = self.wheelIconInnerRadius + self.options["labelRadius"]  # TWEAK
 
         self.baseVector = [1, 0]
@@ -253,7 +279,10 @@ class PieMenu(QWidget):
         self.callback = None
         self.resetCallback = None
         screen = QGuiApplication.screenAt(cursorPosition)
-        self.setGeometry(screen.geometry())
+        # self.setGeometry(screen.geometry())
+        self.setGeometry(QRect(0, 0, screen.geometry().width(), screen.geometry().height()))
+        print("Check self parent")
+        print(screen.geometry())
         self.menuSections = menuSections
         self.cursorInitPosition = self.getCurrentPosition( cursorPosition )
         self.totalSplitSections = len(self.menuSections)
@@ -447,4 +476,19 @@ class PieMenu(QWidget):
         position = QCursor.pos() if aPosition == None else aPosition
         screen = QGuiApplication.screenAt(position)
 
-        return QPoint(position.x() - screen.geometry().x(), position.y() - screen.geometry().y())
+        print("Position x Map from global x parent map")
+        print(position)
+        print(self.mapFromGlobal( position ))
+        print("Screen")
+        print(screen.geometry().x())
+        print(screen.geometry().y())
+        p = self.mapFromGlobal( position )
+        result = p
+        # p = self.mapFromGlobal( position )
+
+        # p = self.mapFromGlobal( QPoint(position.x() - screen.geometry().x(), position.y() - screen.geometry().y()) )
+        # result = QPoint(p.x() + screen.geometry().x(), p.y() + screen.geometry().y())
+        print(result)
+        return result
+        # return self.mapFromGlobal( QPoint(position.x() - screen.geometry().x(), position.y() - screen.geometry().y()) )
+        # return QPoint(position.x() - screen.geometry().x(), position.y() - screen.geometry().y())
