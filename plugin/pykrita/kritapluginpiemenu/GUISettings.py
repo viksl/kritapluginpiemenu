@@ -58,7 +58,7 @@ class GUISettings(QDialog):
     self.addSpinBoxRow("gizmoSizeDefault", "Gizmo Size Default", self.options["gizmoSizeDefault"], 0, 10000, 1, layout)
     layout.addRow( self.addLine() )
 
-    self.addSpinBoxRow("submenuPositionOffset", "Submenu Position Offset", self.options["submenuPositionOffset"], 0, 10000, 1, layout)
+    self.addSpinBoxRow("submenuPositionOffset", "Submenu Position Offset", self.options["submenuPositionOffset"], 0, 10, 0.1, layout)
     layout.addRow( self.addLine() )
 
     self.addSpinBoxRow("wheelInnerRadius", "Wheel Inner Radius", self.options["wheelInnerRadius"], 0, 10000, 1, layout)
