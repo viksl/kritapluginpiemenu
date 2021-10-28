@@ -446,6 +446,8 @@ class PieMenu(QWidget):
         if self.renderGizmo and self.gizmo.enabled:
             self.paintGizmo(self.gizmo)
 
+        self.raise_()
+
         self.painter.end()
 
     def getCurrentPosition(self, aPosition=None):
