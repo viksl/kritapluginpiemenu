@@ -1,5 +1,7 @@
 # Pie Menu Krita Plugin
 
+Discontinued, life happened, but there's a better one us this: https://krita-artists.org/t/shortcut-composer-v1-4-2-plugin-for-pie-menus-multiple-key-assignment-mouse-trackers-and-more/55314
+
 Author: viksl
 
 Github: https://github.com/viksl
